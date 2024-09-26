@@ -39,7 +39,7 @@ def rag_chain(question):
 
 
 # Use the RAG App
-Question = "summarize this document"
+Question = "what is conservation of mass?"
 result = rag_chain(f"{Question}")
 print(f"Question : {Question}")
 print(f"Response : {result}")
