@@ -11,7 +11,7 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20
 splits = text_splitter.split_documents(documents)
 
 # Create Ollama embeddings and vector store
-embeddings = OllamaEmbeddings(model="llama3.1")
+embeddings = OllamaEmbeddings(model="llama3.2")
 vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
 
 
@@ -19,7 +19,7 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
 def ollama_llm(question, context):
     formatted_prompt = f"Question: {question}\n\nContext: {context}"
     response = ollama.chat(
-        model="llama3.1", messages=[{"role": "user", "content": formatted_prompt}]
+        model="llama3.2", messages=[{"role": "user", "content": formatted_prompt}]
     )
     return response["message"]["content"]
 
