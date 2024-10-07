@@ -51,6 +51,6 @@ query_engine = RetrieverQueryEngine(
 )
 
 response = query_engine.query(
-    "can you create mass? explain why",
+    "generate 5 difficult questions from the corpus",
 )
 print(response)
