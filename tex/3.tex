@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section{Conservation Laws}
+
+\subsection{Mass Conservation}
+
+Based on (\ref{eq:4.1}), the principle of mass conservation clearly constrains the fluid density. The implications of (\ref{eq:4.1}) for the fluid velocity field may be better displayed by using Reynolds transport theorem (\ref{eq:3.35}) with $F=\rho$ and ${\bf b}={\bf u}$ to expand the time derivative in (\ref{eq:4.1}):
+$$
+\int_{V ( t )} \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\int_{A ( t )} \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, 0. \tag{42}
+$$
+This is a mass-balance statement between integrated density changes within $V ( t )$ and integrated motion of its surface $A ( t )$. Although general and correct, (\ref{eq:4.2}) may be hard to utilize in practice because the motion and evolution of $V ( t )$ and $A ( t )$ are determined by the flow, which may be unknown.
+
+To develop the integral equation that represents mass conservation for an arbitrarily moving control volume $V^{*} ( t )$ with surface $A^{*} ( t )$, (\ref{eq:4.2}) must be modified to involve integrations over $V^{*} ( t )$ and $A^{*} ( t )$. This modification is motivated by the frequent need to conserve mass within a volume s not a material volume, for example a stationary control volume.
+
+The first step in this modification is to set $F=\rho$ in (\ref{eq:3.35}) to obtain:
+$$
+\frac{d} {d t} \, \int_{V^{*} ( t )} \! \rho( {\bf x}, t ) d V-\! \int_{V^{*} ( t )} \, \frac{\partial\rho( {\bf x}, t )} {\partial t} d V-\! \int_{A^{*} ( t )} \! \rho( {\bf x}, t ) {\bf b} \cdot{\bf n} \, d A \,=\, 0.
+$$
+
+The second step is to choose the arbitrary control volume $V^{*} ( t )$ to be instantaneously coincident with material volume $V ( t )$ so that at the moment of interest $V ( t )=V^{*} ( t )$ and $A ( t )=A^{*} ( t )$. At this coincidence moment, the $(d/dt)$ pdV-terms in (\ref{eq:4.1}) and (\ref{eq:4b}) are different.
+
+\begin{align*}
+\int_{V ( t )} \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\int_{A ( t )} \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, 0.
+\end{align*}
+
+and
+
+\begin{align*}
+\int_{V ( t )} \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\int_{A ( t )} \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, \int_{V ( t )} \! \left\{\frac{\partial\rho( \mathbf{x}, t )} {\partial t}+\nabla\! \cdot\! \left( \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \right) \right\} d V \,=\, 0.
+\end{align*}
+
+In particular, when ${\bf b}={\bf u}$,
+
+The two equations for the same system are different in their surface integrals.
+
+\end{document}

@@ -1,8 +1,14 @@
-`Output:`
-1 4. CONSERVATION LAWS
-EXAMPLE 4.2
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section{4. CONSERVATION LAWS}
+
+\subsection{4.2. Density in a Horizontal Flow}
+
 The density in a horizontal flow $\mathbf{u} = U(y,z)\mathbf{e}_x$ is given by $\rho(\mathbf{x}, t) = f(x - Ut, y, z)$, where $f\left(x, y, z\right)$ is the density distribution at $t=0$. Is this flow incompressible?
-Solution
+
 Letting $\xi = x - Ut$, we have:
 
 $$
@@ -17,7 +23,8 @@ $$
 
 Therefore, this is an incompressible flow, but the density may vary when $f$ is not constant.
 
-4.3 STREAM FUNCTIONS
+\subsection{4.3 STREAM FUNCTIONS}
+
 Consider the steady form of the continuity equation (4.7):
 
 The divergence of the curl of any vector field is identically zero (see Exercise 2.21), so $\rho\mathbf{u}$ will satisfy (4.11) when written as the curl of a vector potential $\Psi$:
@@ -43,3 +50,5 @@ $$
 &= (b-a)(d-c).
 \end{aligned}
 $$
+
+\end{document}
