@@ -1,0 +1,12 @@
+# Use the official Ollama image as the base
+FROM ollama/ollama:latest
+
+# Set environment variables for Ollama
+ENV OLLAMA_MODELS=/root/.ollama/models
+
+# Download the llama3.2 model during the build process
+RUN ollama serve & sleep 5 && ollama run llama3.2
+
+# Expose the port for Ollama service
+EXPOSE 11434
+

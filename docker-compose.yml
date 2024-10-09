@@ -1,0 +1,26 @@
+services:
+  buddy:
+    build:
+      dockerfile: ./docker/Python
+    container_name: buddy_app
+    ports:
+      - "8000:8000" # Expose the buddy app on port 5000
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_URL=http://ollama:11434 # Use Ollama's internal service name for communication
+    networks:
+      - buddy_ollama_network
+
+  ollama:
+    build:
+      dockerfile: ./docker/Ollama
+    container_name: ollama_container
+    ports:
+      - "11434:11434" # Expose Ollama on port 11434
+    networks:
+      - buddy_ollama_network
+
+networks:
+  buddy_ollama_network:
+    driver: bridge
