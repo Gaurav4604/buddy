@@ -1,0 +1,24 @@
+Here is the merged response:
+
+`output: 
+
+This is a math-based extraction LaTeX format extraction: 112 4. CONSERVATION LAWS
+Based on (4.1), the principle of mass conservation clearly constrains the fluid density. The implications of (4.1) for the fluid velocity field may be better displayed by using Reynolds transport theorem (3.35) with $F=\rho$ and ${\bf b}={\bf u}$ to expand the time derivative in (4.1)
+$$
+\int_{V ( t )} \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\int_{A ( t )} \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, 0. \tag{4.2}
+$$
+This is a mass-balance statement between integrated density changes within $V ( t )$ and integrated motion of its surface $A ( t )$. Although general and correct, (4.2) may be hard to utilize in practice because the motion and evolution of $V ( t )$ and $A ( t )$ are determined by the flow, which may be unknown.
+
+To develop the integral equation that represents mass conservation for an arbitrarily moving control volume $V^{*} ( t )$ with surface $A^{*} ( t )$, (4.2) must be modified to involve integrations over $V^{*} ( t )$ and A*(t). The first step in this modification is to set $F=\rho$ in (3.35) to obtain:
+$$
+\frac{d} {d t} \, \int_{V^{*} ( t )} \! \rho( {\bf x}, t ) d V-\! \int_{V^{*} ( t )} \, \frac{\partial\rho( {\bf x}, t )} {\partial t} d V-\! \int_{A^{*} ( t )} \! \rho( {\bf x}, t ) {\bf b} \cdot{\bf n} \, d A \,=\, 0. \tag{4.3}
+$$
+The second step is to choose the arbitrary control volume $V^{*} ( t )$ to be instantaneously coincident with material volume $V ( t )$ so that at the moment of interest $V ( t )=V^{*} ( t )$ and $A ( t )=A^{*} ( t )$. At this coincidence moment, the $( d / d t ) \rfloor\rho d V \cdot$-terms in (4.1) and (4.3) are not equal; however, the volume integration of $\partial\rho/ \partial t$ in (4.2) is equal to that in (4.3) and the surface integral of pu'n over $A ( t )$ is equal to that over A*(t):
+$$
+\int_{V^{\times} ( t )} \! \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\! \int_{A ( t )} \! \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, \int_{V ( t )} \! \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V + \int_{A ( t )} \left[ \nabla \cdot (\rho(\mathbf{x},t)\mathbf{u}) - \mathbf{u}\cdot\nabla\rho \right]dV = 0
+$$
+Using the divergence theorem (2.30), we get:
+$$
+\int_{U ( t )} \! \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\! \int_{A ( t )} \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, \int_{V ( t )} \! \left\{\frac{\partial\rho( \mathbf{x}, t )} {\partial t} + \nabla\! \cdot\! \left( \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \right) \right\} d V \,=\, 0. \tag{4.6}
+$$
+This is the general integral statement of conservation of mass for an arbitrarily moving control volume. It can be specialized to stationary, steadily moving, accelerating, or deforming control volumes by appropriate choice of b. In particular, when ${\bf b}={\bf u}$, the arbitrary control volume becomes a material volume and (4.6) reduces to (4.2).

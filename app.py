@@ -1,13 +1,14 @@
-from fastapi import FastAPI, Request
-import requests
+import fitz  # PyMuPDF
+from pdf2image import convert_from_path
 import os
-import ollama
+
+os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
+
+from pix2text import Pix2Text, merge_line_texts
+import pytesseract
 from ollama import Client
 
-# Initialize FastAPI app
-app = FastAPI()
 
-# Get the Ollama service URL from environment variable or use default Docker Compose URL
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:11434")
 
 model_name = "llama3.2"
@@ -15,37 +16,58 @@ base_url = OLLAMA_URL
 
 client = Client(host=base_url)
 
+# Path to the PDF file
+pdf_path = "file.pdf"
 
-@app.post("/process_input/")
-async def process_input(request: Request):
-    """
-    This endpoint accepts POST requests with a prompt as JSON input
-    and sends the prompt to the Ollama service for processing.
-    """
-    # Extract JSON body from request
-    request_data = await request.json()
-    prompt = request_data.get("prompt", "")
+p2t = Pix2Text()
 
-    if not prompt:
-        return {"error": "No prompt provided"}
+# Create directory named 'rough' if it doesn't exist
+output_dir = "rough"
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
-    # Send the prompt to Ollama
-    try:
-        response = client.chat(
-            model=model_name, messages=[{"role": "user", "content": prompt}]
-        )
-        response_data = response["message"]["content"]
+cache_dir = "cache"
+if not os.path.exists(cache_dir):
+    os.makedirs(cache_dir)
 
-        # Return the response from Ollama
-        return {"ollama_response": response_data}
+# Open the PDF
+doc = fitz.open(pdf_path)
+total_pages = doc.page_count
 
-    except Exception as e:
-        return {"error": str(e)}
+# Convert each page to image and extract text
+for page_num in range(total_pages):
+    # Convert the PDF page to image
+    pages = convert_from_path(
+        pdf_path, first_page=page_num + 1, last_page=page_num + 1, dpi=300
+    )
 
+    # Run OCR on the image to extract text
+    p2t_text = p2t.recognize(img=pages[0])
+    tess_text = pytesseract.image_to_string(pages[0])
 
-# Root endpoint for testing
-@app.get("/")
-def read_root():
-    return {
-        "message": "API is running. Use the /process_input/ endpoint to send input."
-    }
+    prompt_1 = f"""I have a physics based document page extracted out, it has an OCR based extraction: {tess_text}, this does not have valid math symbols"""
+
+    prompt_2 = (
+        f"""this is a math based extraction latex format extraction: {p2t_text}"""
+    )
+
+    prompt_3 = """give me a merged response, with valid math, and retain all text info, in format -> `output:`"""
+    res = client.chat(
+        model="llama3.2",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt_1,
+            },
+            {
+                "role": "user",
+                "content": prompt_2,
+            },
+            {"role": "user", "content": prompt_3},
+        ],
+    )
+    output = res["message"]["content"]
+    print(output)
+    text_file_name = os.path.join(output_dir, f"{page_num}.txt")
+    with open(text_file_name, "w", encoding="utf-8") as text_file:
+        text_file.write(output)

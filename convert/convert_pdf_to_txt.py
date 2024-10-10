@@ -45,8 +45,6 @@ for page_num in range(total_pages):
     )
 
     prompt_3 = """give me a merged response, with valid math, and retain all text info, in format -> `output:`"""
-    print(p2t_text)
-    print(tess_text)
     res = ollama.chat(
         model="llama3.2",
         messages=[

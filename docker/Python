@@ -2,7 +2,7 @@ FROM python:3.9-slim-bullseye
 
 WORKDIR /app
 
-# Install necessary dependencies
+# Install necessary dependencies including OpenGL libraries for OpenCV
 RUN apt-get update && apt-get install -y \
     python3-dev \
     python3-pip \
@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     poppler-utils \
     libglib2.0-0 \
+    libgl1-mesa-glx \
+    libgl1-mesa-dri \
     && apt-get clean
 
 # Create a virtual environment named 'buddy' for Python dependencies
@@ -28,11 +30,27 @@ RUN /opt/buddy/bin/pip install --upgrade pip
 # Set the virtual environment to be the default for any subsequent commands
 ENV PATH="/opt/buddy/bin:$PATH"
 
-# Install the Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir pytesseract chromadb llama_index pdf2image numpy onnxruntime fastapi uvicorn ollama
+# Install Python dependencies
+RUN pip install --no-cache-dir \
+    pytesseract \
+    chromadb \
+    llama_index \
+    pdf2image \
+    numpy \
+    onnxruntime \
+    fastapi \
+    uvicorn \
+    ollama \
+    pytesseract \
+    pix2text \
+    pymupdf \
+    opencv-python-headless
 
+# Create directories for cache and output
+RUN mkdir -p /app/cache /app/rough
+
+# Copy the Python script to the container
 COPY app.py /app/app.py
-EXPOSE 8000
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command to run the script
+CMD ["python", "/app/app.py"]
