@@ -3,42 +3,30 @@
 
 \begin{document}
 
-\section{CONSERVATION OF MASS}
+\section{CONSERVATION LAWS}
 
-\subsection{The Continuity Equation}
+Based on (4.1), the principle of mass conservation clearly constrains the fluid density. The implications of (4.1) for the fluid velocity field may be better displayed by using Reynolds transport theorem (3.35) with $F=\rho$ and ${\bf b}={\bf u}$ to expand the time derivative in (4.1)
+$$
+\int_{V(t)} \frac{\partial\rho(\mathbf{x}, t)}{\partial t} d V+\int_{A(t)} \rho(\mathbf{x}, t) {\bf u}(\mathbf{x}, t) \cdot {\bf n} d A = 0. \tag{4.2}
+$$
 
-The final equality can only be possible if the integrand vanishes at every point in space. If the integrand did not vanish at every point in space, then integrating (4.6) in a small volume around a point where the integrand is nonzero would produce a nonzero integral. Thus, (4.6) requires:
+This is a mass-balance statement between integrated density changes within $V(t)$ and integrated motion of its surface $A(t)$. Although general and correct, (4.2) may be hard to utilize in practice because the motion and evolution of $V(t)$ and $A(t)$ are determined by the flow, which may be unknown.
 
-\[
-\frac{\partial\rho({\bf x}, t)}{\partial t} + \nabla\cdot(\rho({\bf x}, t){\bf u}({\bf x}, t)) = 0 \quad\mathrm{or}, \quad\mathrm{i n ~ i n d e x ~ n o t a t i o n}: \quad\frac{\partial\rho}{\partial t} + \frac{\partial}{\partial {\bf x}_i}(\rho u_i) = 0. \tag{4.7}
-\]
+To develop the integral equation that represents mass conservation for an arbitrarily moving control volume $V^{*}(t)$ with surface $A^{*}(t)$, (4.2) must be modified to involve integrations over $V^{*}(t)$ and A*(t). This modification is motivated by the frequent need to conserve mass within a volume that is not a material volume, for example a stationary control volume. The first step in this modification is to set $F=\rho$ in (3.35) to obtain:
+$$
+\frac{d}{dt} \int_{V^{*}(t)} \rho(\mathbf{x}, t) d V - \int_{V^{*}(t)} \frac{\partial\rho(\mathbf{x}, t)}{\partial t} d V - \int_{A^{*}(t)} \rho(\mathbf{x}, t) {\bf b} \cdot {\bf n} d A = 0. \tag{4.3}
+$$
 
-This relationship is called the continuity equation. It expresses the principle of conservation of mass in differential form, but is insufficient for fully determining flow fields because it is a single equation that involves two field quantities, $\rho$ and ${\bf u}$, and ${\bf u}$ is a vector with three components.
+The second step is to choose the arbitrary control volume $V^{*}(t)$ to be instantaneously coincident with material volume $V(t)$ so that at the moment of interest $V(t) = V^{*}(t)$ and $A(t) = A^{*}(t)$. At this coincidence moment, the $(d/dt)\rho d V$-terms in (4.1) and (4.3) are not equal; however, the volume integration of $\partial\rho/ \partial t$ in (4.2) is equal to that in (4.3) and the surface integral of $\rho{\bf u}$ over $A(t)$ is equal to that over A*(t):
+$$
+\int_{V^{*}(t)} \frac{\partial\rho(\mathbf{x}, t)}{\partial t} d V - \int_{A(t)} \rho(\mathbf{x}, t) {\bf u}(\mathbf{x}, t) \cdot {\bf n} d A = \int_{V(t)} \frac{\partial\rho(\mathbf{x}, t)}{\partial t} d V + \nabla \cdot (\rho(\mathbf{x}, t) {\bf u}(\mathbf{x}, t)) d V = 0.
+$$
 
-The second term in (4.7) is the divergence of the mass-density flux $\rho{\bf u}$. Such flux divergence terms frequently arise in conservation statements and can be interpreted as the net loss at a point due to divergence of a flux. For example, the local $\rho$ will decrease with time if $\nabla\cdot(\rho{\bf u})$ is positive. Flux divergence terms are also called transport terms because they transfer quantities from one region to another without making a net contribution over the entire field. When integrating (4.7) over the entire domain of interest, their contribution vanishes if there are no sources at the boundaries.
+This is the general integral statement of conservation of mass for an arbitrarily moving control volume. It can be specialized to stationary, steadily moving, accelerating, or deforming control volumes by appropriate choice of b. In particular, when ${\bf b}={\bf u}$, the arbitrary control volume becomes a material volume and (4.3) reduces to (4.1).
 
-The continuity equation may alternatively be written using the definition of $D/Dt$ and $\nabla\cdot({\bf u}{\bf j})/\partial {\bf x}$:
-
-\[
-\frac{1}{D}\frac{\partial\rho({\bf x}, t)}{\partial t} = \frac{\partial\rho({\bf x}, t)}{\partial {\bf x}_i}\frac{{\bf u}_i + V - \rho\frac{\partial {\bf u}}{\partial {\bf x}_i}}{1}. \tag{4.8}.
-\]
-
-The derivative $D\rho/Dt$ is the time rate of change of fluid density following a fluid particle. It will be zero for constant density flow where $\rho$ = constant throughout the flow field, and it will be non-zero otherwise.
-
-Taken together, (4.8) and the definition of $D/Dt$ imply:
-
-\[
-\frac{\partial\rho}{\partial t} = u_i \frac{\partial\rho}{\partial x_i} + \rho \frac{\partial {\bf u}_i}{\partial x_i}. \tag{4.9}
-\]
-
-or $\rho$ = constant is a solution of (4.9) but it is not a general solution. A fluid is usually called incompressible if its density does not change with pressure. Liquids are almost incompressible. Gases are compressible, but for flow speeds less than $\sim\! 100 \, \mathrm{m/s}$ (that is, for Mach numbers <0.3) the fractional change of absolute pressure in a room temperature airflow will be small.
-
-The derivative $D\rho/Dt$ is also equal to:
-
-\[
-\frac{\partial\rho}{\partial t} = \rho \frac{\partial {\bf u}}{\partial t}. \tag{4.10}
-\]
-
-This equation shows that the time rate of change of fluid density is directly proportional to the mass flux, which is a measure of the amount of fluid flowing through a given area per unit time.
+The differential equation that represents mass conservation is obtained by applying Gauss' divergence theorem (2.30) to the surface integration in (4.6):
+$$
+\int_{V(t)} \frac{\partial\rho(\mathbf{x}, t)}{\partial t} d V + \int_{A(t)} \rho(\mathbf{x}, t) {\bf u}(\mathbf{x}, t) \cdot {\bf n} d A = \int_{V(t)} \left( \frac{\partial\rho(\mathbf{x}, t)}{\partial t} + \nabla \cdot (\rho(\mathbf{x}, t) {\bf u}(\mathbf{x}, t)) \right) d V = 0.
+$$
 
 \end{document}

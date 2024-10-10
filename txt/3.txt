@@ -1,0 +1,51 @@
+
+
+
+
+
+
+
+§ CONSERVATION LAWS
+
+
+
+ §.§ EXAMPLE 4.2
+
+
+The density in a horizontal flow 𝐮=U(y,z)𝐞_x is given by ρ(𝐱, t)=f(x-Ut,y,z), where f(x,y,z) is the density distribution at t=0. Is this flow incompressible?
+
+
+There are two ways to answer this question. First, consider (4.9) and evaluate Dρ/Dt, letting ξ=x-Ut:
+
+    Dρ/Dt=∂ρ/∂ t+𝐮·∇ρ=∂ρ/∂ t+U∂ρ/∂ x=∂ρ/∂ξ∂ξ/∂ t+U∂ρ/∂ξ∂ξ/∂ x=∂ρ/∂ξ(-U)+U∂ρ/∂ξ(1)=0.
+
+Second, consider (4.10) and evaluate ∇·𝐮:
+
+    ∇·𝐮=∂ U(y,z)/∂ x+0+0=0.
+
+This is an incompressible flow, but the density may vary when f is not constant.
+
+
+
+
+
+§ STREAM FUNCTIONS
+
+
+Consider the steady form of the continuity equation (4.7):
+
+    ∇·(ρ𝐮)  =  0. 4.11
+
+
+The divergence of the curl o f any vector field is identically zero (see Exercise 2.21), so ρ𝐮 will satisfy (4.11) when written as the curl of a vector potential Ψ :
+
+    ρ𝐮 = ∇×Ψ, 4.12
+
+for Ψ which can be specified in terms of two scalar functions: Ψ=χ∇ψ.  Putting this specification into (4.12) produces ρ𝐮=∇χ×∇ψ, because the curl of any gradient is identically zero (see Exercise 2.22). Furthermore, ∇χ is perpendicular to surfaces of constant ρ𝐮=∇χ × ∇ψ, and ∇ψ is perpendicular to surfaces of constant ψ. Therefore, three-dimensional streamlines are the intersections of the two stream surfaces, or stream functions in a three-dimensional flow.
+
+The situation is illustrated in Figure 4.1. Consider two members of each of the families of the two stream functions χ=a,  χ=b, ψ=c, ψ=d . The intersections shown as darkened lines in Figure 4.1 are the streamlines. The mass flux ṁ through the surface A bounded by the four stream surfaces (shown in gray in Figure 4.1) is calculated with area element d A ,normal 𝐧 (as shown), and Stokes' theorem.
+
+Defining the mass flux ṁ through A, and using Stokes' theorem produces:
+
+    ṁ    = ∫ρ𝐮·𝐧  d A  = ∫_A  ( ∇×Ψ ) ·𝐧  d A  = ∫_CΨ· d 𝐬 = ∫_Cχ∇ψ· d 𝐬 = ∫_Cχ d ψ
+        =  b(d-c)+a(c-d)  =  (b-a)(d-c).

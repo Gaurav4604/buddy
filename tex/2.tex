@@ -3,24 +3,46 @@
 
 \begin{document}
 
-\section{CONSERVATION OF MASS}
+\section{4.2 Conservation of Mass}
 
-\subsection{Isothermal Liquid Flows}
+\subsection{The Continuity Equation}
 
-In isothermal liquid flows, the fluid density is typically a known constant. What are the dependent field variables in this case? How many equations are needed for a successful mathematical description of such flows? What physical principles supply these equations?
+The final equality can only be possible if the integrand vanishes at every point in space. If the integrand did not vanish at every point in space, then integrating (\ref{eq:4.6}) in a small volume around a point where the integrand is nonzero would produce a nonzero integral. Thus, (\ref{eq:4.6}) requires:
 
-Solution
+\begin{equation}
+\frac{\partial\rho(\mathbf{x}, t)}{\partial t} + \nabla\cdot(\rho\mathbf{u}(\mathbf{x}, t)) = 0 \quad\text{or, in index notation: } \frac{\partial\rho}{\partial t} + \frac{\partial}{\partial x_i}(\rho u_i) = 0.\tag{4.7}
+\end{equation}
 
-When the fluid’s temperature is constant and its density is a known constant, the thermal energy of fluid elements cannot be changed by heat transfer or work because $dT = dv = 0$, so the thermodynamic characterization of the flow is complete from knowledge of the density. Thus, the dependent field variables are $\mathbf{u}$, the fluid's velocity (momentum per unit mass), and the pressure, $p$. Here, $p$ is not a thermodynamic variable; instead it is a normal force (per unit area) developed between neighboring fluid particles that either causes or results from fluid-particle acceleration, or arises from body forces. Thus, four equations are needed; one for each component of $\mathbf{u}$, and one for $p$. These equations are supplied by the principle of mass conservation, and three components of Newton's second law for fluid motion (conservation of momentum).
+This relationship is called the continuity equation. It expresses the principle of conservation of mass in differential form, but is insufficient for fully determining flow fields because it is a single equation that involves two field quantities, $\rho$ and $\mathbf{u}$, and $\mathbf{u}$ is a vector with three components.
 
-\subsection{CONSERVATION OF MASS}
+\subsection{Divergence of Mass-Density Flux}
 
-Setting aside nuclear reactions and relativistic effects, mass is neither created nor destroyed. Thus, individual mass elements — molecules, grains, fluid particles, etc. — may be tracked within a flow field because they will not disappear and new elements will not spontaneously appear. The equations representing conservation of mass in a flowing fluid are based on the principle that the mass of a specific collection of neighboring fluid particles is constant. The volume occupied by a specific collection of fluid particles is called a material volume $V(t)$. Such a volume moves and deforms within a fluid flow so that it always contains the same mass elements; none enter the volume and none leave it. This implies that a material volume's surface $A(t)$, a material surface, must move at the local fluid velocity $\mathbf{u}$ so that fluid particles inside $V(t)$ remain inside and fluid particles outside $V(t)$ remain outside. Thus, a statement of conservation of mass for a material volume in a flowing fluid is:
+The second term in (\ref{eq:4.7}) is the divergence of the mass-density flux $\rho\mathbf{u}$. Such flux divergence terms frequently arise in conservation statements and can be interpreted as the net loss at a point due to divergence of a flux. For example, the local $\rho$ will decrease with time if $\nabla\cdot(\rho\mathbf{u})$ is positive. Flux divergence terms are also called transport terms because they transfer quantities from one region to another without making a net contribution over the entire field. When integrated over the entire domain of interest, their contribution vanishes if there are no sources at the boundaries.
 
-$$
-\frac{d}{dt}\int_{V(t)} \rho(\mathbf{x}, t) d V=0.
-$$
+\subsection{Alternative Form of the Continuity Equation}
 
-where $\rho$ is the fluid density.
+The continuity equation may alternatively be written using the definition of $D/Dt$ (\ref{eq:3.5}) and $\partial(\rho u_i)/\partial x_i = u_i \partial\rho/\partial x_i + \rho \partial u_i / \partial x_i$ [see (\ref{B3.6})]:
+
+\begin{equation}
+\frac{1}{\rho(\mathbf{x}, t)}\frac{D}{Dt}\rho(\mathbf{x}, t) + \nabla\cdot\mathbf{u}(\mathbf{x}, t) = 0.\tag{4.8}
+\end{equation}
+
+The derivative $D\rho/Dt$ is the time rate of change of fluid density following a fluid particle. It will be zero for constant density flow where $\rho=$ constant throughout the flow field, and for incompressible flow where the density of fluid particles does not change but different fluid particles may have different density:
+
+\begin{equation}
+\frac{D\rho}{Dt} \equiv \frac{\partial\rho}{\partial t} + \mathbf{u}\cdot\nabla\rho = 0.\tag{4.9}
+\end{equation}
+
+Taken together (\ref{eq:4.8}) and (\ref{eq:4.9}) imply:
+
+\begin{equation}
+\nabla\cdot\mathbf{u} = 0.\tag{4.10}
+\end{equation}
+
+for incompressible flows. Constant density flows are a subset of incompressible flows; $\rho=$ constant is a solution of (\ref{eq:4.9}) but it is not a general solution. A fluid is usually called incompressible if its density does not change with pressure. Liquids are almost incompressible. Gases are compressible, but for flow speeds less than $-100\text{ m/s}$ ($\mathrm{i.s.},$ for Mach numbers <0.3) the fractional change of absolute pressure in a room temperature airflow is small. In this and several other situations, density changes in the flow are also small and (\ref{eq:4.9}) and (\ref{eq:4.10}) are valid.
+
+\subsection{General Form of the Continuity Equation}
+
+The general form of the continuity equation (\ref{eq:4.7}) is typically required when the derivative $D\rho/Dt$ is nonzero because of changes in the pressure, temperature, or molecular composition of fluid particles.
 
 \end{document}

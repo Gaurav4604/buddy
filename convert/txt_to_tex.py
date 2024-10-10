@@ -1,6 +1,9 @@
-import ollama
+from ollama import Client
 import os
 
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:11434")
+base_url = OLLAMA_URL
+ollama = Client(host=base_url)
 
 output_dir = "./tex"
 if not os.path.exists(output_dir):
@@ -37,7 +40,10 @@ for file_name in os.listdir(input_dir):
     )
 
     output = res["message"]["content"]
-    text_file_name = os.path.join(output_dir, f"{count}.tex")
+    print(file_name)
+    fn = file_name.split(".txt")[0]
+    print(fn)
+    text_file_name = os.path.join(output_dir, f"{fn}.tex")
     count += 1
     with open(text_file_name, "w", encoding="utf-8") as text_file:
         text_file.write(output)

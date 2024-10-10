@@ -6,13 +6,19 @@ os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
 
 from pix2text import Pix2Text, merge_line_texts
 import pytesseract
-import ollama
+from ollama import Client
 
 
 # Path to the PDF file
 pdf_path = "file.pdf"
 
 p2t = Pix2Text()
+
+
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:11434")
+base_url = OLLAMA_URL
+ollama = Client(host=base_url)
+
 
 # Create directory named 'rough' if it doesn't exist
 output_dir = "rough"
@@ -60,7 +66,7 @@ for page_num in range(total_pages):
         ],
     )
     output = res["message"]["content"]
-    print(output)
+
     text_file_name = os.path.join(output_dir, f"{page_num}.txt")
     with open(text_file_name, "w", encoding="utf-8") as text_file:
         text_file.write(output)

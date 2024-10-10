@@ -1,36 +1,27 @@
-`output:`
-4.2 CONSERVATION OF MASS 113
+Here is the merged response:
+
+`4.2 CONSERVATION OF MASS 113`
+
 The final equality can only be possible if the integrand vanishes at every point in space. If the integrand did not vanish at every point in space, then integrating (4.6) in a small volume around a point where the integrand is nonzero would produce a nonzero integral. Thus, (4.6) requires:
 
-$$
-\frac{\partial\rho( {\bf x}, t )} {\partial t}+\nabla\cdot( \rho( {\bf x}, t ) {\bf u} ( {\bf x}, t ) ) \,=\, 0 \quad\mathrm{o r}, \quad\mathrm{i n ~ i n d e x ~ n o t a t i o n} \colon$$
+$$\frac{\partial\rho(\mathbf{x}, t)}{\partial t} + \nabla\cdot(\rho\mathbf{u}(\mathbf{x}, t)) = 0 \quad\text{or, in index notation: } \frac{\partial\rho}{\partial t} + \frac{\partial}{\partial x_i}(\rho u_i) = 0.\tag{4.7}$$
 
-$$
-\frac{\partial\rho} {\partial t}+\frac{\partial}{\partial x_{i}} ( \rho u_{i} ) \,=\, 0. \tag{4.7}
-$$
+This relationship is called the continuity equation. It expresses the principle of conservation of mass in differential form, but is insufficient for fully determining flow fields because it is a single equation that involves two field quantities, $\rho$ and $\mathbf{u}$, and $\mathbf{u}$ is a vector with three components.
 
-This relationship is called the continuity equation. It expresses the principle of conservation of mass in differential form, but is insufficient for fully determining flow fields because it is a single equation that involves two field quantities, $\rho$ and $\mathbf{u}$ , and $u$ is a vector with three components.
+The second term in (4.7) is the divergence of the mass-density flux $\rho\mathbf{u}$. Such flux divergence terms frequently arise in conservation statements and can be interpreted as the net loss at a point due to divergence of a flux. For example, the local $\rho$ will decrease with time if $\nabla\cdot(\rho\mathbf{u})$ is positive. Flux divergence terms are also called transport terms because they transfer quantities from one region to another without making a net contribution over the entire field. When integrated over the entire domain of interest, their contribution vanishes if there are no sources at the boundaries.
 
-The second term in (4.7) is the divergence of the mass-density flux $\rho u$. Such flux divergence terms frequently arise in conservation statements and can be interpreted as the net loss at a point due to divergence of a flux. For example, the local $\rho$ will decrease with time if $\nabla\cdot( \rho\mathbf{u} )$ is positive. Flux divergence terms are also called transport terms because they transfer quantities from one region to another without making a net contribution over the entire field. When integrated over the entire domain of interest, their contribution vanishes if there are no sources at the boundaries.
+The continuity equation may alternatively be written using the definition of $D/Dt\,(3.5)$ and $\partial(\rho u_i)/\partial x_i = u_i \partial\rho/\partial x_i + \rho \partial u_i / \partial x_i$ [see (B3.6)]:
 
-The continuity equation may alternatively be written using the definition of $D / D t \, ( 3. 5 )$ and $\partial( \rho u_{i} ) / \partial x_{i} \,=\, u_{i} \partial\rho/ \partial x_{i}+\rho\partial u_{i} / \partial x_{i}$ [see (B3.6)]:
+$$\frac{1}{\rho(\mathbf{x}, t)}\frac{D}{Dt}\rho(\mathbf{x}, t) + \nabla\cdot\mathbf{u}(\mathbf{x}, t) = 0.\tag{4.8}$$
 
-$$
-\frac{1}{\rho( {\bf x}, t )} \frac{D}{D t}\rho( {\bf x}, t)+{\bf\nabla} \! \cdot{\bf u}( {\bf x}, t) \,=\, 0. \tag{4.8}
-$$
+The derivative $D\rho/Dt$ is the time rate of change of fluid density following a fluid particle. It will be zero for constant density flow where $\rho=$ constant throughout the flow field, and for incompressible flow where the density of fluid particles does not change but different fluid particles may have different density:
 
-The derivative $D \rho/ D t$ is the time rate of change of fluid density following a fluid particle. It will be zero for constant density flow where $\rho=$ constant throughout the flow field, and for incompressible flow where the density of fluid particles does not change but different fluid particles may have different density:
-
-$$
-{\frac{D \rho}{D t}} \equiv {\frac{\partial\rho}{\partial t}}+{\bf u} \cdot\nabla\rho\,=\, 0. \tag{4.9}
-$$
+$$\frac{D\rho}{Dt} \equiv \frac{\partial\rho}{\partial t} + \mathbf{u}\cdot\nabla\rho = 0.\tag{4.9}$$
 
 Taken together (4.8) and (4.9) imply:
 
-$$
-\nabla\cdot{\bf u} ~=~ 0 \tag{4.10}
-$$
+$$\nabla\cdot\mathbf{u} = 0\tag{4.10}$$
 
-for incompressible flows. Constant density flows are a subset of incompressible flows; $\rho=$ constant is a solution of (4.9) but it is not a general solution. A fluid is usually called incompressible if its density does not change with pressure. Liquids are almost incompressible. Gases are compressible, but for flow speeds less than $-100m/s$ (that is, for Mach numbers <0.3) the fractional change of absolute pressure in a room temperature airflow is small. In this and several other situations, density changes in the flow are also small and (4.9) and (4.10) are valid.
+for incompressible flows. Constant density flows are a subset of incompressible flows; $\rho=$ constant is a solution of (4.9) but it is not a general solution. A fluid is usually called incompressible if its density does not change with pressure. Liquids are almost incompressible. Gases are compressible, but for flow speeds less than $-100\text{ m/s}$ ($\mathrm{i.s.},$ for Mach numbers <0.3) the fractional change of absolute pressure in a room temperature airflow is small. In this and several other situations, density changes in the flow are also small and (4.9) and (4.10) are valid.
 
-The general form of the continuity equation (4.7) is typically required when the derivative $D \rho/ D t$ is nonzero because of changes in the pressure, temperature, or molecular composition of fluid particles.
+The general form of the continuity equation (4.7) is typically required when the derivative $D\rho/Dt$ is nonzero because of changes in the pressure, temperature, or molecular composition of fluid particles.

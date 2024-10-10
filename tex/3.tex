@@ -3,37 +3,42 @@
 
 \begin{document}
 
-\section{Conservation Laws}
+\section{CONSERVATION LAWS}
+\subsection{EXAMPLE 4.2}
 
-\subsection{Mass Conservation}
+The density in a horizontal flow $\mathbf{u}=U(y,z)\mathbf{e}_x$ is given by $\rho(\mathbf{x}, t)=f(x-Ut,y,z)$, where $f(x,y,z)$ is the density distribution at $t=0$. Is this flow incompressible?
 
-Based on (\ref{eq:4.1}), the principle of mass conservation clearly constrains the fluid density. The implications of (\ref{eq:4.1}) for the fluid velocity field may be better displayed by using Reynolds transport theorem (\ref{eq:3.35}) with $F=\rho$ and ${\bf b}={\bf u}$ to expand the time derivative in (\ref{eq:4.1}):
+\begin{proof}
+There are two ways to answer this question. First, consider (4.9) and evaluate $\frac{D\rho}{Dt}$, letting $\xi=x-Ut$:
 $$
-\int_{V ( t )} \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\int_{A ( t )} \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, 0. \tag{42}
+\frac{D\rho}{Dt}=\frac{\partial\rho}{\partial t}+\mathbf{u}\cdot\nabla\rho=\frac{\partial\rho}{\partial t}+U\frac{\partial\rho}{\partial x}=\frac{\partial\rho}{\partial\xi}\frac{\partial\xi}{\partial t}+U\frac{\partial\rho}{\partial\xi}\frac{\partial\xi}{\partial x}=\frac{\partial\rho}{\partial\xi}(-U)+U\frac{\partial\rho}{\partial\xi}(1)=0.
 $$
-This is a mass-balance statement between integrated density changes within $V ( t )$ and integrated motion of its surface $A ( t )$. Although general and correct, (\ref{eq:4.2}) may be hard to utilize in practice because the motion and evolution of $V ( t )$ and $A ( t )$ are determined by the flow, which may be unknown.
-
-To develop the integral equation that represents mass conservation for an arbitrarily moving control volume $V^{*} ( t )$ with surface $A^{*} ( t )$, (\ref{eq:4.2}) must be modified to involve integrations over $V^{*} ( t )$ and $A^{*} ( t )$. This modification is motivated by the frequent need to conserve mass within a volume s not a material volume, for example a stationary control volume.
-
-The first step in this modification is to set $F=\rho$ in (\ref{eq:3.35}) to obtain:
+Second, consider (4.10) and evaluate $\nabla\cdot\mathbf{u}$:
 $$
-\frac{d} {d t} \, \int_{V^{*} ( t )} \! \rho( {\bf x}, t ) d V-\! \int_{V^{*} ( t )} \, \frac{\partial\rho( {\bf x}, t )} {\partial t} d V-\! \int_{A^{*} ( t )} \! \rho( {\bf x}, t ) {\bf b} \cdot{\bf n} \, d A \,=\, 0.
+\nabla\cdot\mathbf{u}=\frac{\partial U(y,z)}{\partial x}+0+0=0.
+$$
+This is an incompressible flow, but the density may vary when $f$ is not constant.
+
+\end{proof}
+
+\section{STREAM FUNCTIONS}
+
+Consider the steady form of the continuity equation (4.7):
+$$
+\nabla\cdot(\rho\mathbf{u}) ~=~ 0. \tag{4.11}
 $$
 
-The second step is to choose the arbitrary control volume $V^{*} ( t )$ to be instantaneously coincident with material volume $V ( t )$ so that at the moment of interest $V ( t )=V^{*} ( t )$ and $A ( t )=A^{*} ( t )$. At this coincidence moment, the $(d/dt)$ pdV-terms in (\ref{eq:4.1}) and (\ref{eq:4b}) are different.
+The divergence of the curl $\mathrm{o f}$ any vector field is identically zero (see Exercise 2.21), so $\rho\mathbf{u}$ will satisfy (4.11) when written as the curl of a vector potential $\Psi$ :
+$$
+\rho\mathbf{u} ~=~ \nabla\times\mathbf{\Psi}, \tag{4.12}
+$$
+for $\Psi$ which can be specified in terms of two scalar functions: $\Psi=\chi\nabla\psi.$  Putting this specification into (4.12) produces $\rho\mathbf{u}=\nabla\chi\times\nabla\psi,$ because the curl of any gradient is identically zero (see Exercise 2.22). Furthermore, $\nabla\chi$ is perpendicular to surfaces of constant $\rho\mathbf{u}=\nabla\chi\, \times\, \nabla\psi$, and $\nabla\psi$ is perpendicular to surfaces of constant $\psi$. Therefore, three-dimensional streamlines are the intersections of the two stream surfaces, or stream functions in a three-dimensional flow.
 
-\begin{align*}
-\int_{V ( t )} \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\int_{A ( t )} \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, 0.
-\end{align*}
+The situation is illustrated in Figure 4.1. Consider two members of each of the families of the two stream functions $\chi=a, \, \chi=b, \psi=c, \psi=d$ . The intersections shown as darkened lines in Figure 4.1 are the streamlines. The mass flux $\dot{m}$ through the surface $A$ bounded by the four stream surfaces (shown in gray in Figure 4.1) is calculated with area element $d A$ ,normal $\mathbf{n}$ (as shown), and Stokes' theorem.
 
-and
-
-\begin{align*}
-\int_{V ( t )} \frac{\partial\rho( \mathbf{x}, t )} {\partial t} \, d V+\int_{A ( t )} \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \cdot\mathbf{n} \, d A \,=\, \int_{V ( t )} \! \left\{\frac{\partial\rho( \mathbf{x}, t )} {\partial t}+\nabla\! \cdot\! \left( \rho( \mathbf{x}, t ) \mathbf{u} ( \mathbf{x}, t ) \right) \right\} d V \,=\, 0.
-\end{align*}
-
-In particular, when ${\bf b}={\bf u}$,
-
-The two equations for the same system are different in their surface integrals.
+Defining the mass flux $\dot{m}$ through $A,$ and using Stokes' theorem produces:
+$$
+\begin{aligned} {\dot{m}} & {{} \,=\, \int\rho\mathbf{u}\cdot\mathbf{n} \, d A \,=\, \int_{A} \, ( \nabla\times\mathbf{\Psi} ) \cdot\mathbf{n} \, d A \,=\, \int_{C} \mathbf{\Psi}\cdot d \mathbf{s} \,=\, \int_{C} \chi\nabla\psi\cdot d \mathbf{s} \,=\, \int_{C} \chi d \psi} \\ {} & {{} \,=\, b(d-c)+a(c-d) \,=\, (b-a)(d-c). \end{aligned}
+$$}
 
 \end{document}

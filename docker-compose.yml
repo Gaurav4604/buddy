@@ -6,6 +6,9 @@ services:
     volumes:
       - ./file.pdf:/app/file.pdf # Mount the file.pdf into the container
       - ./output:/app/rough # Mount the output directory to the host
+      - ./tex:/app/tex # Mount the output directory to the host
+      - ./txt:/app/tex # Mount the output directory to the host
+      - ./cache/pix2text_cache:/root/.pix2text
     # ports:
     #   - "8000:8000" # Expose the buddy app on port 5000
     depends_on:

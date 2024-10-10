@@ -31,26 +31,19 @@ RUN /opt/buddy/bin/pip install --upgrade pip
 ENV PATH="/opt/buddy/bin:$PATH"
 
 # Install Python dependencies
-RUN pip install --no-cache-dir \
-    pytesseract \
-    chromadb \
-    llama_index \
-    pdf2image \
-    numpy \
-    onnxruntime \
-    fastapi \
-    uvicorn \
-    ollama \
-    pytesseract \
-    pix2text \
-    pymupdf \
-    opencv-python-headless
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Install model data from Pix2Text
+RUN python -c "from pix2text import Pix2Text; Pix2Text()"
+
+
 
 # Create directories for cache and output
-RUN mkdir -p /app/cache /app/rough
+RUN mkdir -p /app/cache /app/rough /app/convert /app/tex /app/txt
 
 # Copy the Python script to the container
-COPY app.py /app/app.py
+COPY ./convert/* /app/convert/
 
 # Command to run the script
-CMD ["python", "/app/app.py"]
+CMD ["bash", "-c", "python /app/convert/pdf_to_txt.py && python /app/convert/txt_to_tex.py && python /app/convert/tex_to_txt.py"]
