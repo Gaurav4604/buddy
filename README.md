@@ -1,12 +1,12 @@
 # Motivation
 
-Document preprocessing is required for RAG (Retrieval-Augmented Generation) chain processing, and documents should be properly formatted, as improper formatting will result in a garbage-in, garbage-out scenario. Current OCR methods struggle with extracting documents that contain both text and math symbols, often misinterpreting mathematical expressions or losing important text data. The more accurate solutions are cloud-based, expensive, and locked behind paywalls. To address this, I’ve used LLaMA 3.2 (3B) with OCR and specialized math extraction, merging the results for more accurate document processing. This setup:
+Document preprocessing is required for RAG (Retrieval-Augmented Generation) chain processing, and documents should be properly formatted, as improper formatting will result in a garbage-in, garbage-out scenario. Current OCR methods struggle with extracting documents that contain both text and math symbols, often misinterpreting mathematical expressions or losing important text data. The more accurate solutions are cloud-based, expensive, and locked behind paywalls. To address this, I’ve used LLaMA 3.2 (3B) with OCR and math extraction, merging the results for more accurate document processing. This setup:
 
 1. Converts PDFs to text,
-2. Processes math into LaTeX format and merges the data,
+2. Processes math into LaTeX format and merges the data
 3. Reformats it to display math symbols as plaintext
 
-all within a self-hosted Docker image, providing an affordable and robust solution.
+all within a self-hosted Docker image, providing an free and robust solution.
 *(I've tested it on a PDF file on thermodynamics, works pretty great!)*
 
 ## Tools and Requirements for Installation
