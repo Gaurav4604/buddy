@@ -7,6 +7,7 @@ Document preprocessing is required for RAG (Retrieval-Augmented Generation) chai
 3. Reformats it to display math symbols as plaintext
 
 all within a self-hosted Docker image, providing an affordable and robust solution.
+*(I've tested it on a PDF file on thermodynamics, works pretty great!)*
 
 ## Tools and Requirements for Installation
 
