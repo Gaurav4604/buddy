@@ -10,7 +10,7 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 
-input_dir = "./rough/"
+input_dir = "./raw/"
 count = 0
 
 for file_name in os.listdir(input_dir):

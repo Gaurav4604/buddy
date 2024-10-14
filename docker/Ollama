@@ -5,7 +5,7 @@ FROM ollama/ollama:latest
 ENV OLLAMA_MODELS=/root/.ollama/models
 
 # Download the llama3.2 model during the build process
-RUN ollama serve & sleep 5 && ollama run llama3.2
+RUN ollama serve & sleep 5 && ollama pull llama3.2 && ollama pull llava-phi3
 
 # Expose the port for Ollama service
 EXPOSE 11434

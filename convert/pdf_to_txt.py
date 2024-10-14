@@ -10,7 +10,7 @@ from ollama import Client
 
 
 # Path to the PDF file
-pdf_path = "file.pdf"
+pdf_path = "files/thermodynamics.pdf"
 
 p2t = Pix2Text()
 
@@ -20,8 +20,7 @@ base_url = OLLAMA_URL
 ollama = Client(host=base_url)
 
 
-# Create directory named 'rough' if it doesn't exist
-output_dir = "rough"
+output_dir = "raw"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
