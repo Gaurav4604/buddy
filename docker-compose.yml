@@ -4,10 +4,10 @@ services:
       dockerfile: ./docker/Python
     container_name: buddy_app
     volumes:
-      - ./file.pdf:/app/file.pdf # Mount the file.pdf into the container
-      - ./output:/app/rough # Mount the output directory to the host
+      - ./files:/app/files
+      - ./raw:/app/raw # Mount the output directory to the host
       - ./tex:/app/tex # Mount the output directory to the host
-      - ./txt:/app/tex # Mount the output directory to the host
+      - ./txt:/app/txt
       - ./cache/pix2text_cache:/root/.pix2text
     # ports:
     #   - "8000:8000" # Expose the buddy app on port 5000
