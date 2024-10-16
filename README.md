@@ -19,7 +19,7 @@ all within a self-hosted Docker image, providing an free and robust solution.
 
 ## How to Use
 
-- place your file, name it **file.pdf** in the root directory and run the following command: `docker-compose up --build`
+- place your file, name it **files/thermodynamics.pdf** in the root directory and run the following command: `docker-compose up --build`
 
 ## Outputs
 
