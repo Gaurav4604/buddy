@@ -1,32 +1,33 @@
-`output:`
-4.2 CONSERVATION OF MASS 113 The final equality can only be possible if the integrand vanishes at every point in space. If the integrand did not vanish at every point in space, then integrating (4.6) in a small volume around a point where the integrand is nonzero would produce a nonzero integral. Thus, (4.6) requires:
+Here is the merged and formatted LaTeX version:
 
-$$
-\frac{\partial\rho(\mathbf{x}, t)}{\partial t} + \nabla \cdot (\rho\mathbf{u}) = 0 \quad\text{or, in index notation: } \frac{\partial\rho}{\partial t} + \frac{\partial}{\partial x_i}(\rho u_i) = 0. \tag{4.7}
-$$
+\documentclass{article}
+
+\begin{document}
+
+\section{4.2 CONSERVATION OF MASS 113}
+The final equality can only be possible if the integrand vanishes at every point in space. If the integrand did not vanish at every point in space, then integrating (4.6) in a small volume around a point where the integrand is nonzero would produce a nonzero integral. Thus, (4.6) requires:
+\[
+\frac{\partial\rho( {\bf x}, t )} {\partial t}+\nabla\cdot( \rho( {\bf x}, t ) {\bf u} ( {\bf x}, t ) ) = 0 \quad\text{or, in index notation:}\quad
+\frac{\partial\rho}{\partial t}+\frac{\partial}{\partial x_i}(\rho u_i) = 0. \tag{4.7}
+\]
 
 This relationship is called the continuity equation. It expresses the principle of conservation of mass in differential form, but is insufficient for fully determining flow fields because it is a single equation that involves two field quantities, $\rho$ and $\mathbf{u}$ , and $u$ is a vector with three components.
 
-The second term in (4.7) is the divergence of the mass-density flux $\rho\mathbf{u}$. Such flux divergence terms frequently arise in conservation statements and can be interpreted as the net loss at a point due to divergence of a flux. For example, the local $\rho$ will decrease with time if $\nabla \cdot (\rho\mathbf{u})$ is positive. Flux divergence terms are also called transport terms because they transfer quantities from one region to another without making a net contribution over the entire field. When integrated over the entire domain of interest, their contribution vanishes if there are no sources at the boundaries.
+The second term in (4.7) is the divergence of the mass-density flux $\rho\mathbf{u}$. Such flux divergence terms frequently arise in conservation statements and can be interpreted as the net loss at a point due to divergence of a flux. For example, the local $\rho$ will decrease with time if $\nabla\cdot(\rho\mathbf{u})$ is positive. Flux divergence terms are also called transport terms because they transfer quantities from one region to another without making a net contribution over the entire field. When
+$\frac{\partial}{\partial x_i} (\rho u_i) = \rho \frac{\partial u_i}{\partial x_i} + u_i \frac{\partial\rho}{\partial x_i}$, they can be understood as transferring quantities from one region to another without making a net contribution over the entire field. When integrated over the entire domain of interest, their contribution vanishes if there are no sources at the boundaries.
 
-The continuity equation may alternatively be written using the definition of $\frac{D}{Dt}$ $(3.5)$ and $\frac{\partial(\rho u_i)}{\partial x_i} = \rho\frac{\partial u_i}{\partial x_i} + u_i\frac{\partial\rho}{\partial x_i}$ [see (B3.6)]:
+The continuity equation may alternatively be written using the definition of $D/Dt$ (3.5) and
+$\frac{\partial \rho}{\partial t} + u_i \frac{\partial \rho}{\partial x_i} = u_i \frac{\partial \rho}{\partial x_i} + \rho \frac{\partial u_i}{\partial x_i}$ [see (B3.6)]:
+\[
+\frac{D\rho(x,t)}{Dt} = -u_i \frac{\partial \rho}{\partial x_i}.
+\]
+The derivative $\frac{D\rho}{Dt}$ is the time rate of change of fluid density following a fluid particle. It will be zero for constant density flow where $\rho$= constant throughout the flow field, and
+the fractional change of absolute pressure in room temperature airflow is very small. For example,
 
-$$
-\frac{1}{\rho(\mathbf{x}, t)}\frac{D\rho}{Dt} + \nabla \cdot \mathbf{u} = 0. \tag{4.8}
-$$
+\begin{itemize}
+\item A fluid is usually called incompressible if its density does not change with pressure.
+\item Liquids are almost incompressible.
+\item Gases are compressible, but for flow speeds less than $100 \, \mathrm{m/s}$ (that is, for Mach numbers <0.3) the fractional change of absolute pressure in room temperature airflow is very small.
+\end{itemize}
 
-The derivative $\frac{D\rho}{Dt}$ is the time rate of change of fluid density following a fluid particle. It will be zero for constant density flow where $\rho = \text{constant}$ throughout the flow field, and for incompressible flow where the density of fluid particles does not change but different fluid particles may have different density:
-
-$$
-\frac{D\rho}{Dt} \equiv \frac{\partial\rho}{\partial t} + \mathbf{u}\cdot\nabla\rho = 0. \tag{4.9}
-$$
-
-Taken together (4.8) and (4.9) imply:
-
-$$
-\nabla \cdot \mathbf{u} = 0 \tag{4.10}
-$$
-
-for incompressible flows. Constant density flows are a subset of incompressible flows; $\rho = \text{constant}$ is a solution of (4.9) but it is not a general solution. A fluid is usually called incompressible if its density does not change with pressure. Liquids are almost incompressible. Gases are compressible, but for flow speeds less than $100\text{m/s}$ (that is, for Mach numbers <0.3) the fractional change of absolute pressure in a room temperature airflow is small. In this and several other situations, density changes in the flow are also small and (4.9) and (4.10) are valid.
-
-The general form of the continuity equation (4.7) is typically required when the derivative $\frac{D\rho}{Dt}$ is nonzero because of changes in the pressure, temperature, or molecular composition of fluid particles.
+\end{document}

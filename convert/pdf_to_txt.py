@@ -15,7 +15,7 @@ pdf_path = "files/thermodynamics.pdf"
 p2t = Pix2Text()
 
 
-OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:11434")
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 base_url = OLLAMA_URL
 ollama = Client(host=base_url)
 
@@ -31,6 +31,9 @@ if not os.path.exists(cache_dir):
 # Open the PDF
 doc = fitz.open(pdf_path)
 total_pages = doc.page_count
+
+
+system_prompt = f"convert the data to tex file format only, display nothing else, other than the required tex. ensure that it has tags such as begin, section, subsection and has usepackage amsmath"
 
 # Convert each page to image and extract text
 for page_num in range(total_pages):
@@ -49,7 +52,7 @@ for page_num in range(total_pages):
         f"""this is a math based extraction latex format extraction: {p2t_text}"""
     )
 
-    prompt_3 = """give me a merged response, with valid math, and retain all text info, in format -> `output:`"""
+    prompt_3 = """merge it and convert it to proper latex document"""
     res = ollama.chat(
         model="llama3.2",
         messages=[
@@ -61,7 +64,11 @@ for page_num in range(total_pages):
                 "role": "user",
                 "content": prompt_2,
             },
-            {"role": "user", "content": prompt_3},
+            {
+                "role": "user",
+                "content": prompt_3,
+                "options": {system_prompt: system_prompt},
+            },
         ],
     )
     output = res["message"]["content"]
