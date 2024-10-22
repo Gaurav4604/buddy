@@ -1,33 +1,54 @@
-Here is the merged and formatted LaTeX version:
+Here is the merged and converted LaTeX document:
 
 \documentclass{article}
 
 \begin{document}
 
-\section{4.2 CONSERVATION OF MASS 113}
-The final equality can only be possible if the integrand vanishes at every point in space. If the integrand did not vanish at every point in space, then integrating (4.6) in a small volume around a point where the integrand is nonzero would produce a nonzero integral. Thus, (4.6) requires:
-\[
-\frac{\partial\rho( {\bf x}, t )} {\partial t}+\nabla\cdot( \rho( {\bf x}, t ) {\bf u} ( {\bf x}, t ) ) = 0 \quad\text{or, in index notation:}\quad
-\frac{\partial\rho}{\partial t}+\frac{\partial}{\partial x_i}(\rho u_i) = 0. \tag{4.7}
-\]
+Finite-state machines 3
 
-This relationship is called the continuity equation. It expresses the principle of conservation of mass in differential form, but is insufficient for fully determining flow fields because it is a single equation that involves two field quantities, $\rho$ and $\mathbf{u}$ , and $u$ is a vector with three components.
+\section*{The Tap-Light Finite State Machine}
 
-The second term in (4.7) is the divergence of the mass-density flux $\rho\mathbf{u}$. Such flux divergence terms frequently arise in conservation statements and can be interpreted as the net loss at a point due to divergence of a flux. For example, the local $\rho$ will decrease with time if $\nabla\cdot(\rho\mathbf{u})$ is positive. Flux divergence terms are also called transport terms because they transfer quantities from one region to another without making a net contribution over the entire field. When
-$\frac{\partial}{\partial x_i} (\rho u_i) = \rho \frac{\partial u_i}{\partial x_i} + u_i \frac{\partial\rho}{\partial x_i}$, they can be understood as transferring quantities from one region to another without making a net contribution over the entire field. When integrated over the entire domain of interest, their contribution vanishes if there are no sources at the boundaries.
+\subsection*{Introduction}
 
-The continuity equation may alternatively be written using the definition of $D/Dt$ (3.5) and
-$\frac{\partial \rho}{\partial t} + u_i \frac{\partial \rho}{\partial x_i} = u_i \frac{\partial \rho}{\partial x_i} + \rho \frac{\partial u_i}{\partial x_i}$ [see (B3.6)]:
-\[
-\frac{D\rho(x,t)}{Dt} = -u_i \frac{\partial \rho}{\partial x_i}.
-\]
-The derivative $\frac{D\rho}{Dt}$ is the time rate of change of fluid density following a fluid particle. It will be zero for constant density flow where $\rho$= constant throughout the flow field, and
-the fractional change of absolute pressure in room temperature airflow is very small. For example,
+A finite state machine (FSM) is a mathematical model that can be in one of a finite number of states. The tap-light FSM is an example of such a model.
 
-\begin{itemize}
-\item A fluid is usually called incompressible if its density does not change with pressure.
-\item Liquids are almost incompressible.
-\item Gases are compressible, but for flow speeds less than $100 \, \mathrm{m/s}$ (that is, for Mach numbers <0.3) the fractional change of absolute pressure in room temperature airflow is very small.
-\end{itemize}
+\subsection*{The Diagram}
+
+In the diagram, the two circles, named $o f f$ and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap.
+
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{figure1}
+  \caption{The tap-on/tap-off table light}
+  \label{fig:tap-light}
+\end{center}
+
+\subsection*{Transitions}
+
+We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, indicating the starting state of the diagram. The transitions are as follows:
+
+- From $o f f$ to on: tap
+- From on to $o f f$: tap
+
+\subsection*{Behavior}
+
+The FSM can be shown by putting a dot inside the current state. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
+
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{figure2}
+  \caption{The tap-light in the $O F F$ state}
+  \label{fig:tap-light-fff}
+\end{center}
+
+All this behavior can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state.
+
+\subsection*{Current State}
+
+Consider our previous diagram, with the tap-light in the $O F F$ state. If we receive a tap event, the diagram changes to the on state, as shown in fig. 3.
+
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{figure3}
+  \caption{The tap-light in the on state}
+  \label{fig:tap-light-on}
+\end{center}
 
 \end{document}

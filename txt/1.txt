@@ -5,30 +5,54 @@
 
 
 
-§ CONSERVATION LAWS
+§ 0.1 WHAT ARE EVENT-DRIVEN SYSTEMS?
 
 
-Based on (4.1), the principle of mass conservation clearly constrains the fluid density. The implications of (4.1) for the fluid velocity field may be better displayed by using Reynolds transport theorem (3.35) with F=ρ and b= u to expand the time derivative in (4.1)
-
-    ∫_V(t)∂ρ(𝐱, t)/∂ t d V+∫_A(t)ρ(𝐱, t)  u(𝐱, t) · n d A = 0. 4.2
+As noted above, reactive or event-driven systems can cover a broad spectrum of applications. The most common are:
 
 
-This is a mass-balance statement between integrated density changes within V(t) and integrated motion of its surface A(t). Although general and correct, (4.2) may be hard to utilize in practice because the motion and evolution of V(t) and A(t) are determined by the flow, which may be unknown.
+  * Graphical User Interfaces (GUIs)
 
-To develop the integral equation that represents mass conservation for an arbitrarily moving control volume V^*(t) with surface A^*(t), (4.2) must be modified to involve integrations over V^*(t) and A*(t). This modification is motivated by the frequent need to conserve mass within a volume that is not a material volume, for example a stationary control volume. The first step in this modification is to set F=ρ in (3.35) to obtain:
+  * Embedded Systems
 
-    d/dt∫_V^*(t)ρ(𝐱, t) d V - ∫_V^*(t)∂ρ(𝐱, t)/∂ t d V - ∫_A^*(t)ρ(𝐱, t)  b· n d A = 0. 4.3
-
-
-The second step is to choose the arbitrary control volume V^*(t) to be instantaneously coincident with material volume V(t) so that at the moment of interest V(t) = V^*(t) and A(t) = A^*(t). At this coincidence moment, the (d/dt)ρ d V-terms in (4.1) and (4.3) are not equal; however, the volume integration of ∂ρ/ ∂ t in (4.2) is equal to that in (4.3) and the surface integral of ρ u over A(t) is equal to that over A*(t):
-
-    ∫_V^*(t)∂ρ(𝐱, t)/∂ t d V - ∫_A(t)ρ(𝐱, t)  u(𝐱, t) · n d A = ∫_V(t)∂ρ(𝐱, t)/∂ t d V + ∇· (ρ(𝐱, t)  u(𝐱, t)) d V = 0.
+  * Communication Protocols
 
 
-This is the general integral statement of conservation of mass for an arbitrarily moving control volume. It can be specialized to stationary, steadily moving, accelerating, or deforming control volumes by appropriate choice of b. In particular, when b= u, the arbitrary control volume becomes a material volume and (4.3) reduces to (4.1).
+It is very difficult to write correct code for GUIs without using event-driven techniques. In this course, we will show you how to construct bug-free GUIs.
 
-The differential equation that represents mass conservation is obtained by applying Gauss' divergence theorem (2.30) to the surface integration in (4.6):
 
-    ∫_V(t)∂ρ(𝐱, t)/∂ t d V + ∫_A(t)ρ(𝐱, t)  u(𝐱, t) · n d A = ∫_V(t)( ∂ρ(𝐱, t)/∂ t + ∇· (ρ(𝐱, t)  u(𝐱, t)) ) d V = 0.
 
+ §.§ Embedded Systems
+
+
+If you are an engineer, you will almost certainly be involved in designing or implementing an embedded control system for a product. The reason is simple: a microcontroller is the cheapest and most flexible way to implement the control section of almost every electronic product. Those of you who are studying the courses “Software Engineering and Project” or “Embedded Computer Systems” will find that knowledge of event-driven systems will significantly simplify the software for your projects.
+
+
+
+ §.§ Communication Protocols
+
+
+Modern computer systems are extensively networked, to allow them to exchange data. All computer communication depends on a protocol for the exchange of data. Communication protocols need to be able to respond to events, such as: arrival of a message, arrival of an acknowledgement, timeout after sending a message, and so on. All these events can occur in any order. A protocol can only be implemented reliably using event-driven programming techniques.
+
+A “protocol stack” is a layered set of intercommunicating protocols that together permit computer-to-computer communication. Each layer in the stack is a reactive program. A protocol stack is thus, by its very nature, highly reactive, and highly concurrent.
+
+
+
+ §.§ History
+
+
+The ideas behind finite state machines have been around for a long time now. In the 1930s, Alan Turing did research on computable functions, and invented the “Turing machine”, a simple processor that has been proved to have the same capabilities as any current-day computer.
+
+In the 1940s, McCulloch and Pitts modelled the behaviour of nerve networks, using ideas similar to those presented in these notes.
+
+In the mid 1950s, papers by Mealy and Moore, from the Engineering community, had a big influence on the design of switching systems in telephone exchanges. Both described finite state machines as we now know them. We will look at the nature of their work a little later on.
+
+At the end of the 1950s, Rabin and Scott published a paper that introduced non-deteministic finite state machines, and provided fruitful insights for further work. They received the ACM Turing award for this work.
+
+
+
+ §.§ An introductory example - the tap-light
+
+
+Let us consider a simple but familiar example: an electric table lamp that is controlled by simply "tapping" it: when a user taps the lamp, it turns on; tap again, and it turns back off; tap again, and it turns back on; and so on. We can represent this behaviour in a state-diagram, as shown in fig. 1.
 

@@ -10,7 +10,7 @@ from ollama import Client
 
 
 # Path to the PDF file
-pdf_path = "files/thermodynamics.pdf"
+pdf_path = "files/automata.pdf"
 
 p2t = Pix2Text()
 
@@ -46,7 +46,7 @@ for page_num in range(total_pages):
     p2t_text = p2t.recognize(img=pages[0])
     tess_text = pytesseract.image_to_string(pages[0])
 
-    prompt_1 = f"""I have a physics based document page extracted out, it has an OCR based extraction: {tess_text}, this does not have valid math symbols"""
+    prompt_1 = f"""I have a document page extracted out, it has an OCR based extraction: {tess_text}, this does not have valid math symbols"""
 
     prompt_2 = (
         f"""this is a math based extraction latex format extraction: {p2t_text}"""

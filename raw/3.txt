@@ -1,61 +1,45 @@
-Here is the extracted text in LaTeX format:
+Here is the merged and formatted LaTeX document:
 
 \documentclass{article}
+\usepackage{amsmath}
 
-\title{Conservation Laws Example 4.2}
+\title{Finite Automata}
 \author{}
 \date{}
 
 \begin{document}
 
+\maketitle
+
 \section*{Introduction}
-The density in a horizontal flow $\mathbf{u} = U(y, z)\mathbf{e}_x$ is given by $\rho(\mathbf{x}, t) = f(x - Ut, y, z)$, where $f(x, y, z)$ is the density distribution at $t=0$. Is this flow incompressible?
 
-\section*{Solution}
-There are two ways to answer this question. First, consider (4.9) and evaluate $\frac{D\rho}{Dt}$, letting $\xi = x - Ut$:
+A finite state machine has one or more states, represented on a state-diagram as circles. As a result of an external event, the FSM can make a transition from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an initial state, represented on the diagram by a lightning-trike. The current state is represented by a large dot inside the state.
 
-$$
-\frac{D\rho}{Dt}=\frac{\partial\rho}{\partial t}+\mathbf{u}\cdot\nabla\rho=\frac{\partial\rho}{\partial t}+U\frac{\partial\rho}{\partial x}=\frac{\partial\rho}{\partial\xi}\frac{\partial\xi}{\partial t}+U\frac{\partial\rho}{\partial\xi}\frac{\partial\xi}{\partial x}=\frac{\partial\rho}{\partial\xi}(-U)+U\frac{\partial\rho}{\partial\xi}(1)=0.
-$$
+\section*{Another example - text recognition}
 
-Second, consider (4.10) and evaluate $\nabla\cdot\mathbf{u}$:
+We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognise the words "for", and float" in a stream of text. We could construct a finite state machine with the following transitions:
 
 $$
-\nabla\cdot\mathbf{u}=\frac{\partial U(y, z)}{\partial x}+0+0=0.
+\begin{array}{cc}
+f & o & r \\
+\mathbf{f_0} & \text{start for} & \mathbf{f l o}\\
+o & a & t\\
+\mathbf{f l o} & \mathbf{f l o a}\\
+\end{array}
 $$
 
-This is an incompressible flow, but the density may vary when $f$ is not constant.
+Figure 4: The text recogniser
 
-\section*{Stream Functions}
+In the FSM there are states named after the partially-recognised words: $f, f o, f l, f l o,$ and floa. There are also two accepting states named $\, f o r$ and $\, f l o a t,$ shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state $f o,$ the machine will not recognise the character $x,$ because there is no transition labelled with the event $x$ , from state $\, f o$ . If an unrecognised event occurs, the machine "dies", and ceases to process symbols -- it no longer has a current state. Effectively, the dot has been lost.
 
-Consider the steady form of the continuity equation (4.7):
+Diagrams of this kind often result from describing the behaviour of a regular expression, a topic we will deal with later.
 
-$$
-\nabla\cdot\mathbf{u}=0
-$$
+\section*{Central concepts}
 
-The divergence of the curl of any vector field is identically zero (see Exercise 2.21), so $\rho\{\mathbf{u}\} \nabla$ will satisfy (4.11) when written as the curl of a vector potential $\Psi$:
+There are a number of basic concepts that are central to the study of finite automata. These concepts are:
 
-$$
-\Psi=\chi\nabla\psi
-$$
-
-Furthermore, $\rho\mathbf{u}=\nabla\chi\times\nabla\psi$, because the curl of any gradient is identically zero.
-
-\section*{Streamlines}
-
-Let $\chi=a, \psi=c$ in Figure 4.1 are the streamlines. The mass flux $\dot{m}$ through the surface $A$ bounded by the four stream surfaces (shown in gray in Figure 4.1) is calculated with area element $d A$, normal n (as shown), and Stokes' theorem.
-
-Defining the mass flux $\dot{m}$ through $A$, and using Stokes' theorem produces:
-
-$$
-\begin{aligned}
-\dot{m} &= \int\rho\mathbf{u}\cdot\mathbf{n}\,d A = \int_{A}(\nabla\times\mathbf{\Psi})\cdot\mathbf{n}\,d A = \int_{C}\mathbf{\Psi}\cdot d\mathbf{s} = \int_{C}\chi\nabla\psi\cdot d\mathbf{s}\\
-&=\int_{C}\chi d\psi\\
-&= b(d-c)+a(c-d) = (b-a)(d-c).
-\end{aligned}
-$$
+- Alphabet (a set of symbols)
+- String (a list of symbols from an alphabet)
+- Language (a set of strings from the same alphabet)
 
 \end{document}
-
-Note: I removed the unnecessary author and date fields, as they are not relevant to the content of the document. Also, I used the `article` class as it is a common choice for scientific documents. You can adjust the class according to your needs.

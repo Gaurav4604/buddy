@@ -3,23 +3,34 @@
 
 \begin{document}
 
-\section{4.2 CONSERVATION OF MASS}
+\chapter{Chapter 0}
 
-\subsection*{EXAMPLE 4.1}
+\section{Introduction}
 
-In isothermal liquid flows, the fluid density is typically a known constant. What are the dependent field variables in this case? How many equations are needed for a successful mathematical description of such flows? What physical principles supply these equations?
+Most of your programming experience will have been acquired by writing conventional data-processing style programs that read data, process it, and generate output. Programs that simply read and write files are among the oldest uses of computers, and are known as batch programs — the program runs, computes and, when it is finished, the result is available.
 
-Solution
-When the fluid's temperature is constant and its density is a known constant, the thermal energy of fluid elements cannot be changed by heat transfer or work because $dT=dv=0$, so the thermodynamic characterization of the flow is complete from knowledge of the density. Thus, the dependent field variables are ${\bf u}$, the fluid's velocity (momentum per unit mass), and the pressure, $p$. Here, $p$ is not a thermodynamic variable; instead it is a normal force (per unit area) developed between neighboring fluid particles that either causes or results from fluid-particle acceleration, or arises from body forces. Thus, four equations are needed; one for each component of ${\bf u}$, and one for $p$. These equations are supplied by the principle of mass conservation, and three components of Newton's second law for fluid motion (conservation of momentum).
+If the program interacts with a user, and asks for data as it is needed for the computation, it is called an interactive program. Interactive programs were the next stage in the evolution of computers and software. You have probably written many interactive programs during your coursework so far.
 
-\subsection*{4.2 CONSERVATION OF MASS}
+However, many programs in the real world need to be able to process data as it arrives at the system. These programs are called reactive or event-driven because they need to be able to react to the data as soon as it arrives.
 
-Setting aside nuclear reactions and relativistic effects, mass is neither created nor destroyed. Thus, individual mass elements - molecules, grains, fluid particles, etc. - may be tracked within a flow field because they will not disappear and new elements will not spontaneously appear. The equations representing conservation of mass in a flowing fluid are based on the principle that the mass of a specific collection of neighboring fluid particles is constant. The volume occupied by a specific collection of fluid particles is called a material volume $V(t)$. Such a volume moves and deforms within a fluid flow so that it always contains the same mass elements; none enter the volume and none leave it. This implies that a material volume's surface $A(t)$, a material surface, must move at the local fluid velocity ${\bf u}$ so that fluid particles inside $V(t)$ remain inside and fluid particles outside $V(t)$ remain outside. Thus, a statement of conservation of mass for a material volume in a flowing fluid is:
+A familiar example of a reactive program is any program with a Graphical User Interface (GUI). Such a program does not wait for a specific button to be pressed, but is instead ready to respond to any button that is pressed.
 
-$$
-\frac{d}{dt} \int_{V(t)} \rho({\bf x},t) dV = 0,
-$$
+Another application of reactive programs is embedded systems. These are systems that control electrical appliances such as DVD players, air conditioners, toasters, mobile phones, burglar alarms, car fuel injection systems, and many others. More than 99\% of all microprocessors made in the world are hiding inside an embedded system.
 
-where $\rho$ is the fluid density. Figure 3.20 depicts a material volume when the control surface velocity $\textbf{b}$ is equal to ${\bf u}$. The primary concept here is equivalent to an infinitely flexible, perfectly sealed thin-walled balloon containing fluid. The balloon's contents play the role of the material volume $V(t)$ with the balloon itself defining the material surface $A(t)$. And, because the balloon is sealed, the total mass of fluid inside the balloon remains constant as the balloon moves, expands, contracts, or deforms.
+Reactive programs have three main characteristics:
+
+\subsection{Characteristics}
+
+\subsubsection{1. They are driven by the availability of data} 
+
+When a particular piece of data becomes available for processing, we say that an event occurs (hence event-driven programs). From a software viewpoint, the order in which events can occur is unpredictable — e.g., a DVD player cannot predict which button a user will press next. This means that the number of execution paths in a reactive program is much larger than in an interactive program.
+
+\subsubsection{2. They are concurrent} 
+
+Reactive systems are usually carrying out multiple activities at the same time. For example, a single web browser process can have multiple windows opened where a different download is in progress in each window. While doing this, the browser still responds to user mouse-clicks and key-strokes. From the viewpoint of the web browser, the arrival of data for each web-page or of a mouse-click is simply an event that can occur at any time.
+
+\subsubsection{3. The user is always in control} 
+
+While the program is processing data, it cannot choose to ignore the user, rather it must respond to the user's events (mouse-clicks, or key-strokes) in a timely fashion.
 
 \end{document}

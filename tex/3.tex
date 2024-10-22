@@ -1,44 +1,38 @@
 \documentclass{article}
 \usepackage{amsmath}
 
+\title{Finite Automata}
+
+\author{}
+\date{}
+
 \begin{document}
 
-\section{CONSERVATION LAWS}
-\subsection{EXAMPLE 4.2}
+\maketitle
 
-The density in a horizontal flow $\mathbf{u}=U(y,z)\mathbf{e}_x$ is given by $\rho(\mathbf{x}, t)=f(x-Ut,y,z)$, where $f(x,y,z)$ is the density distribution at $t=0$. Is this flow incompressible?
+\section*{Introduction}
+A finite state machine has one or more states, represented on a state-diagram as circles. As a result of an external event, the FSM can make a transition from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an initial state, represented on the diagram by a lightning-trike. The current state is represented by a large dot inside the state.
 
-\begin{proof}
-There are two ways to answer this question. First, consider (4.9) and evaluate $\frac{D\rho}{Dt}$, letting $\xi=x-Ut$:
-$$
-\frac{D\rho}{Dt}=\frac{\partial\rho}{\partial t}+\mathbf{u}\cdot\nabla\rho=\frac{\partial\rho}{\partial t}+U\frac{\partial\rho}{\partial x}=\frac{\partial\rho}{\partial\xi}\frac{\partial\xi}{\partial t}+U\frac{\partial\rho}{\partial\xi}\frac{\partial\xi}{\partial x}=\frac{\partial\rho}{\partial\xi}(-U)+U\frac{\partial\rho}{\partial\xi}(1)=0.
-$$
-Second, consider (4.10) and evaluate $\nabla\cdot\mathbf{u}$:
-$$
-\nabla\cdot\mathbf{u}=\frac{\partial U(y,z)}{\partial x}+0+0=0.
-$$
-This is an incompressible flow, but the density may vary when $f$ is not constant.
+\section*{Another example - text recognition}
+We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognise the words "for", and float" in a stream of text. We could construct a finite state machine with the following transitions:
 
-\end{proof}
+\begin{array}{cc}
+f & o & r \\
+\mathbf{f_0} & \text{start for} & \mathbf{f l o}\\
+o & a & t\\
+\mathbf{f l o} & \mathbf{f l o a}\\
+\end{array}
 
-\section{STREAM FUNCTIONS}
+Figure 4: The text recogniser
 
-Consider the steady form of the continuity equation (4.7):
-$$
-\nabla\cdot(\rho\mathbf{u}) ~=~ 0. \tag{4.11}
-$$
+In the FSM there are states named after the partially-recognised words: $f, f o, f l, f l o,$ and floa. There are also two accepting states named $\, f o r$ and $\, f l o a t,$ shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state $f o,$ the machine will not recognise the character $x,$ because there is no transition labelled with the event $x$ , from state $\, f o$ . If an unrecognised event occurs, the machine "dies", and ceases to process symbols -- it no longer has a current state. Effectively, the dot has been lost.
 
-The divergence of the curl $\mathrm{o f}$ any vector field is identically zero (see Exercise 2.21), so $\rho\mathbf{u}$ will satisfy (4.11) when written as the curl of a vector potential $\Psi$ :
-$$
-\rho\mathbf{u} ~=~ \nabla\times\mathbf{\Psi}, \tag{4.12}
-$$
-for $\Psi$ which can be specified in terms of two scalar functions: $\Psi=\chi\nabla\psi.$  Putting this specification into (4.12) produces $\rho\mathbf{u}=\nabla\chi\times\nabla\psi,$ because the curl of any gradient is identically zero (see Exercise 2.22). Furthermore, $\nabla\chi$ is perpendicular to surfaces of constant $\rho\mathbf{u}=\nabla\chi\, \times\, \nabla\psi$, and $\nabla\psi$ is perpendicular to surfaces of constant $\psi$. Therefore, three-dimensional streamlines are the intersections of the two stream surfaces, or stream functions in a three-dimensional flow.
+Diagrams of this kind often result from describing the behaviour of a regular expression, a topic we will deal with later.
 
-The situation is illustrated in Figure 4.1. Consider two members of each of the families of the two stream functions $\chi=a, \, \chi=b, \psi=c, \psi=d$ . The intersections shown as darkened lines in Figure 4.1 are the streamlines. The mass flux $\dot{m}$ through the surface $A$ bounded by the four stream surfaces (shown in gray in Figure 4.1) is calculated with area element $d A$ ,normal $\mathbf{n}$ (as shown), and Stokes' theorem.
-
-Defining the mass flux $\dot{m}$ through $A,$ and using Stokes' theorem produces:
-$$
-\begin{aligned} {\dot{m}} & {{} \,=\, \int\rho\mathbf{u}\cdot\mathbf{n} \, d A \,=\, \int_{A} \, ( \nabla\times\mathbf{\Psi} ) \cdot\mathbf{n} \, d A \,=\, \int_{C} \mathbf{\Psi}\cdot d \mathbf{s} \,=\, \int_{C} \chi\nabla\psi\cdot d \mathbf{s} \,=\, \int_{C} \chi d \psi} \\ {} & {{} \,=\, b(d-c)+a(c-d) \,=\, (b-a)(d-c). \end{aligned}
-$$}
+\section*{Central concepts}
+There are a number of basic concepts that are central to the study of finite automata. These concepts are:
+- Alphabet (a set of symbols)
+- String (a list of symbols from an alphabet)
+- Language (a set of strings from the same alphabet)
 
 \end{document}

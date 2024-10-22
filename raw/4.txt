@@ -1,0 +1,62 @@
+Here is the merged text in a proper LaTeX format:
+
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+
+\section{Finite-state Machines 5}
+
+\subsection{0.5.1 Alphabets}
+
+An alphabet is a finite, non-empty set of symbols. It is conventional to use the Greek letter $\Sigma$ (sigma), to represent an alphabet. Some examples of common alphabets are:
+
+1. $\Sigma = \{0, 1\}$: The set of binary digits.
+2. $\Sigma = \{A, B, \cdots, Z\}$: The set of uppercase Roman letters.
+3. $\Sigma = \{N, E, S, W\}$: The set of compass-points.
+
+\subsection{0.5.2 Strings}
+
+A string is a finite sequence of symbols drawn from an alphabet. A string is also sometimes called a word. Some examples of strings are:
+
+1. $100101$ is a string from the binary alphabet $\Sigma = \{0, 1\}$.
+2. $THEORY$ is a string from the Roman alphabet $\Sigma = \{A, B, \cdots, Z\}$.
+3. $SE$ is a string from the compass-points alphabet $\Sigma = \{N, E, S, W\}$.
+
+\subsection{Empty String}
+
+The empty string is a string with no symbols in it, usually denoted by the Greek letter $\epsilon$. Clearly, the empty string is a string that can be chosen from any alphabet.
+
+\subsection{Length of String}
+
+It is handy to classify strings by their length, the number of symbols in the string. The string $THEORY$ has a length of 6. The usual notation for the length of a string $s$ is $|s|$. Thus, $|THEORY| = 6$, $|1001| = 4$, and $|\epsilon| = 0$.
+
+\subsection{Powers of an Alphabet}
+
+We are often interested in the set of all strings of a certain length, say $k$, drawn from an alphabet $\Sigma$. This can be constructed by taking the Cartesian product, of $\Sigma$ with itself $k$ times: $\Sigma \times \Sigma \times \cdots \Sigma$. We can represent this symbolically, using exponential notation, as $\Sigma^k$.
+
+Clearly, $\Sigma^0 = \{\epsilon\}$, for any alphabet $\Sigma$, because $\epsilon$ is the only string whose length is zero. For the alphabet $\Sigma = \{N, E, S, W\}$, we find:
+
+$$
+\Sigma^1 = \{\mathrm{N}, \mathrm{E}, \mathrm{S}, \mathrm{W}\}
+$$
+
+$$
+\Sigma^2 = \{\mathrm{N N}, \mathrm{N E}, \mathrm{N S}, \mathrm{N W}, \mathrm{E N}, \mathrm{E E}, \mathrm{E S}, \mathrm{E W}, \mathrm{S N}, \mathrm{S E}, \mathrm{S S}, \mathrm{S W}, \mathrm{W N}, \mathrm{W E}, \mathrm{W S}, \mathrm{W W}\}
+$$
+
+$\Sigma^3$, has 64 members, since it contains $4 \times 4 \times 4$ members.
+
+The set of all strings that can be drawn from an alphabet is conventionally denoted, using the so-called Kleene star, by $\Sigma^*$, and of course has an infinite number of members. For the alphabet $\Sigma = \{0, 1\}$,
+
+$$
+\Sigma^* = \{\epsilon, 0, 1, 00, 01, 10, 11, 000, 001, 010, \cdots\}
+$$
+
+Clearly, $\Sigma^* = \Sigma^0 \cup \Sigma^1 \cup \Sigma^2 \cup \cdots$
+
+\end{document}
+
+Note that I've used the `article` class and the `geometry` package to set the margins. You can adjust these settings according to your needs.
+
+Also, I've kept the original LaTeX formatting of the mathematical expressions. If you want to change this, please let me know.

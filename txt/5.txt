@@ -1,0 +1,51 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+§ INTRODUCTION
+
+Sometimes we do not want to include the empty string in the set. The set of non-empty strings is denoted by Σ^+. This is often referred to as the Kleene plus, by analogy with the Kleene star.
+
+Clearly Σ^+=Σ^1∪Σ^2∪Σ^3∪⋯ 
+And Σ^*={ϵ}∪Σ^+
+
+Concatenating strings
+Let s be the string composed of the m symbols s_1 s_1 s_2⋯ s_m, and t be the string composed of the n symbols t_1 t_1 t_2⋯ t_n . The concatenation of the strings s and t, denoted by st, is the string of length m+n, composed of the symbols s_1 s_1 s_2⋯ s_m t_1 t_1 t_2⋯ t_n .
+
+It is clear that the string ϵ can be concatenated with any other string s and that: es = se = s.  Thus, it behaves as the identity value for concatenation.
+
+
+
+§ LANGUAGES
+
+
+A set of strings, all of which have been chosen from Σ^* of an alphabet Σ, is called a language. If L ⊆Σ^* , then L is said to be a language over Σ .
+
+A language over Σ does not need to include strings with  all the symbols of Σ. The implication of this is that when we know that L is a language over Σ, then L is also a language over any alphabet that is a superset of Σ.
+
+The use of the word “language” here is entirely consistent with everyday usage. For example, the language "English" can be considered to be a set of strings drawn from the alphabet of Roman letters.
+
+The programming language Java, or indeed any other programming language, is another example. The set of syntactically-correct programs is the set of strings that can be formed from the alphabet of the language (the ASCII characters).
+
+Using the alphabets we defined earlier, we can specify some languages that might be of interest to us:
+
+1. The language consisting of valid binary byte-values (a string of 8 or 13):
+00000001 ∈Σ^8
+2. The set of even-parity binary numbers (having an even number of 1's), whose first digit is a 1: 
+11.1.101001.10.1011.+3
+3. The set of valid compass directions: (N, S, E, W, NE, NW, SE, SW).
+4. Σ^* is a language over an alphabet Σ.
+
+5. {ϵ} , the language consisting only of the empty string, is a language over any alphabet. This language has just one string: ϵ.
+
+Note also that an alphabet Σ is always of a finite size, but a language over that alphabet can either be of finite or infinite size.
+

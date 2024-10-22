@@ -3,46 +3,43 @@
 
 \begin{document}
 
-\section{4.2 Conservation of Mass}
+\section{Finite-state machines 3}
 
-\subsection{The Continuity Equation}
+\subsection{The Tap-Light Finite State Machine}
 
-The final equality can only be possible if the integrand vanishes at every point in space. If the integrand did not vanish at every point in space, then integrating (\ref{eq:4.6}) in a small volume around a point where the integrand is nonzero would produce a nonzero integral. Thus, (\ref{eq:4.6}) requires:
+\begin{center}
+\includegraphics[width=0.5\textwidth]{figure1}
+\caption{The tap-on/tap-off table light}
+\label{fig:tap-light}
+\end{center}
 
-\begin{equation}
-\frac{\partial\rho(\mathbf{x}, t)}{\partial t} + \nabla\cdot(\rho\mathbf{u}(\mathbf{x}, t)) = 0 \quad\text{or, in index notation: } \frac{\partial\rho}{\partial t} + \frac{\partial}{\partial x_i}(\rho u_i) = 0.\tag{4.7}
-\end{equation}
+\section{Introduction}
+A finite state machine (FSM) is a mathematical model that can be in one of a finite number of states. The tap-light FSM is an example of such a model.
 
-This relationship is called the continuity equation. It expresses the principle of conservation of mass in differential form, but is insufficient for fully determining flow fields because it is a single equation that involves two field quantities, $\rho$ and $\mathbf{u}$, and $\mathbf{u}$ is a vector with three components.
+\subsection{The Diagram}
+In the diagram, the two circles, named \emph{o f f} and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap.
 
-\subsection{Divergence of Mass-Density Flux}
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{figure2}
+  \caption{The tap-light in the $O F F$ state}
+  \label{fig:tap-light-fff}
+\end{center}
 
-The second term in (\ref{eq:4.7}) is the divergence of the mass-density flux $\rho\mathbf{u}$. Such flux divergence terms frequently arise in conservation statements and can be interpreted as the net loss at a point due to divergence of a flux. For example, the local $\rho$ will decrease with time if $\nabla\cdot(\rho\mathbf{u})$ is positive. Flux divergence terms are also called transport terms because they transfer quantities from one region to another without making a net contribution over the entire field. When integrated over the entire domain of interest, their contribution vanishes if there are no sources at the boundaries.
+\subsection{Transitions}
+We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, indicating the starting state of the diagram. The transitions are as follows:
 
-\subsection{Alternative Form of the Continuity Equation}
+$\begin{array}{rll} & \text{o f f}\xrightarrow{\text{tap}}&\text{on}\\ &\text{on}\xrightarrow{\text{tap}}&\text{o f f}\end{array}$
 
-The continuity equation may alternatively be written using the definition of $D/Dt$ (\ref{eq:3.5}) and $\partial(\rho u_i)/\partial x_i = u_i \partial\rho/\partial x_i + \rho \partial u_i / \partial x_i$ [see (\ref{B3.6})]:
+\subsection{Behavior}
+The FSM can be shown by putting a dot inside the current state. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 3.
 
-\begin{equation}
-\frac{1}{\rho(\mathbf{x}, t)}\frac{D}{Dt}\rho(\mathbf{x}, t) + \nabla\cdot\mathbf{u}(\mathbf{x}, t) = 0.\tag{4.8}
-\end{equation}
+$\begin{center} \includegraphics[width=0.5\textwidth]{figure3} \caption{The tap-light in the on state} \label{fig:tap-light-on} \end{center}$
 
-The derivative $D\rho/Dt$ is the time rate of change of fluid density following a fluid particle. It will be zero for constant density flow where $\rho=$ constant throughout the flow field, and for incompressible flow where the density of fluid particles does not change but different fluid particles may have different density:
+All this behavior can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state.
 
-\begin{equation}
-\frac{D\rho}{Dt} \equiv \frac{\partial\rho}{\partial t} + \mathbf{u}\cdot\nabla\rho = 0.\tag{4.9}
-\end{equation}
+\subsection{Current State}
+Consider our previous diagram, with the tap-light in the $O F F$ state. If we receive a tap event, the diagram changes to the on state, as shown in fig. 4.
 
-Taken together (\ref{eq:4.8}) and (\ref{eq:4.9}) imply:
-
-\begin{equation}
-\nabla\cdot\mathbf{u} = 0.\tag{4.10}
-\end{equation}
-
-for incompressible flows. Constant density flows are a subset of incompressible flows; $\rho=$ constant is a solution of (\ref{eq:4.9}) but it is not a general solution. A fluid is usually called incompressible if its density does not change with pressure. Liquids are almost incompressible. Gases are compressible, but for flow speeds less than $-100\text{ m/s}$ ($\mathrm{i.s.},$ for Mach numbers <0.3) the fractional change of absolute pressure in a room temperature airflow is small. In this and several other situations, density changes in the flow are also small and (\ref{eq:4.9}) and (\ref{eq:4.10}) are valid.
-
-\subsection{General Form of the Continuity Equation}
-
-The general form of the continuity equation (\ref{eq:4.7}) is typically required when the derivative $D\rho/Dt$ is nonzero because of changes in the pressure, temperature, or molecular composition of fluid particles.
+$\begin{center} \includegraphics[width=0.5\textwidth]{figure4} \caption{The tap-light in the on state} \label{fig:tap-light-on-2} \end{center}$
 
 \end{document}
