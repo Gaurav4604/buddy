@@ -11,3 +11,4 @@ pix2text
 pymupdf
 opencv-python-headless
 pylatexenc
+ultralytics

@@ -1,45 +1,33 @@
-Here is the merged and formatted LaTeX document:
+Here is the modified LaTeX document with the added image data:
 
 \documentclass{article}
 \usepackage{amsmath}
 
-\title{Finite Automata}
-\author{}
-\date{}
-
 \begin{document}
 
-\maketitle
+\section*{0.3.1 Some nomenclature}
 
-\section*{Introduction}
+A finite state machine has one or more states, represented on a state-diagram as circles. As a result of an external event, the FSM can make a transition from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an initial state, represented on the diagram by a lightning-strike. The current state is represented by a large dot inside the state.
 
-A finite state machine has one or more states, represented on a state-diagram as circles. As a result of an external event, the FSM can make a transition from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an initial state, represented on the diagram by a lightning-trike. The current state is represented by a large dot inside the state.
+\section*{0.4 Another example - text recognition}
 
-\section*{Another example - text recognition}
+We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognise the words “for”, and “float”, in a stream of text. We could construct a finite state machine, where the sequence of events is the sequence of characters in the input stream.
 
-We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognise the words "for", and float" in a stream of text. We could construct a finite state machine with the following transitions:
+\begin{figure}[h]
+  \centering
+  Reactive programming involves event-driven programs that process data as it arrives, unlike traditional interactive programs which wait for user input.
+  Finite state machines (FSM) are an efficient way to describe a system's behavior by reacting to events and processing data concurrently. In this context, the example of recognising specific words like "for" or "float" in a stream of text is used as a demonstration. Such recognition can be achieved using a finite state machine where each sequence of characters represents different states within the FSM.
+  The resulting FSM for such recognition is illustrated above and serves as an effective summary.
 
-$$
-\begin{array}{cc}
-f & o & r \\
-\mathbf{f_0} & \text{start for} & \mathbf{f l o}\\
-o & a & t\\
-\mathbf{f l o} & \mathbf{f l o a}\\
-\end{array}
-$$
+Furthermore, it is noted that finite automata also deal with concepts like alphabet (a set of symbols), string (a list of symbols from an alphabet), and language (a collection of strings from the same alphabet). These concepts are valuable in digital electronics applications such as designing, testing, and implementing systems.
+\end{figure}
 
-Figure 4: The text recogniser
-
-In the FSM there are states named after the partially-recognised words: $f, f o, f l, f l o,$ and floa. There are also two accepting states named $\, f o r$ and $\, f l o a t,$ shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state $f o,$ the machine will not recognise the character $x,$ because there is no transition labelled with the event $x$ , from state $\, f o$ . If an unrecognised event occurs, the machine "dies", and ceases to process symbols -- it no longer has a current state. Effectively, the dot has been lost.
+In the FSM there are states named after the partially-recognised words: $f$, $fo$, $fl$, $flo,$ and $ftoa$. There are also two accepting states named $\, f o r$ and $\, f l o a t$, shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state $fo$, the machine will not recognise the character $x$, because there is no transition labelled with the event $x$, from state $f_o$. If an unrecognised event occurs, the machine "dies", and ceases to process symbols -- it no longer has a current state. Effectively, the dot has been lost.
 
 Diagrams of this kind often result from describing the behaviour of a regular expression, a topic we will deal with later.
 
-\section*{Central concepts}
+\section*{0.5 Central concepts}
 
-There are a number of basic concepts that are central to the study of finite automata. These concepts are:
-
-- Alphabet (a set of symbols)
-- String (a list of symbols from an alphabet)
-- Language (a set of strings from the same alphabet)
+There are a number of basic concepts that are central to the study of finite automata. These concepts are alphabet (a set of symbols), string (a list of symbols from an alphabet), and language (a set of strings from the same alphabet).
 
 \end{document}
