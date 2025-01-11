@@ -1,14 +1,6 @@
-pytesseract
-chromadb
-llama_index
+texify
+doclayout-yolo
 pdf2image
-numpy
-onnxruntime
-fastapi
-uvicorn
 ollama
-pix2text
-pymupdf
-opencv-python-headless
 pylatexenc
-ultralytics
+pytesseract
