@@ -32,6 +32,8 @@ ENV PATH="/opt/buddy/bin:$PATH"
 
 # Install Python dependencies
 COPY requirements.txt /app/requirements.txt
+COPY document_semantic_inference.pt /app/document_semantic_inference.pt
+
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Install model data from Pix2Text
