@@ -22,6 +22,10 @@ class DocContent(BaseModel):
     text: str
 
 
+class ImageDescription(BaseModel):
+    description: str
+
+
 class Formula(BaseModel):
     formula: str
 
@@ -72,6 +76,29 @@ def extract_table(image: str) -> Table:
         options={"temperature": 0},
     )
     return Table.model_validate_json(res["message"]["content"])
+
+
+def extract_image(image: str) -> Table:
+    """
+    Extracts the contents of a Image, and returns it as description
+    Args:
+        image (str): the image path to be extracted
+    Returns:
+        str: contents of Image
+    """
+    res = ollama.chat(
+        model="minicpm-v",
+        messages=[
+            {
+                "role": "user",
+                "content": "give me the contents of this Image",
+                "images": [image],
+            }
+        ],
+        format=ImageDescription.model_json_schema(),
+        options={"temperature": 0},
+    )
+    return ImageDescription.model_validate_json(res["message"]["content"]).description
 
 
 template_formula = """
@@ -145,6 +172,26 @@ this is a math based extraction latex format extraction
 give me a merged response, with valid math, and retain all text info
 """
 
+cleanup_template = """
+The following is an output from a parser image to text parser: 
+<parser-text>
+{}
+</parser-text>
+this parser converts valid math symbols along with text data from image to text,
+this parser has a tendency to add extra words that were not a part of
+the orginal text,
+
+
+The following is the text content from the image:
+<ocr-text>
+{}
+</ocr-text>
+it might have mis-represented math symbols
+
+You're supposed to merge these two outputs together and return text,
+that is supposed to accurately represent the text content with valid math
+"""
+
 
 def extract_text(image: str) -> str:
     """
@@ -174,6 +221,20 @@ def extract_text(image: str) -> str:
         options={"temperature": 0},
     )
     result = DocContent.model_validate_json(res["message"]["content"]).text
+
+    res = ollama.chat(
+        model="marco-o1",
+        messages=[
+            {
+                "role": "user",
+                "content": cleanup_template.format(result, tesseract_text),
+            },
+        ],
+        format=DocContent.model_json_schema(),
+        options={"temperature": 0},
+    )
+    result = DocContent.model_validate_json(res["message"]["content"]).text
+
     return LatexNodes2Text().latex_to_text(result)
 
 

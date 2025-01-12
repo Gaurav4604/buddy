@@ -1,10 +1,19 @@
-from utils import DetectionInfo, model, extract_formula, extract_table, extract_text
+import cv2
+from utils import (
+    DetectionInfo,
+    model,
+    extract_formula,
+    extract_table,
+    extract_text,
+    extract_image,
+)
 import os
+import shutil
 from PIL import Image
 from pdf2image import convert_from_path
 
 
-def extraction_pipeline(input_img: str):
+def extraction_pipeline(input_img: str, page_num: int):
     # Load the pre-trained model
 
     det_res = model.predict(
@@ -45,6 +54,13 @@ def extraction_pipeline(input_img: str):
     # Create the /temp folder if it doesn't exist
     os.makedirs("temp", exist_ok=True)
 
+    # for outputs from the pages
+    os.makedirs("outputs", exist_ok=True)
+    if not os.path.exists(os.path.join("outputs", "images")):
+        os.makedirs(os.path.join("outputs", "images"))
+    if not os.path.exists(os.path.join("outputs", "pages")):
+        os.makedirs(os.path.join("outputs", "pages"))
+
     # Read the original image using PIL
     original_img = Image.open(input_img).convert("RGB")
 
@@ -62,9 +78,23 @@ def extraction_pipeline(input_img: str):
 
     content = ""
 
-    for det in all_detections:
+    for idx, det in enumerate(all_detections):
         if det.class_id == 3:  # image data
-            pass
+            description = extract_image(det.file_location)
+            save_path = f"outputs/images/page_{page_num}_{idx}.jpg"
+            shutil.copyfile(dst=save_path, src=det.file_location)
+            content += """
+            <image>
+            <path>
+            {}
+            </path>
+            <description>
+            {}
+            </description>
+            </image>
+            """.format(
+                save_path, description
+            )
         elif det.class_id == 8:
             formula = extract_formula(det.file_location)
             content += formula + "\n"
@@ -72,11 +102,13 @@ def extraction_pipeline(input_img: str):
             table = extract_table(det.file_location)
             content += table.construct_table() + "\n"
         else:
-            print(det.file_location)
             text = extract_text(det.file_location)
             content += text + "\n"
 
-    os.rmdir("temp")
+    with open(f"outputs/pages/page_{page_num}.txt", "w", encoding="utf-8") as f:
+        f.write(content)
+
+    shutil.rmtree("temp")
     return content
 
 
@@ -97,10 +129,10 @@ def extraction_pipeline_from_pdf(pdf_path: str) -> str:
         page.save(page_filename, "PNG")
 
         # Now run the existing pipeline function
-        page_content = extraction_pipeline(page_filename)
+        page_content = extraction_pipeline(page_filename, page_num=i)
         all_pages_content.append(f"--- Page {i+1} ---\n{page_content}")
 
-    os.rmdir("pages")
+    shutil.rmtree("temp")
     # Combine text from all pages
     return "\n".join(all_pages_content)
 
