@@ -2,12 +2,6 @@
 
 0.3.1 Some nomenclature
 A finite state machine has one or more _states_, represented on a state-diagram as circles. As a result of an external _event_, the FSM can make a _transition_ from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an _initial state_, represented on the diagram by a lightning-strike. The _current state_ is represented by a large dot inside the state.
-A finite state machine has one or more _states_, represented on a state-diagram as circles. As a result of an external _event_, the FSM can make a _transition_ from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an _initial state_, represented on the diagram by a lightning-strike. The _current state_ is represented by a large dot inside the state.
-# 0.4 Another example - text recognition
-
-
-    0.4 Another example - text recognition
-
 # 0.4 Another example - text recognition
 
 
@@ -17,10 +11,10 @@ We consider here another example, that arises in text-processing programs, such 
 
             <image>
             <path>
-            outputs/images/page_1_6.jpg
+            outputs/images/page_1_4.jpg
             </path>
             <description>
-            <start> f o r for floa float fo fl flo a t l o o f e start </start>
+            <start> f o r for l a t floa float fo flo fla </ start>
             </description>
             </image>
             # Figure 4: The text recogniser

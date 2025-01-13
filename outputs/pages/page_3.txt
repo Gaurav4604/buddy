@@ -1,40 +1,27 @@
 Sometimes we do not want to include the empty string in the set. The set of non-empty strings is denoted by Σ^+. This is often referred to as the Kleene plus, by analogy with the Kleene star.
 Σ^+ = Σ^1∪Σ^2∪Σ^3∪…
 ∑^⋆ = {ϵ}∪Σ^+
-And ∑^⋆=ϵ∪Σ^+.
 # Concatenating strings
 
 
-    Let  S    = the set of all strings, 
-        
-            T    = a subset of  S, 
-        
-            U    = another subset of  S.
+    Let  S = ⋃_i=1^n A_i 
+           where each  A_i  is a string.
+           We aim to concatenate all strings in  S.
 
 
-The process involves combining elements from sets T and U to form a new string in set S. This can be represented as:
+**Steps:***
+1. **Initialization:** Start with an empty string `result = ""`.
+2. **Iteration:** For each string `A_i` in set `S`, append it to `result`.
+3. **Concatenation:** The final concatenated string is stored in `result`.
 
-
-    C = T 	imes U,
-
-where each element of C is an ordered pair (t, u) with t ∈ T and u ∈ U. The concatenation operation combines these pairs to form a single string in S.
-
-For example, if T = {a, b} and U = {1, 2}, then the concatenated set C would be:
-
-
-    C = {(a,1), (a,2), (b,1), (b,2)}.
-
-Each pair (t, u) can then be transformed into a string by concatenating t and u, resulting in the set of strings:
-
-
-    S = {a1, a2, b1, b2}.
-
-This demonstrates how elements from different subsets are combined to create new strings within the original set.
+**Example:***
+- If `S = {
 Let s be the string composed of the m symbols s₁s₁s₂⋯ sₘ, and t be the string composed of the n symbols t₁t₁t₂⋯ tₙ. The _concatenation_ of the strings s and t, denoted by st, is the string of length m+n, composed of the symbols s₁s₁s₂⋯ sₘt₁t₁t₂⋯ tₙ.
 
 Let s be the string composed of the m symbols s₁s₁s₂⋯ sₘ, and t be the string composed of the n symbols t₁t₁t₂⋯ tₙ. The concatenation of the strings s and t, denoted by st, is the string of length m+n, composed of the symbols s₁s₁s₂⋯ sₘt₁t₁t₂⋯ tₙ.
 It is clear that the string ϵ can be concatenated with any other string s and that: ϵs = se = s. ϵ thus behaves as the identity value for concatenation.
 0.5.3 Lang14885
+
 0.5.3 Languages
 A set of strings, all of which have been chosen from Σ* of an alphabet Σ, is called a _language_. If Σ is an alphabet, and L⊆Σ*, then L is said to be a language over Σ.
 
@@ -62,14 +49,13 @@ Using the alphabets we defined earlier, we can specify some languages that might
 
 1. The language consisting of valid binary byte-values (a string of 8 0’s or 1’s):
 00000000, 00000001, —, 11111111 This is just ©°.
-1. The language consisting of valid binary byte-values (a string of 8 0's or 1's):
 2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a
 1: 11, 101, 110, 1001, 1010, 1100, 1111,—,
 
 3. The set of valid compass directions: N, S, E, W, NE, NW, SE, SW, NNE, ENE,—
 4. Σ^* is alphabet Σ.
 
-4.    * is a language over an alphabet ™.
+4. * is a language over an alphabet ™.
 5. e, the language consisting only of the empty string, is a language over any alphabet. This language has just one string: e.
 6. ∅, the language with no strings, is a language over any alphabet. Note that ∅≠ϵ, because ϵ contains one string.
 Notice also that an alphabet Σ is always of a finite size, but a language over that alphabet can either be of finite or of infinite size.

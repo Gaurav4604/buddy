@@ -4,21 +4,20 @@
             outputs/images/page_0_0.jpg
             </path>
             <description>
-            <p> A simple diagram showing a toggle switch with two positions: OFF and ON. The switch is depicted as having an 'OFF' position on one side, labeled with arrows pointing away from it, indicating that something needs to be done (like tapping) to move the switch.</p><ul><li>OFF</li></ul><ul><li>tap</li></ul><ul><li>ON</li></ul><ul><li>tap</li></ul><ul><li>tap</li></ul>
+            <p> A simple diagram showing a switch with two positions: OFF and ON. The arrow labeled 'tap' indicates that tapping either position will change it to its opposite.</p>
             </description>
             </image>
             Figure 1: The tap-on/tap-off table light
-Figure 1: The tap-on/tap-off table light
 In the diagram, the two circles, named off and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap. We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, labelled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named off.) A diagram such as this is called a finite state machine(FSM).
 This state-diagram very neatly and succinctly captures the behavior of the light: Initially, the light is off, and the FSM is in state off. Upon receipt of a tap event, the system changes state to on, indicating that the light is now on. The FSM is now in state on. Upon receipt of a tap event, the system changes state to off, indicating that the light is now off. The FSM is now in state off.
 We can show the current state by putting a dot inside it. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
 
             <image>
             <path>
-            outputs/images/page_0_6.jpg
+            outputs/images/page_0_5.jpg
             </path>
             <description>
-            <p>A simple diagram showing a switch with two positions: OFF and ON. The OFF position has an arrow pointing to it labeled 'OFF' and another circle inside it marked as 'OFF'. The ON position is shown on the right side, also with an arrow pointing towards it labeled 'ON'. There are arrows indicating that tapping either of these circles will change their state from OFF to ON or vice versa. </p>
+            <p> A simple diagram showing a switch with two positions: OFF and ON. The arrow indicates that tapping on either position will change it to its opposite state.</p>
             </description>
             </image>
             Figure 2: The tap-light in the O F F state
@@ -26,17 +25,15 @@ We can show the current state by putting a dot inside it. For example, immediate
 
     
 
-Figure 2: The tap-light in the O F F state
-
 All this behaviour can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state. By reading the diagram, it is easy to see what will happen in every situation.
 Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the ON state, as shown in fig. 3.
 
             <image>
             <path>
-            outputs/images/page_0_11.jpg
+            outputs/images/page_0_9.jpg
             </path>
             <description>
-            <p> A simple diagram showing a switch with two positions: OFF and ON. The OFF position is on the left, labeled 'OFF', while the ON position is on the right, labeled 'ON'. Arrows indicate that tapping either side will change the state of the switch from OFF to ON or vice versa.</p>
+            <p> A simple diagram showing a switch with two positions: OFF and ON. The arrow indicates that tapping 'OFF' leads to switching on, while another tap returns it back off.</p>
             </description>
             </image>
             Figure 3: The tap-light in the O N state

@@ -49,10 +49,10 @@ class Table(BaseModel):
         )
 
 
-def save_detections(result: list):
+def save_detections(result: list, save_path: str = "result.jpg"):
     # Annotate and save the result
     annotated_frame = result[0].plot(pil=True, line_width=5, font_size=20)
-    cv2.imwrite("result.jpg", annotated_frame)
+    cv2.imwrite(save_path, annotated_frame)
 
 
 def extract_table(image: str) -> Table:
@@ -96,8 +96,9 @@ def extract_image(image: str) -> Table:
             }
         ],
         format=ImageDescription.model_json_schema(),
-        options={"temperature": 0},
+        options={"temperature": 0, "repeat_penalty": 1.4},
     )
+    print(res["message"]["content"])
     return ImageDescription.model_validate_json(res["message"]["content"]).description
 
 
@@ -172,26 +173,6 @@ this is a math based extraction latex format extraction
 give me a merged response, with valid math, and retain all text info
 """
 
-cleanup_template = """
-The following is an output from a parser image to text parser: 
-<parser-text>
-{}
-</parser-text>
-this parser converts valid math symbols along with text data from image to text,
-this parser has a tendency to add extra words that were not a part of
-the orginal text,
-
-
-The following is the text content from the image:
-<ocr-text>
-{}
-</ocr-text>
-it might have mis-represented math symbols
-
-You're supposed to merge these two outputs together and return text,
-that is supposed to accurately represent the text content with valid math
-"""
-
 
 def extract_text(image: str) -> str:
     """
@@ -215,19 +196,6 @@ def extract_text(image: str) -> str:
             {
                 "role": "user",
                 "content": template_files.format(text_content_latex, tesseract_text),
-            },
-        ],
-        format=DocContent.model_json_schema(),
-        options={"temperature": 0},
-    )
-    result = DocContent.model_validate_json(res["message"]["content"]).text
-
-    res = ollama.chat(
-        model="marco-o1",
-        messages=[
-            {
-                "role": "user",
-                "content": cleanup_template.format(result, tesseract_text),
             },
         ],
         format=DocContent.model_json_schema(),

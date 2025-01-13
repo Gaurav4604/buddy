@@ -10,19 +10,13 @@ An alphabet is a finite, non-empty set of symbols. It is conventional to use the
 1. Σ=0,1, the set of binary digits.
 
 1. © = 0, 1, the set of binary digits.
-2. Σ=A,B,⋯,Z, the set of Roman letters.
-3. Σ=N,E,S,W, the points.
-
-3. N= N,E,S,W, the set of compass-points.
 0.5.2   st rings
 
 0.5.2 Strings
 A _string_ is a finite sequence of symbols drawn from an alphabet. A string is also sometimes called a _word_. Some examples of strings are:
 
 
-    eginalign*    	extFinite Sequence of Symbols     	extDrawn from an Alphabet     	extAlso Sometimes Called a Word     	extExamples:  	ext(List of Examples)	extNote: The LaTeX formatting for the mathematical symbols has been retained to ensure clarity and precision.
-    
-    </align*
+    eginalign*    	extFinite Sequence of Symbols     	extDrawn from an Alphabet     	extAlso Sometimes Called a Word     	extExamples:  	ext(List of Examples)	extNote: The LaTeX formatting has been adjusted to ensure proper rendering.
 
 1. 100101 is a string from the binary alphabet Σ=0,1. 2. THEORY is a string from the Roman alphabet Σ=A,B,⋯,Z. 3. SE is a string from the compass-points alphabet Σ=N,E,S,W.
 1. 100101 is a string from the binary alphabet Σ=0,1.
