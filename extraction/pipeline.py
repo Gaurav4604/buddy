@@ -1,4 +1,3 @@
-import pytesseract
 from utils import (
     DetectionInfo,
     model,
