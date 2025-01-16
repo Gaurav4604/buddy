@@ -1,0 +1,1 @@
+FROM hf.co/bartowski/Qwen2-VL-7B-Instruct-GGUF:Q5_K_S
