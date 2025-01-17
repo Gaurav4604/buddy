@@ -1,1 +1,4 @@
-FROM hf.co/bartowski/Qwen2-VL-7B-Instruct-GGUF:Q5_K_S
+FROM hf.co/lmstudio-community/MiniCPM-V-2_6-GGUF:Q4_K_M
+
+
+PARAMETER temperature 0.2
