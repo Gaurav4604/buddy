@@ -64,7 +64,7 @@ def extract_table(image: str) -> Table:
         Table: contents of table, as headers and rows
     """
     res = ollama.chat(
-        model="minicpm-v",
+        model="minicpm-v-2",
         messages=[
             {
                 "role": "user",
@@ -87,7 +87,7 @@ def extract_image(image: str) -> Table:
         str: contents of Image
     """
     res = ollama.chat(
-        model="minicpm-v",
+        model="minicpm-v-2",
         messages=[
             {
                 "role": "user",
