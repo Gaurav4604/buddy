@@ -2,3 +2,26 @@ FROM hf.co/lmstudio-community/MiniCPM-V-2_6-GGUF:Q4_K_M
 
 
 PARAMETER temperature 0.2
+
+TEMPLATE """{{- if .Messages }}
+{{- range $i, $_ := .Messages }}
+{{- $last := eq (len (slice $.Messages $i)) 1 -}}
+<|im_start|>{{ .Role }}
+{{ .Content }}
+{{- if $last }}
+{{- if (ne .Role "assistant") }}<|im_end|>
+<|im_start|>assistant
+{{ end }}
+{{- else }}<|im_end|>
+{{ end }}
+{{- end }}
+{{- else }}
+{{- if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{ if .Prompt }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+{{ end }}<|im_start|>assistant
+{{ end }}{{ .Response }}{{ if .Response }}<|im_end|>{{ end }}"""
+
+PARAMETER stop <|im_start|>
+PARAMETER stop <|im_end|>

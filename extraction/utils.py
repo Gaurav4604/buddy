@@ -9,6 +9,7 @@ import pytesseract
 import os
 from PIL import Image
 from doclayout_yolo import YOLOv10
+import base64
 
 
 latex_model = load_model()
@@ -49,6 +50,14 @@ class Table(BaseModel):
         )
 
 
+def convert_to_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        image_data = image_file.read()
+        base64_encoded_data = base64.b64encode(image_data)
+        base64_string = base64_encoded_data.decode("utf-8")
+        return base64_string
+
+
 def save_detections(result: list, save_path: str = "result.jpg"):
     # Annotate and save the result
     annotated_frame = result[0].plot(pil=True, line_width=5, font_size=20)
@@ -69,7 +78,7 @@ def extract_table(image: str) -> Table:
             {
                 "role": "user",
                 "content": "give me the contents of this table",
-                "images": [image],
+                "images": [convert_to_base64(image)],
             }
         ],
         format=Table.model_json_schema(),
@@ -92,11 +101,10 @@ def extract_image(image: str) -> Table:
             {
                 "role": "user",
                 "content": "give me the contents of this Image",
-                "images": [image],
+                "images": [convert_to_base64(image)],
             }
         ],
         format=ImageDescription.model_json_schema(),
-        options={"temperature": 0, "repeat_penalty": 1.4},
     )
     print(res["message"]["content"])
     return ImageDescription.model_validate_json(res["message"]["content"]).description

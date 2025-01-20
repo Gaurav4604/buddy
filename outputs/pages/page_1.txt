@@ -14,7 +14,7 @@ We consider here another example, that arises in text-processing programs, such 
             outputs/images/page_1_4.jpg
             </path>
             <description>
-            <start> f o r for l a t floa float fo flo fla </ start>
+            A diagram showing a flowchart with various nodes and arrows indicating transitions between them. The chart starts at 'start' node, moves through several intermediate steps such as 'f', 'fo', 'for', 'fl', 'flo', to finally end at the 'float' node.
             </description>
             </image>
             # Figure 4: The text recogniser

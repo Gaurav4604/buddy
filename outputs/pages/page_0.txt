@@ -4,7 +4,7 @@
             outputs/images/page_0_0.jpg
             </path>
             <description>
-            <p> A simple diagram showing a switch with two positions: OFF and ON. The arrow labeled 'tap' indicates that tapping either position will change it to its opposite.</p>
+            A simple diagram showing a toggle switch with 'OFF' and 'ON' labels. The arrow labeled 'tap' indicates where to press for toggling between OFF and ON states.
             </description>
             </image>
             Figure 1: The tap-on/tap-off table light
@@ -17,7 +17,7 @@ We can show the current state by putting a dot inside it. For example, immediate
             outputs/images/page_0_5.jpg
             </path>
             <description>
-            <p> A simple diagram showing a switch with two positions: OFF and ON. The arrow indicates that tapping on either position will change it to its opposite state.</p>
+            A simple diagram showing a switch with an OFF and ON position. The arrow indicates that pressing or tapping on either side will change the state from OFF to ON.
             </description>
             </image>
             Figure 2: The tap-light in the O F F state
@@ -33,7 +33,7 @@ Consider our previous diagram, with the tap-light in the _OFF_ state. If we rece
             outputs/images/page_0_9.jpg
             </path>
             <description>
-            <p> A simple diagram showing a switch with two positions: OFF and ON. The arrow indicates that tapping 'OFF' leads to switching on, while another tap returns it back off.</p>
+            A simple diagram showing a toggle switch with two positions: OFF and ON. The OFF position is connected to an arrow pointing upwards, indicating that it can be turned on by tapping once or twice (tap tap). Once switched on, the ON position has a small black dot in its center, suggesting that it remains in this state until another tap turns it off.
             </description>
             </image>
             Figure 3: The tap-light in the O N state
