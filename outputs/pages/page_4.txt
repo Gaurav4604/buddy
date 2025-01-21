@@ -1,0 +1,68 @@
+0.5.1 Alphalets
+
+0.5.1 Alphabets
+An _alphabet_ is a finite, non-empty set of symbols. It is conventional to use the Greek letter Σ (sigma), to represent an alphabet. Some examples of common alphabets are:
+
+An alphabet is a finite, non-empty set of symbols. It is conventional to use the Greek letter σ (sigma), to represent an alphabet. Some examples of common alphabets are:
+1. Σ=0,1, the set of binary digits.
+2. Σ=A,B,⋯,Z, the set of Roman letters.
+3. Σ=N,E,S,W, the set of compass-points.
+1. Σ=0,1, the set of binary digits.
+
+1. © = 0, 1, the set of binary digits.
+0.5.2   st rings
+
+0.5.2 Strings
+A _string_ is a finite sequence of symbols drawn from an alphabet. A string is also sometimes called a _word_. Some examples of strings are:
+
+
+    eginalign*    	extFinite Sequence of Symbols     	extDrawn from an Alphabet     	extAlso Sometimes Called a Word     	extExamples:  	ext(List of Examples)	extNote: The LaTeX formatting has been adjusted to ensure proper rendering.
+
+1. 100101 is a string from the binary alphabet Σ=0,1. 2. THEORY is a string from the Roman alphabet Σ=A,B,⋯,Z. 3. SE is a string from the compass-points alphabet Σ=N,E,S,W.
+1. 100101 is a string from the binary alphabet Σ=0,1.
+## 2. THEORY is a string from the Roman alphabet Σ=A,B,⋯, Z.
+
+2. THEORY isa string from the Roman alphabet © = A, B,—, Z.
+**3.** SE is a string from the compass-points alphabet Σ=N,E,S,W.
+Empty string
+
+
+    
+
+The *empty string* is a string with no symbols in it, usually denoted by the Greek letter ϵ (epsilon). Clearly, the empty string is a string that can be chosen from any alphabet.
+# Length of a string
+
+
+    Length = √((Δ x)^2 + (Δ y)^2 + (Δ z)^2)
+
+
+It is handy to classify strings by their length, the number of symbols in the string. The string THEORY, for example, has a length of 6. The usual notation for the length of a string s is |s|. Thus |THEORY| = 6, |1001| = 4, and |e| = 0.
+# Powers of an alphabet
+
+Powers of an alphabet
+
+We are often interested in the set of all strings of a certain length, say k, drawn from an alphabet Σ. This can be constructed by taking the Cartesian product, of Σ with itself k times: Σ×Σ×⋯Σ. We can represent this symbolically, using exponential notation, as Σ^k.
+early Σ^0=ϵ, for any alphabet Σ, because ϵ is the only string whose length is zero.
+
+math: Σ^0 = {ϵ}, for any alphabet Σ, because ϵ is the only string whose length is zero.
+For the alphabet Σ=N,E,S,W, we find:
+
+For the alphabet © = N, E, S, W, we find:
+Σ^1 = {N, E, S, W}
+Σ^1 = {N, E, S, W}
+
+Σ^2 = {NN, NE, NS, NW, EN, EE, ES, EW, SN, SE, SS, SW, WN, WE, WS, WW}
+
+Σ^3 = {NNN, NNE, NNS, ⋯, WWS, WWW}
+Σ^2=NN, NE, NS, NW, EN, EE, ES, EW, SN, SE, SS, SW, WN, WE, WS, WW. »? = NN, NE, NS, NW, EN, EE, ES, EW, SN, SE, SS, SW, WN, WE, WS, WW
+Σ^3 = {NNN, NNE, NNS, ⋯, WWS, WWW}
+Σ^3, has 64 members, since it contains 4×4×4 members.
+The set of _all_ strings that can be drawn from an alphabet is conventionally denoted, using the so-called Kleene star, by Σ^*, and of course has an infinite number of members. For the alphabet Σ=0,1. The set of all strings that can be drawn from an alphabet is conventionally denoted, using the so-called Kleene star, by    *, and of course has an infinite number of members. For the alphabet x = 0,1.
+Σ*=ϵ,0,1,00,01,10,11,000,001,010,⋯
+
+* = e,0, 1,00, 01, 10, 11, 000, 001, 010, - - -
+Clearly, Σ* = Σ0 ∪ Σ1 ∪ Σ2 ∪ ⋯
+
+**Math Extraction:**
+
+Clearly, 5* = S°US'US?2U—

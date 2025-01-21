@@ -142,6 +142,7 @@ def extraction_pipeline(input_img: str, page_num: int):
         if det.class_id == 3:  # image data
             description = extract_image(det.file_location)
             save_path = f"outputs/images/page_{page_num}_{idx}.jpg"
+            print(f"image {save_path} - {idx} - {description}")
             shutil.copyfile(src=det.file_location, dst=save_path)
             content += f"""
             <image>
@@ -156,14 +157,17 @@ def extraction_pipeline(input_img: str, page_num: int):
         elif det.class_id == 8:
             # Possibly a formula
             formula = extract_formula(det.file_location)
+            print(f"formula {formula} - {idx}")
             content += formula + "\n"
         elif det.class_id == 5:
             # Possibly a table
             table = extract_table(det.file_location)
+            print(f"table {table} - {idx}")
             content += table.construct_table() + "\n"
         else:
             # General text
             extracted_text = extract_text(det.file_location)
+            print(f"text {extracted_text} - {idx}")
             content += extracted_text + "\n"
 
     # 7) Write the page's content to disk
@@ -201,4 +205,4 @@ def extraction_pipeline_from_pdf(pdf_path: str) -> str:
 
 
 if __name__ == "__main__":
-    print(extraction_pipeline_from_pdf("files/automata_2.pdf"))
+    print(extraction_pipeline_from_pdf("files/automata.pdf"))

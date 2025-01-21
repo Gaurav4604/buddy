@@ -1,39 +1,25 @@
-
-            <image>
-            <path>
-            outputs/images/page_0_0.jpg
-            </path>
-            <description>
-            A simple diagram showing a toggle switch with 'OFF' and 'ON' labels. The arrow labeled 'tap' indicates where to press for toggling between OFF and ON states.
-            </description>
-            </image>
-            Figure 1: The tap-on/tap-off table light
-In the diagram, the two circles, named off and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap. We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, labelled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named off.) A diagram such as this is called a finite state machine(FSM).
-This state-diagram very neatly and succinctly captures the behavior of the light: Initially, the light is off, and the FSM is in state off. Upon receipt of a tap event, the system changes state to on, indicating that the light is now on. The FSM is now in state on. Upon receipt of a tap event, the system changes state to off, indicating that the light is now off. The FSM is now in state off.
-We can show the current state by putting a dot inside it. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
-
-            <image>
-            <path>
-            outputs/images/page_0_5.jpg
-            </path>
-            <description>
-            A simple diagram showing a switch with an OFF and ON position. The arrow indicates that pressing or tapping on either side will change the state from OFF to ON.
-            </description>
-            </image>
-            Figure 2: The tap-light in the O F F state
+chapeter 0
 
 
-    
+    Chapter 0
 
-All this behaviour can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state. By reading the diagram, it is easy to see what will happen in every situation.
-Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the ON state, as shown in fig. 3.
+Introduction
 
-            <image>
-            <path>
-            outputs/images/page_0_9.jpg
-            </path>
-            <description>
-            A simple diagram showing a toggle switch with two positions: OFF and ON. The OFF position is connected to an arrow pointing upwards, indicating that it can be turned on by tapping once or twice (tap tap). Once switched on, the ON position has a small black dot in its center, suggesting that it remains in this state until another tap turns it off.
-            </description>
-            </image>
-            Figure 3: The tap-light in the O N state
+
+Most of your programming experience will have been acquired by writing conventional data-processing style programs that read data, process it, and generate output. Programs that simply read and write files are among the oldest uses of computers, and are known as batch programs – the program runs, computes and, when it is finished, the result is available.
+If the program interacts with a user, and asks for data as it is needed for the computation, it is called an interactive program. Interactive programs were the next stage in the evolution of computers and software. You have probably written many interactive programs during your coursework so far.
+However, many programs in the real world need to be able to process data as it arrives at the system. These programs are called _reactive_ or _event-driven_ because they need to be able to react to the data as soon as it arrives.
+A familiar example of a reactive program is any program with a Graphical User Interface (GUI). Such a program does not wait for a specific button to be pressed, but is instead ready to respond to _any_ button that is pressed.
+Another application of reactive programs is embedded systems. These are systems that control electrical appliances such as DVD players, air conditioners, toasters, mobile phones, burglar alarms, car fuel injection systems, and many others. More than 99
+# Reactive programs have three main characteristics:
+
+Reactive programs have three main characteristics:
+* They are driven by the availability of data. When a particular piece of data becomes available for processing, we say that an event occurs (hence event-driven programs). From a software viewpoint, the order in which events can occur is unpredictable — e.g., a DVD player cannot predict which button a user will press next. This means that the number of execution paths in a reactive program is much larger than in an interactive program. This fact alone makes writing correct code much more difficult (we have all experienced GUI programs that crash for no obvious reason).
+* They are concurrent. Reactive systems are usually carrying out multiple activities at the same time. For example, a single web browser process can have multiple windows opened where a different download is in progress in each window. While doing this, the browser still responds to user mouse-clicks and key-strokes. From the viewpoint of the web browser, the arrival of data for each web-page or of a mouse-click is simply an event that can occur at any time.
+* _The user is always in control._ While the program is processing data, it cannot choose to ignore the user, rather it must respond to the user's events (mouse-clicks, or key-strokes) in a timely fashion.
+
+**Mathematics:**
+
+
+    e^i	heta = 	extThe user is always in control. While the program is processing data, it cannot choose to ignore the user, rather it must respond to the user’s events (mouse-clicks, or key-strokes) in a timely fashion.
+
