@@ -49,3 +49,15 @@ class RAGtoolkit:
             query_embeddings=[question_embedding], query_texts=[query]
         )
         return res
+
+
+from semantic_text_splitter import TextSplitter
+
+
+splitter = TextSplitter(overlap=True, capacity=1000, trim=True)
+
+chunks = splitter.chunks(
+    "A simple diagram showing a switch with an OFF and ON position. The OFF position is on the left, labeled 'OFF', while the ON position is on the right, labeled 'ON'. Arrows indicate that pressing or tapping the switch will change its state from OFF to ON."
+)
+
+print(chunks)

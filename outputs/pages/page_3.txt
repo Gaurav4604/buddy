@@ -1,30 +1,70 @@
-# 0.3.1 Some nomenclature
-
-0.3.1 Some nomenclature
-A finite state machine has one or more _states_, represented on a state-diagram as circles. As a result of an external _event_, the FSM can make a _transition_ from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an _initial state_, represented on the diagram by a lightning-strike. The _current state_ is represented by a large dot inside the state.
-# 0.4 Another example - text recognition
-
-
-    0.4 Another example - text recognition
-
-We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognize the words 'for' and 'float' in a stream of text. We could construct a finite state machine, where the sequence of events is the sequence of characters in the input stream. The resulting FSM is shown in figure 4.
 
             <image>
             <path>
-            outputs/images/page_3_4.jpg
+            outputs/images/page_2_0.jpg
             </path>
             <description>
-            A diagram showing a sequence or flowchart with various nodes and arrows indicating transitions between them. The start node is labeled 'start' and has an arrow pointing upwards, suggesting input or initiation from above. There are several other nodes connected by arrows: f, fo, for, fl, floa, float, o, l, t, a, r, and i. Each node represents a step in the process with labels such as 'f', 'o', 'for', etc., indicating different stages or conditions within the flowchart.
+            A simple diagram showing a toggle switch with two positions: OFF and ON. The arrow labeled 'tap' indicates that pressing or tapping on either position will change it to its opposite state.
             </description>
             </image>
-            # Figure 4: The text recogniser
+            
 
+                <caption>
+                Figure 1: The tap-on/tap-off table light
+                </caption>
+                
 
-    Figure  4: The text recogniser
+                <text>
+                In the diagram, the two circles, named off and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap. We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, labelled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named off.) A diagram such as this is called a finite state machine(FSM).
+                </text>
+                
 
-In the FSM there are states named after the partially-recognised words: f, fo, fl, flo, and floa. There are also two accepting states named for and float, shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state fo, the machine will not recognise the character x, because there is no transition labelled with the event x, from state fo. If an unrecognised event occurs, the machine “dies”, and ceases to process symbols — it no longer has a current state. Effectively, the dot has been lost.
-Diagrams of this kind often result from describing the behavior of a *regular expression*, a topic we will deal with later.
-0.5 Central concepts
+                <text>
+                This state-diagram very neatly and succinctly captures the behavior of the light: Initially, the light is off, and the FSM is in state off. Upon receipt of a tap event, the system changes state to on, indicating that the light is now on. The FSM is now in state on. Upon receipt of a tap event, the system changes state to off, indicating that the light is now off. The FSM is now in state off.
+                </text>
+                
 
-0.5 Central concepts
-There are a number of basic concepts that are central to the study of finite automata. These concepts are _alphabet_ (a set of symbols), _string_ (a list of symbols from an alphabet), and _language_ (a set of strings from the same alphabet).
+                <text>
+                We can show the current state by putting a dot inside it. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
+                </text>
+                
+
+            <image>
+            <path>
+            outputs/images/page_2_5.jpg
+            </path>
+            <description>
+            A simple diagram showing a switch with two positions: OFF and ON. The switch is depicted as having an 'OFF' position on one side, indicated by a circle with a black dot inside it, and an 'ON' position on the other side, marked by text within a circular boundary. Arrows indicate that to change from 'OFF' to 'ON', or vice versa, requires pressing down (tap) in both directions.
+            </description>
+            </image>
+            
+
+                <caption>
+                Figure 2: The tap-light in the O F F state
+                </caption>
+                
+
+                <text>
+                All this behaviour can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state. By reading the diagram, it is easy to see what will happen in every situation.
+                </text>
+                
+
+                <text>
+                Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the _ON_ state, as shown in fig. 3.
+                </text>
+                
+
+            <image>
+            <path>
+            outputs/images/page_2_9.jpg
+            </path>
+            <description>
+            A simple diagram showing a switch with two states: OFF and ON. The OFF state is connected to an arrow labeled 'OFF' pointing upwards, indicating that it can be turned on by tapping once (tap). Similarly, the ON state has an arrow labeled 'ON' pointing downwards, suggesting that it can also be turned off by another tap.
+            </description>
+            </image>
+            
+
+                <caption>
+                Figure 3: The tap-light in the O N state
+                </caption>
+                

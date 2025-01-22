@@ -1,39 +1,88 @@
 
-            <image>
-            <path>
-            outputs/images/page_2_0.jpg
-            </path>
-            <description>
-            A simple diagram showing a switch with two positions: OFF and ON. The word 'tap' is written in an arc connecting the two positions.
-            </description>
-            </image>
-            Figure 1: The tap-on/tap-off table light
-In the diagram, the two circles, named off and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap. We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, labelled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named off.) A diagram such as this is called a finite state machine(FSM).
-This state-diagram very neatly and succinctly captures the behavior of the light: Initially, the light is off, and the FSM is in state off. Upon receipt of a tap event, the system changes state to on, indicating that the light is now on. The FSM is now in state on. Upon receipt of a tap event, the system changes state to off, indicating that the light is now off. The FSM is now in state off.
-We can show the current state by putting a dot inside it. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
+                <title>
+                # 0.1 What are event-driven systems?
 
-            <image>
-            <path>
-            outputs/images/page_2_5.jpg
-            </path>
-            <description>
-            A simple diagram showing a switch with an OFF and ON position. The OFF position is on the left, labeled 'OFF', while the ON position is on the right, labeled 'ON'. Arrows indicate that pressing or tapping the switch will change its state from OFF to ON.
-            </description>
-            </image>
-            Figure 2: The tap-light in the O F F state
+0.1 What are event-driven systems?
+                </title>
+                
 
+                <text>
+                As noted above, reactive or event-driven systems can cover a broad spectrum of applications. The most common are:
 
-    
+As noted above, reactive or event-driven systems can cover a broad spectrum of applications. The
+most common are:
+                </text>
+                
 
-All this behaviour can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state. By reading the diagram, it is easy to see what will happen in every situation.
-Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the ON state, as shown in fig. 3.
+                <text>
+                **Graphical User Interfaces (GUIs)** It is very difficult to write correct code for GUIs without using event-driven techniques. In this course, we will show you how to construct _bug-free_ GUIs.
+                </text>
+                
 
-            <image>
-            <path>
-            outputs/images/page_2_9.jpg
-            </path>
-            <description>
-            A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing or tapping on either state will toggle between them.
-            </description>
-            </image>
-            Figure 3: The tap-light in the O N state
+                <text>
+                **Graphical User Interfaces (GUIs)** It is very difficult to write correct code for GUIs without using event-driven techniques. In this course, we will show you how to construct _bug-free_ GUIs.
+                </text>
+                
+
+                <text>
+                **Embedded Systems**: If you are an engineer, you will almost certainly be involved in designing or implementing an embedded control system for a product. The reason is simple: a microcontroller is the cheapest and most flexible way to implement the control section of almost every electronic product. Those of you who are studying the courses "Software Engineering and Project" or "Embedded Computer Systems" will find that knowledge of event-driven systems will significantly simplify the software for your projects.
+                </text>
+                
+
+                <text>
+                **Communication Protocols**: Modern computer systems are extensively networked, to allow them to exchange data. All computer communication depends on a protocol for the exchange of data. Communication protocols need to be able to respond to events, such as: arrival of a message, arrival of an acknowledgement, timeout after sending a message, and so on. All these events can occur in any order. A protocol can only be implemented reliably using event-driven programming techniques.
+                </text>
+                
+
+                <text>
+                A "protocol stack" is a layered set of intercommunicating protocols that together permit computer-to-computer communication. Each layer in the stack is a reactive program. A protocol stack is thus, by its very nature, highly reactive, and highly concurrent.
+                </text>
+                
+
+                <text>
+                Despite the variety of applications for event-driven systems, there are some well understood techniques for designing and implementing these systems. They can significantly reduce the time, effort and the likelihood of bugs when writing your code. They also will make your program much easier to change in the future.
+                </text>
+                
+
+                <text>
+                By making clear design and implementation decisions at the beginning, you will retain intellectual control over the complexity inherent in all reactive systems.
+                </text>
+                
+
+                <title>
+                0.2 A little history
+
+                </title>
+                
+
+                <text>
+                The ideas behind finite state machines have been around for a long time now. In the 1930s, Alan Turing did research on computable functions, and invented the “Turing machine”, a simple processor that has been proved to have the same capabilities as any current-day computer.
+                </text>
+                
+
+                <text>
+                In the 1940s, McCulloch and Pitts modelled the behaviour of nerve networks, using ideas similar to those presented in these notes.
+                </text>
+                
+
+                <text>
+                In the mid 1950s, papers by Mealy and Moore, from the Engineering community, had a big influence on the design of switching systems in telephone exchanges. Both described finite state machines as we now know them. We will look at the nature of their work a little later on.
+                </text>
+                
+
+                <text>
+                At the end of the 1950s, Rabin and Scott published a paper that introduced non-deterministic finite state machines, and provided fruitful insights for further work. They received the ACM Turing award for this work.
+                </text>
+                
+
+                <title>
+                # 0.3   An introductory example - the tap-light
+
+0.3 An introductory example - the tap-light
+                </title>
+                
+
+                <text>
+                Let us consider a simple but familiar example: an electric table lamp that is controlled by simply 'tapping' it: when a user taps the lamp, it turns on; tap again, and it turns back off; tap again, and it turns back on; and so on. We can represent this behaviour in a state-diagram, as shown in fig. 1.
+                </text>
+                

@@ -10,6 +10,11 @@ import os
 from PIL import Image
 from doclayout_yolo import YOLOv10
 import base64
+from transformers.utils import logging
+import warnings
+
+logging.set_verbosity(40)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 latex_model = load_model()
@@ -17,6 +22,10 @@ latex_processor = load_processor()
 
 
 model = YOLOv10("inf.pt")
+
+
+class PolishedDoc(BaseModel):
+    markdown: str
 
 
 class DocContent(BaseModel):
@@ -111,7 +120,7 @@ def extract_image(image: str) -> Table:
 
 
 template_formula = """
-I have a physics based formula extracted out,
+I have a math formula extracted out,
 it has an OCR based extraction,
 this does not have valid math symbols
 <valid-text>
@@ -149,7 +158,7 @@ def extract_formula(image: str) -> str:
             }
         ],
         format=Formula.model_json_schema(),
-        options={"temperature": 0},
+        options={"temperature": 0.2},
     )
 
     text_content = LatexNodes2Text().latex_to_text(
@@ -166,7 +175,7 @@ and merge the two files together, to build a common text, containing valid text
 """
 
 template_files = """
-I have a physics based document page extracted out,
+I have a document page extracted out,
 it has an OCR based extraction,
 this does not have valid math symbols
 <valid-text>
@@ -207,7 +216,7 @@ def extract_text(image: str) -> str:
             },
         ],
         format=DocContent.model_json_schema(),
-        options={"temperature": 0},
+        options={"temperature": 0.2},
     )
     result = DocContent.model_validate_json(res["message"]["content"]).text
 

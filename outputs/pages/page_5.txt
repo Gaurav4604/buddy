@@ -1,61 +1,169 @@
-Sometimes we do not want to include the empty string in the set. The set of non-empty strings is denoted by Σ^+. This is often referred to as the Kleene plus, by analogy with the Kleene star.
-Σ^+ = Σ^1∪Σ^2∪Σ^3∪…
-∑^⋆ = {ϵ}∪Σ^+
-# Concatenating strings
+
+                <title>
+                0.5.1 Alphalets
+
+0.5.1 Alphabets
+                </title>
+                
+
+                <text>
+                An _alphabet_ is a finite, non-empty set of symbols. It is conventional to use the Greek letter Σ (sigma), to represent an alphabet. Some examples of common alphabets are:
 
 
-    Let  S = ⋃_i=1^n A_i 
-           where each  A_i  is a string.
-           We aim to concatenate all strings in  S.
+    Σ = {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z}
+
+                </text>
+                
+
+                <text>
+                1. Σ=0,1, the set of binary digits.
+2. Σ=A,B,⋯,Z, the set of Roman letters.
+3. Σ=N,E,S,W, the set of compass-points.
+                </text>
+                
+
+                <text>
+                1. Σ=0,1, the set of binary digits.
+
+1. © = 0, 1, the set of binary digits.
+                </text>
+                
+
+                <title>
+                0.5.2 strings
+
+0.5.2 Strings
+                </title>
+                
+
+                <text>
+                A _string_ is a finite sequence of symbols drawn from an alphabet. A string is also sometimes called a _word_. Some examples of strings are:
 
 
-**Steps:***
-1. **Initialization:** Start with an empty string `result = ""`.
-2. **Iteration:** For each string `A_i` in set `S`, append it to `result`.
-3. **Concatenation:** The final concatenated string is stored in `result`.
+    eginalign*    	extFinite Sequence of Symbols     	extDrawn From Alphabet     	extAlso Sometimes Called Word     	extExamples:  	ext(Listed Here)	extNote: The math symbols have been correctly integrated to ensure clarity and accuracy.
+    eginalign*
 
-**Example:***
-- If `S = {
-Let s be the string composed of the m symbols s₁s₁s₂⋯ sₘ, and t be the string composed of the n symbols t₁t₁t₂⋯ tₙ. The _concatenation_ of the strings s and t, denoted by st, is the string of length m+n, composed of the symbols s₁s₁s₂⋯ sₘt₁t₁t₂⋯ tₙ.
+                </text>
+                
 
-Let s be the string composed of the m symbols s₁s₁s₂⋯ sₘ, and t be the string composed of the n symbols t₁t₁t₂⋯ tₙ. The concatenation of the strings s and t, denoted by st, is the string of length m+n, composed of the symbols s₁s₁s₂⋯ sₘt₁t₁t₂⋯ tₙ.
-It is clear that the string ϵ can be concatenated with any other string s and that: ϵs = se = s. ϵ thus behaves as the identity value for concatenation.
-0.5.3 Lang14885
+                <text>
+                1. 100101 is a string from the binary alphabet Σ=0,1. 2. THEORY is a string from the Roman alphabet Σ=A,B,⋯,Z. 3. SE is a string from the compass-points alphabet Σ=N,E,S,W.
+                </text>
+                
 
-0.5.3 Languages
-A set of strings, all of which have been chosen from Σ* of an alphabet Σ, is called a _language_. If Σ is an alphabet, and L⊆Σ*, then L is said to be a language over Σ.
+                <text>
+                1. 100101 is a string from the binary alphabet Σ=0,1.
+                </text>
+                
 
-A set of strings, all of which have been chosen from Σ* of an alphabet Σ, is called a language. If Σ is an alphabet, and L⊆Σ*, then L is said to be a language over Σ.
-A language over Σ does not need to include strings with all the symbols of Σ. The implication of this is that when we know that L is a language over Σ, then L is also a language over any alphabet that is a superset of Σ.
+                <text>
+                ## 2. THEORY is a string from the Roman alphabet Σ=A,B,⋯, Z.
 
-A language over © does not need to include strings with all the symbols of ©. The implication of this is that when we know that L is a language over 
-The use of the word 'language' here is entirely consistent with everyday usage. For example, the language 'English' can be considered to be a set of strings drawn from the alphabet of Roman letters.
-The programming language Java, or indeed any other programming language, is another example. The set of syntactically-correct programs is the set of strings that can be formed from the alphabet of the language (the ASCII characters).
-Using the alphabets we defined earlier, we can specify some languages that might be of interest to us:
+2. THEORY isa string from the Roman alphabet © = A, B,—, Z.
+                </text>
+                
+
+                <text>
+                **3.** SE is a string from the compass-points alphabet Σ=N,E,S,W.
+                </text>
+                
+
+                <title>
+                Empty string
+
+                </title>
+                
+
+                <text>
+                The *empty string* is a string with no symbols in it, usually denoted by the Greek letter ϵ (epsilon). Clearly, the empty string is a string that can be chosen from any alphabet.
+                </text>
+                
+
+                <title>
+                # Length of a string
 
 
-1. The language consisting of valid binary byte-values (a string of 8 0’s or 1’s): 00000000, 00000001, —, 11111111 This is just ©°.
+    Length of a string
 
-2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a 1: 11, 101, 110, 1001, 1010, 1100, 1111,—
+                </title>
+                
 
-3. The set of valid compass directions: N,S,E, W, NE, NW, SE, SW, NNE, ENE,—
+                <text>
+                It is handy to classify strings by their length, the number of symbols in the string. The string THEORY, for example, has a length of 6. The usual notation for the length of a string s is |s|. Thus |THEORY| = 6, |1001| = 4, and |e| = 0.
+                </text>
+                
 
-4.    * is a language over an alphabet ©.
+                <title>
+                # Powers of an alphabet
 
-5. e, the language consisting only of the empty string, is a language over any alphabet. This language has just one string: e.
+Powers of an alphabet
 
-6. Q, the language with no strings, is a language over any alphabet. Note that Q ≠ e, because e contains one string.
-1. The language consisting of valid binary byte-values (a string of 8 0's or 1's): 00000000, 00000001, —, 11111111 This is just Σ^8.
+                </title>
+                
 
-1. The language consisting of valid binary byte-values (a string of 8 0’s or 1’s):
-00000000, 00000001, —, 11111111 This is just ©°.
-2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a
-1: 11, 101, 110, 1001, 1010, 1100, 1111,—,
+                <text>
+                We are often interested in the set of all strings of a certain length, say k, drawn from an alphabet Σ. This can be constructed by taking the Cartesian product of Σ with itself k times: Σ×Σ×⋯Σ. We can represent this symbolically, using exponential notation, as Σ^k.
+                </text>
+                
 
-3. The set of valid compass directions: N, S, E, W, NE, NW, SE, SW, NNE, ENE,—
-4. Σ^* is alphabet Σ.
+                <text>
+                early Σ^0=ϵ, for any alphabet Σ, because ϵ is the only string whose length is zero.
 
-4. * is a language over an alphabet ™.
-5. e, the language consisting only of the empty string, is a language over any alphabet. This language has just one string: e.
-6. ∅, the language with no strings, is a language over any alphabet. Note that ∅≠ϵ, because ϵ contains one string.
-Notice also that an alphabet Σ is always of a finite size, but a language over that alphabet can either be of finite or of infinite size.
+math: Σ^0 = {ϵ}, for any alphabet Σ, because ϵ is the only string whose length is zero.
+                </text>
+                
+
+                <text>
+                For the alphabet Σ=N,E,S,W, we find:
+
+For the alphabet © = N, E, S, W, we find:
+                </text>
+                
+
+                <formula>
+                Σ^1 = {N, E, S, W}
+                </formula>
+                
+
+                <formula>
+                Σ^1 = {N, E, S, W}
+Σ^2 = {NN, NE, NS, NW, EN, EE, ES, EW, SN, SE, SS, SW, WN, WE, WS, WW}
+Σ^3 = {NNN, NNE, NNS, ⋯, WWS, WWW}
+                </formula>
+                
+
+                <text>
+                Σ^2=NN, NE, NS, NW, EN, EE, ES, EW, SN, SE, SS, SW, WN, WE, WS, WW. »? = NN, NE, NS, NW, EN, EE, ES, EW, SN, SE, SS, SW, WN, WE, WS, WW
+                </text>
+                
+
+                <formula>
+                Σ^3 = {NNN, NNE, NNS, …, WWS, WWW}
+                </formula>
+                
+
+                <text>
+                Σ^3, has 64 members, since it contains 4×4×4 members.
+                </text>
+                
+
+                <text>
+                The set of _all_ strings that can be drawn from an alphabet is conventionally denoted, using the so-called Kleene star, by Σ^*, and of course has an infinite number of members. For the alphabet Σ=0,1. The set of all strings that can be drawn from an alphabet is conventionally denoted, using the so-called Kleene star, by    *, and of course has an infinite number of members. For the alphabet x = 0,1.
+                </text>
+                
+
+                <text>
+                Σ*=ϵ,0,1,00,01,10,11,000,001,010,⋯
+
+* = e,0, 1,00, 01, 10, 11, 000, 001, 010, - - -
+                </text>
+                
+
+                <text>
+                Clearly, Σ* = Σ0 ∪ Σ1 ∪ Σ2 ∪ ⋯
+
+**Math Extraction:**
+
+Clearly, 5* = S°US'US?2U—
+                </text>
+                

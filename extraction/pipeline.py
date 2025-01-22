@@ -139,12 +139,15 @@ def extraction_pipeline(input_img: str, page_num: int):
     # 6) Build textual content for this page
     content = ""
     for idx, det in enumerate(all_detections):
+        # {0: 'title', 1: 'plain text', 2: 'abandon', 3: 'figure', 4: 'figure_caption', 5: 'table', 6: 'table_caption', 7: 'table_footnote', 8: 'isolate_formula', 9: 'formula_caption'}
+        #
         if det.class_id == 3:  # image data
             description = extract_image(det.file_location)
             save_path = f"outputs/images/page_{page_num}_{idx}.jpg"
             print(f"image {save_path} - {idx} - {description}")
             shutil.copyfile(src=det.file_location, dst=save_path)
-            content += f"""
+            content += (
+                f"""
             <image>
             <path>
             {save_path}
@@ -154,24 +157,72 @@ def extraction_pipeline(input_img: str, page_num: int):
             </description>
             </image>
             """
+                + "\n"
+            )
+        elif det.class_id == 4:
+            # caption text
+            extracted_text = extract_text(det.file_location)
+            print(f"caption {extracted_text} - {idx}")
+            content += (
+                f"""
+                <caption>
+                {extracted_text}
+                </caption>
+                """
+                + "\n"
+            )
         elif det.class_id == 8:
             # Possibly a formula
             formula = extract_formula(det.file_location)
             print(f"formula {formula} - {idx}")
-            content += formula + "\n"
+            content += (
+                f"""
+                <formula>
+                {formula}
+                </formula>
+                """
+                + "\n"
+            )
         elif det.class_id == 5:
             # Possibly a table
             table = extract_table(det.file_location)
             print(f"table {table} - {idx}")
-            content += table.construct_table() + "\n"
+            content += (
+                f"""
+                <table>
+                {table.construct_table()}
+                </table>
+                """
+                + "\n"
+            )
+
+        elif det.class_id == 0:
+            # title text
+            extracted_text = extract_text(det.file_location)
+            print(f"title {extracted_text} - {idx}")
+            content += (
+                f"""
+                <title>
+                {extracted_text}
+                </title>
+                """
+                + "\n"
+            )
         else:
-            # General text
+            # plain text
             extracted_text = extract_text(det.file_location)
             print(f"text {extracted_text} - {idx}")
-            content += extracted_text + "\n"
+            content += (
+                f"""
+                <text>
+                {extracted_text}
+                </text>
+                """
+                + "\n"
+            )
 
     # 7) Write the page's content to disk
-    with open(f"outputs/pages/page_{page_num}.txt", "w", encoding="utf-8") as f:
+    with open(f"outputs/pages/page_{page_num + 1}.txt", "w", encoding="utf-8") as f:
         f.write(content)
 
     # Clean up /temp

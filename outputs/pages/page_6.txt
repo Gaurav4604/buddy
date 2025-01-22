@@ -1,0 +1,138 @@
+
+                <text>
+                Sometimes we do not want to include the empty string in the set. The set of non-empty strings is denoted by Σ^+. This is often referred to as the Kleene plus, by analogy with the Kleene star.
+                </text>
+                
+
+                <formula>
+                Σ^+ = Σ^1∪Σ^2∪Σ^3∪⋯
+                </formula>
+                
+
+                <formula>
+                ∑^⋆ = {ϵ}∪Σ^+
+                </formula>
+                
+
+                <title>
+                # Concatenating strings
+
+
+    Let  S = {s_1, s_2, …, s_n}
+           and  T = {t_1, t_2, …, t_m}
+           be two finite strings.
+
+
+
+    The concatenation of  S  and  T,    S · T = s_1t_1s_2t_2 … s_nt_m 
+       is the string formed by placing each element of  T  immediately after its corresponding element in  S.
+
+
+
+    For example, if  S =
+
+                </title>
+                
+
+                <text>
+                Let s be the string composed of the m symbols s₁s₁s₂⋯ sₘ, and t be the string composed of the n symbols t₁t₁t₂⋯ tₙ. The _concatenation_ of the strings s and t, denoted by st, is the string of length m+n, composed of the symbols s₁s₁s₂⋯ sₘt₁t₁t₂⋯ tₙ.
+
+Let s be the string composed of the m symbols s₁s₁s₂⋯ sₘ, and t be the string composed of the n symbols t₁t₁t₂⋯ tₙ. The concatenation of the strings s and t, denoted by st, is the string of length m+n, composed of the symbols s₁s₁s₂⋯ sₘt₁t₁t₂⋯ tₙ.
+                </text>
+                
+
+                <text>
+                It is clear that the string ϵ can be concatenated with any other string s and that: ϵs = se = s. Thus, ϵ behaves as the identity value for concatenation.
+                </text>
+                
+
+                <title>
+                0.5.3 Lang14885
+0.5.3 Languages
+                </title>
+                
+
+                <text>
+                A set of strings, all of which have been chosen from Σ* of an alphabet Σ, is called a _language_. If Σ is an alphabet, and L⊆Σ*, then L is said to be a language over Σ.
+
+A set of strings, all of which have been chosen from    * of an alphabet », is called a language. If ©
+is an alphabet, and L C >*, then L is said to be a language over ™.
+                </text>
+                
+
+                <text>
+                A language over Σ does not need to include strings with all the symbols of Σ. The implication of this is that when we know that L is a language over Σ, then L is also a language over any alphabet that is a superset of Σ.
+
+**Math:**
+A language over © does not need to include strings with all the symbols of ©. The implication of this is that when we know that L is a language over 
+                </text>
+                
+
+                <text>
+                The use of the word 'language' here is entirely consistent with everyday usage. For example the language 'English' can be considered to be a set of strings drawn from the alphabet of Roman letters.
+                </text>
+                
+
+                <text>
+                The programming language Java, or indeed any other programming language, is another example. The set of syntactically-correct programs is the set of strings that can be formed from the alphabet of the language (the ASCII characters).
+                </text>
+                
+
+                <text>
+                Using the alphabets we defined earlier, we can specify some languages that might be of interest to us:
+
+
+                </text>
+                
+
+                <text>
+                1. The language consisting of valid binary byte-values (a string of 8 0’s or 1’s): 00000000, 00000001, —, 11111111 This is just Σ°.
+2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a 1: 11, 101, 110, 1001, 1010, 1100, 1111,—
+3. The set of valid compass directions: N,S,E, W, NE, NW, SE, SW, NNE, ENE,—
+4. Σ° is a language over an alphabet Σ.
+5. e, the language consisting only of the empty string, is a language over any alphabet. This language has just one string: e.
+6. Q, the language with no strings, is a language over any alphabet. Note that Q ≠ e, because e contains one string.
+                </text>
+                
+
+                <text>
+                The language consisting of valid binary byte-values (a string of 8 0's or 1's): 00000000, 00000001, —, 11111111 This is just Σ^8.
+
+1. The language consisting of valid binary byte-values (a string of 8 0’s or 1’s):
+00000000, 00000001, —, 11111111 This is just ©°.
+                </text>
+                
+
+                <text>
+                2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a 1: 11, 101, 110, 1001, 1010, 1100, 1111,—,
+                </text>
+                
+
+                <text>
+                3. The set of valid compass directions: N, S, E, W, NE, NW, SE, SW, NNE, ENE,—
+                </text>
+                
+
+                <text>
+                4. Σ^* is an alphabet Σ.
+
+4. * is a language over an alphabet ™.
+                </text>
+                
+
+                <text>
+                5. ϵ, the language consisting only of the empty string, is a language over any alphabet. This language has just one string: ϵ.
+
+5. e, the language consisting only of the empty string, is a language over any alphabet. This language has just one string: e.
+                </text>
+                
+
+                <text>
+                6. ∅, the language with no strings, is a language over any alphabet. Note that ∅≠ϵ, because ϵ contains one string.
+                </text>
+                
+
+                <text>
+                Notice also that an alphabet Σ is always of a finite size, but a language over that alphabet can either be of finite or of infinite size.
+                </text>
+                
