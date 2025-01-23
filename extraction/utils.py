@@ -9,6 +9,12 @@ import pytesseract
 import os
 from PIL import Image
 from doclayout_yolo import YOLOv10
+import base64
+from transformers.utils import logging
+import warnings
+
+logging.set_verbosity(40)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 latex_model = load_model()
@@ -16,6 +22,10 @@ latex_processor = load_processor()
 
 
 model = YOLOv10("inf.pt")
+
+
+class PolishedDoc(BaseModel):
+    markdown: str
 
 
 class DocContent(BaseModel):
@@ -49,6 +59,14 @@ class Table(BaseModel):
         )
 
 
+def convert_to_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        image_data = image_file.read()
+        base64_encoded_data = base64.b64encode(image_data)
+        base64_string = base64_encoded_data.decode("utf-8")
+        return base64_string
+
+
 def save_detections(result: list, save_path: str = "result.jpg"):
     # Annotate and save the result
     annotated_frame = result[0].plot(pil=True, line_width=5, font_size=20)
@@ -64,12 +82,12 @@ def extract_table(image: str) -> Table:
         Table: contents of table, as headers and rows
     """
     res = ollama.chat(
-        model="minicpm-v",
+        model="minicpm-v-2",
         messages=[
             {
                 "role": "user",
                 "content": "give me the contents of this table",
-                "images": [image],
+                "images": [convert_to_base64(image)],
             }
         ],
         format=Table.model_json_schema(),
@@ -87,23 +105,22 @@ def extract_image(image: str) -> Table:
         str: contents of Image
     """
     res = ollama.chat(
-        model="minicpm-v",
+        model="minicpm-v-2",
         messages=[
             {
                 "role": "user",
                 "content": "give me the contents of this Image",
-                "images": [image],
+                "images": [convert_to_base64(image)],
             }
         ],
         format=ImageDescription.model_json_schema(),
-        options={"temperature": 0, "repeat_penalty": 1.4},
     )
     print(res["message"]["content"])
     return ImageDescription.model_validate_json(res["message"]["content"]).description
 
 
 template_formula = """
-I have a physics based formula extracted out,
+I have a math formula extracted out,
 it has an OCR based extraction,
 this does not have valid math symbols
 <valid-text>
@@ -141,7 +158,7 @@ def extract_formula(image: str) -> str:
             }
         ],
         format=Formula.model_json_schema(),
-        options={"temperature": 0},
+        options={"temperature": 0.2},
     )
 
     text_content = LatexNodes2Text().latex_to_text(
@@ -158,7 +175,7 @@ and merge the two files together, to build a common text, containing valid text
 """
 
 template_files = """
-I have a physics based document page extracted out,
+I have a document page extracted out,
 it has an OCR based extraction,
 this does not have valid math symbols
 <valid-text>
@@ -199,7 +216,7 @@ def extract_text(image: str) -> str:
             },
         ],
         format=DocContent.model_json_schema(),
-        options={"temperature": 0},
+        options={"temperature": 0.2},
     )
     result = DocContent.model_validate_json(res["message"]["content"]).text
 

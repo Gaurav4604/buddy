@@ -4,3 +4,8 @@ pdf2image
 ollama
 pylatexenc
 pytesseract
+opencv-python-headless
+torch 
+torchvision
+torchaudio
+chromadb
