@@ -5,7 +5,7 @@
                 
 
                 <formula>
-                Σ^+ = Σ^1∪Σ^2∪Σ^3∪⋯
+                Σ^+ = Σ^1∪Σ^2∪Σ^3∪…
                 </formula>
                 
 
@@ -18,19 +18,14 @@
                 # Concatenating strings
 
 
-    Let  S = {s_1, s_2, …, s_n}
-           and  T = {t_1, t_2, …, t_m}
-           be two finite strings.
+    Let  S    = the set of all strings, 
+        and let  C    = a function that concatenates two strings. 
+        Then, for any  s_1, s_2 ∈ S, 
+        
+            C(s_1, s_2)    = s_1 + s_2.
 
 
-
-    The concatenation of  S  and  T,    S · T = s_1t_1s_2t_2 … s_nt_m 
-       is the string formed by placing each element of  T  immediately after its corresponding element in  S.
-
-
-
-    For example, if  S =
-
+This function takes two strings and returns their concatenation.
                 </title>
                 
 
@@ -48,6 +43,9 @@ Let s be the string composed of the m symbols s₁s₁s₂⋯ sₘ, and t be the
 
                 <title>
                 0.5.3 Lang14885
+
+**Math:**
+
 0.5.3 Languages
                 </title>
                 
@@ -87,16 +85,19 @@ A language over © does not need to include strings with all the symbols of ©. 
 
                 <text>
                 1. The language consisting of valid binary byte-values (a string of 8 0’s or 1’s): 00000000, 00000001, —, 11111111 This is just Σ°.
-2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a 1: 11, 101, 110, 1001, 1010, 1100, 1111,—
+2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a
+   1: 11, 101, 110, 1001, 1010, 1100, 1111,—
 3. The set of valid compass directions: N,S,E, W, NE, NW, SE, SW, NNE, ENE,—
 4. Σ° is a language over an alphabet Σ.
-5. e, the language consisting only of the empty string, is a language over any alphabet. This language has just one string: e.
-6. Q, the language with no strings, is a language over any alphabet. Note that Q ≠ e, because e contains one string.
+5. e, the language consisting only of the empty string, is a language over any alphabet. This
+   language has just one string: e.
+6. Q, the language with no strings, is a language over any alphabet. Note that Q ≠ e, because
+   e contains one string.
                 </text>
                 
 
                 <text>
-                The language consisting of valid binary byte-values (a string of 8 0's or 1's): 00000000, 00000001, —, 11111111 This is just Σ^8.
+                1. The language consisting of valid binary byte-values (a string of 8 0's or 1's): 00000000, 00000001, ..., 11111111 This is just Σ^8.
 
 1. The language consisting of valid binary byte-values (a string of 8 0’s or 1’s):
 00000000, 00000001, —, 11111111 This is just ©°.
@@ -104,7 +105,7 @@ A language over © does not need to include strings with all the symbols of ©. 
                 
 
                 <text>
-                2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a 1: 11, 101, 110, 1001, 1010, 1100, 1111,—,
+                2. The set of even-parity binary numbers (having an even number of 1’s), whose first digit is a 1: 11, 101, 110, 1001, 1010, 1100, 1111, ⋯, 
                 </text>
                 
 
@@ -114,7 +115,7 @@ A language over © does not need to include strings with all the symbols of ©. 
                 
 
                 <text>
-                4. Σ^* is an alphabet Σ.
+                4. Σ^* is alphabet Σ.
 
 4. * is a language over an alphabet ™.
                 </text>

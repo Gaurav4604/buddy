@@ -13,7 +13,7 @@ from PIL import Image
 from pdf2image import convert_from_path
 
 
-def extraction_pipeline(input_img: str, page_num: int):
+def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
     # 1) Load the pre-trained model predictions
     det_res = model.predict(
         input_img,  # Image to predict
@@ -125,8 +125,17 @@ def extraction_pipeline(input_img: str, page_num: int):
     os.makedirs("outputs", exist_ok=True)
     if not os.path.exists(os.path.join("outputs", "images")):
         os.makedirs(os.path.join("outputs", "images"))
+        if not os.path.exists(
+            os.path.join("outputs", "images", f"chapter_{chapter_num}")
+        ):
+            os.makedirs(os.path.join("outputs", "images", f"chapter_{chapter_num}"))
+
     if not os.path.exists(os.path.join("outputs", "pages")):
         os.makedirs(os.path.join("outputs", "pages"))
+        if not os.path.exists(
+            os.path.join("outputs", "pages", f"chapter_{chapter_num}")
+        ):
+            os.makedirs(os.path.join("outputs", "pages", f"chapter_{chapter_num}"))
 
     for idx, det in enumerate(all_detections):
         # Crop the snippet
@@ -143,7 +152,9 @@ def extraction_pipeline(input_img: str, page_num: int):
         #
         if det.class_id == 3:  # image data
             description = extract_image(det.file_location)
-            save_path = f"outputs/images/page_{page_num}_{idx}.jpg"
+            save_path = (
+                f"outputs/images/chapter_{chapter_num}/page_{page_num}_{idx}.jpg"
+            )
             print(f"image {save_path} - {idx} - {description}")
             shutil.copyfile(src=det.file_location, dst=save_path)
             content += (
@@ -222,7 +233,11 @@ def extraction_pipeline(input_img: str, page_num: int):
             )
 
     # 7) Write the page's content to disk
-    with open(f"outputs/pages/page_{page_num + 1}.txt", "w", encoding="utf-8") as f:
+    with open(
+        f"outputs/pages/chapter_{chapter_num}/page_{page_num + 1}.txt",
+        "w",
+        encoding="utf-8",
+    ) as f:
         f.write(content)
 
     # Clean up /temp
@@ -248,7 +263,7 @@ def extraction_pipeline_from_pdf(pdf_path: str) -> str:
         page.save(page_filename, "PNG")
 
         # Call the pipeline for this image
-        page_content = extraction_pipeline(page_filename, page_num=i)
+        page_content = extraction_pipeline(page_filename, chapter_num=0, page_num=i)
         all_pages_content.append(f"--- Page {i+1} ---\n{page_content}")
 
     # Combine text from all pages

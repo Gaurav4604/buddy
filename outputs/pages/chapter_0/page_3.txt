@@ -1,10 +1,10 @@
 
             <image>
             <path>
-            outputs/images/page_2_0.jpg
+            outputs/images/chapter_0/page_2_0.jpg
             </path>
             <description>
-            A simple diagram showing a toggle switch with two positions: OFF and ON. The arrow labeled 'tap' indicates that pressing or tapping on either position will change it to its opposite state.
+            A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing or tapping on either state will change it to the opposite one.
             </description>
             </image>
             
@@ -15,7 +15,7 @@
                 
 
                 <text>
-                In the diagram, the two circles, named off and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap. We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, labelled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named off.) A diagram such as this is called a finite state machine(FSM).
+                In the diagram, the two circles, named **off** and **on**, represent the state of the light. The state of the light can be changed by the occurrence of an event, named *tap*. We show a transition from one state to another by a directed arc (a line with an arrow on one end) from one state to another, labelled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named **off**.) A diagram such as this is called a *finite* state machine (FSM).
                 </text>
                 
 
@@ -31,10 +31,10 @@
 
             <image>
             <path>
-            outputs/images/page_2_5.jpg
+            outputs/images/chapter_0/page_2_5.jpg
             </path>
             <description>
-            A simple diagram showing a switch with two positions: OFF and ON. The switch is depicted as having an 'OFF' position on one side, indicated by a circle with a black dot inside it, and an 'ON' position on the other side, marked by text within a circular boundary. Arrows indicate that to change from 'OFF' to 'ON', or vice versa, requires pressing down (tap) in both directions.
+            A simple diagram showing a switch with two positions: OFF and ON. The arrow labeled 'tap' indicates that pressing it will change the position from OFF to ON or vice versa.
             </description>
             </image>
             
@@ -50,16 +50,16 @@
                 
 
                 <text>
-                Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the _ON_ state, as shown in fig. 3.
+                Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the ON state, as shown in fig. 3.
                 </text>
                 
 
             <image>
             <path>
-            outputs/images/page_2_9.jpg
+            outputs/images/chapter_0/page_2_9.jpg
             </path>
             <description>
-            A simple diagram showing a switch with two states: OFF and ON. The OFF state is connected to an arrow labeled 'OFF' pointing upwards, indicating that it can be turned on by tapping once (tap). Similarly, the ON state has an arrow labeled 'ON' pointing downwards, suggesting that it can also be turned off by another tap.
+            A simple diagram showing a switch with two states, OFF and ON. The switch is depicted as being in the OFF state initially, but can be toggled to the ON state by tapping it twice.
             </description>
             </image>
             

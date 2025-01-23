@@ -25,7 +25,7 @@ most common are:
                 
 
                 <text>
-                **Embedded Systems**: If you are an engineer, you will almost certainly be involved in designing or implementing an embedded control system for a product. The reason is simple: a microcontroller is the cheapest and most flexible way to implement the control section of almost every electronic product. Those of you who are studying the courses "Software Engineering and Project" or "Embedded Computer Systems" will find that knowledge of event-driven systems will significantly simplify the software for your projects.
+                **Embedded Systems**: If you are an engineer, you will almost certainly be involved in designing or implementing an embedded control system for a product. The reason is simple: a microcontroller is the cheapest and most flexible way to implement the control section of almost every electronic product. Those of you who are studying the courses **"Software Engineering and Project**" or **"Embedded Computer Systems"** will find that knowledge of event-driven systems will significantly simplify the software for your projects.
                 </text>
                 
 
