@@ -1,0 +1,85 @@
+
+            <text>
+            zero one
+            </text>
+            
+
+            <table>
+            
+<headers>
+    ['δ_D', '0', '1']
+</headers>
+<rows>
+        <row>['→ {q_0}', '{q_0, q_1}', '{q_0}']</row>
+	<row>['→ {q_1}', '{q_1}', '{}']</row>
+	<row>['* {q_2}', '*', '{}']</row>
+	<row>['{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
+	<row>['{q_0, q_2}', '{q_0, q_1}', '{q_0}']</row>
+	<row>['* {q_0, q_2}', '* {q_0, q_1}', '* {q_0}']</row>
+	<row>['* {q_1, q_2}', '* {q_1, q_2}', '* {q_2}']</row>
+	<row>['{q_0, q_1, q_2}', '{q_0, q_1, q_2}', '{q_0, q_2}']</row>
+</rows>
+        
+            </table>
+            
+
+            <text>
+            To show how this table was derived, let us generate the entries for the d-state q₀, q₂. Consider first the case when the next input symbol is a 0. Within the d-state q₀, q₂ there are two states to consider, when we evaluate the Δ_N transition function:
+            </text>
+            
+
+            <formula>
+            Δ_N({q_0, q_2}, 0) = δ_N(q_0, 0) ∪δ_N(q_2, 0) = {q_0, q_1}∪∅ = {q_0, q_1}
+            </formula>
+            
+
+            <text>
+            We thus see that δ_D(q_0,q_2,0)=q_0,q_1, so q_0,q_1 goes into the 0 column.
+            </text>
+            
+
+            <text>
+            ider the case when the input symbol is a 1. Once again, within the d-state there a
+
+            </text>
+            
+
+            <formula>
+            Δ_N({q_0, q_2}, 1) = δ_N(q_0, 1) ∪δ_N(q_2, 1) = {q_0}∪∅ = {q_0}
+            </formula>
+            
+
+            <text>
+            We thus see that δ_D(q_0,q_2,1)=q_0. Which now goes into the 1 column.
+            </text>
+            
+
+            <text>
+            The remaining entries in the table are computed in a similar way.
+            </text>
+            
+
+            <text>
+            If we examine the table carefully, starting at the initial d-state q₀, we find we can reach only the d-states q₀,q₁, q₀, and q₀,q₂. All the other d-states are unreachable, and can safely be ignored. Notice that the DFA now has only three states, exactly the same as the original NFA! This is much better than the (potential) worst case of 7 states.
+            </text>
+            
+
+            <text>
+            If we draw the DFA transition diagram that corresponds to this table, we get this diagram:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/images/chapter_1/page_6_11.jpg
+        </path>
+        <description>
+        A state diagram with three states: {q0}, {q1}, and {q2}. The initial state is q0, which has two transitions to q1 (with probabilities 0 and 1) and one transition from q1 back to q0. State q1 also has a self-loop with probability 0, but no other transitions. Finally, state q2 has a single transition from q1 with probability 1.
+        </description>
+        </image>
+        
+
+            <text>
+            With the exception of the labels on the states, which are unimportant because they are just names, this diagram is identical to the DFA we derived in chapter 1. This is, of course, exactly what we expected!
+            </text>
+            

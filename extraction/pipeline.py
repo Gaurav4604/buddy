@@ -11,9 +11,95 @@ import os
 import shutil
 from PIL import Image
 from pdf2image import convert_from_path
+from typing import Any
+import asyncio
 
 
-def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
+async def get_content(idx, det, chapter_num, page_num, content="") -> str:
+
+    if det.class_id == 3:  # image data
+        description = await extract_image(det.file_location)
+        save_path = f"outputs/images/chapter_{chapter_num}/page_{page_num}_{idx}.jpg"
+        print(f"image {save_path} - {idx} - {description}")
+        shutil.copyfile(src=det.file_location, dst=save_path)
+        content += (
+            f"""
+        <image>
+        <path>
+        {save_path}
+        </path>
+        <description>
+        {description}
+        </description>
+        </image>
+        """
+            + "\n"
+        )
+    elif det.class_id == 4:
+        # caption text
+        extracted_text = await extract_text(det.file_location)
+        print(f"caption {extracted_text} - {idx}")
+        content += (
+            f"""
+            <caption>
+            {extracted_text}
+            </caption>
+            """
+            + "\n"
+        )
+    elif det.class_id == 8:
+        # Possibly a formula
+        formula = await extract_formula(det.file_location)
+        print(f"formula {formula} - {idx}")
+        content += (
+            f"""
+            <formula>
+            {formula}
+            </formula>
+            """
+            + "\n"
+        )
+    elif det.class_id == 5:
+        # Possibly a table
+        table = await extract_table(det.file_location)
+        print(f"table {table} - {idx}")
+        content += (
+            f"""
+            <table>
+            {table.construct_table()}
+            </table>
+            """
+            + "\n"
+        )
+
+    elif det.class_id == 0:
+        # title text
+        extracted_text = await extract_text(det.file_location)
+        print(f"title {extracted_text} - {idx}")
+        content += (
+            f"""
+            <title>
+            {extracted_text}
+            </title>
+            """
+            + "\n"
+        )
+    else:
+        # plain text
+        extracted_text = await extract_text(det.file_location)
+        print(f"text {extracted_text} - {idx}")
+        content += (
+            f"""
+            <text>
+            {extracted_text}
+            </text>
+            """
+            + "\n"
+        )
+    return content
+
+
+async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
     # 1) Load the pre-trained model predictions
     det_res = model.predict(
         input_img,  # Image to predict
@@ -125,17 +211,13 @@ def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
     os.makedirs("outputs", exist_ok=True)
     if not os.path.exists(os.path.join("outputs", "images")):
         os.makedirs(os.path.join("outputs", "images"))
-        if not os.path.exists(
-            os.path.join("outputs", "images", f"chapter_{chapter_num}")
-        ):
-            os.makedirs(os.path.join("outputs", "images", f"chapter_{chapter_num}"))
+    if not os.path.exists(os.path.join("outputs", "images", f"chapter_{chapter_num}")):
+        os.makedirs(os.path.join("outputs", "images", f"chapter_{chapter_num}"))
 
     if not os.path.exists(os.path.join("outputs", "pages")):
         os.makedirs(os.path.join("outputs", "pages"))
-        if not os.path.exists(
-            os.path.join("outputs", "pages", f"chapter_{chapter_num}")
-        ):
-            os.makedirs(os.path.join("outputs", "pages", f"chapter_{chapter_num}"))
+    if not os.path.exists(os.path.join("outputs", "pages", f"chapter_{chapter_num}")):
+        os.makedirs(os.path.join("outputs", "pages", f"chapter_{chapter_num}"))
 
     for idx, det in enumerate(all_detections):
         # Crop the snippet
@@ -149,88 +231,33 @@ def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
     content = ""
     for idx, det in enumerate(all_detections):
         # {0: 'title', 1: 'plain text', 2: 'abandon', 3: 'figure', 4: 'figure_caption', 5: 'table', 6: 'table_caption', 7: 'table_footnote', 8: 'isolate_formula', 9: 'formula_caption'}
-        #
-        if det.class_id == 3:  # image data
-            description = extract_image(det.file_location)
-            save_path = (
-                f"outputs/images/chapter_{chapter_num}/page_{page_num}_{idx}.jpg"
-            )
-            print(f"image {save_path} - {idx} - {description}")
-            shutil.copyfile(src=det.file_location, dst=save_path)
-            content += (
-                f"""
-            <image>
-            <path>
-            {save_path}
-            </path>
-            <description>
-            {description}
-            </description>
-            </image>
-            """
-                + "\n"
-            )
-        elif det.class_id == 4:
-            # caption text
-            extracted_text = extract_text(det.file_location)
-            print(f"caption {extracted_text} - {idx}")
-            content += (
-                f"""
-                <caption>
-                {extracted_text}
-                </caption>
-                """
-                + "\n"
-            )
-        elif det.class_id == 8:
-            # Possibly a formula
-            formula = extract_formula(det.file_location)
-            print(f"formula {formula} - {idx}")
-            content += (
-                f"""
-                <formula>
-                {formula}
-                </formula>
-                """
-                + "\n"
-            )
-        elif det.class_id == 5:
-            # Possibly a table
-            table = extract_table(det.file_location)
-            print(f"table {table} - {idx}")
-            content += (
-                f"""
-                <table>
-                {table.construct_table()}
-                </table>
-                """
-                + "\n"
+        # content +=
+        max_retries = 3
+        for attempt in range(1, max_retries + 1):
+            # Recreate the task each time we retry
+            task = asyncio.create_task(
+                get_content(idx, det, chapter_num, page_num, content)
             )
 
-        elif det.class_id == 0:
-            # title text
-            extracted_text = extract_text(det.file_location)
-            print(f"title {extracted_text} - {idx}")
-            content += (
-                f"""
-                <title>
-                {extracted_text}
-                </title>
-                """
-                + "\n"
-            )
-        else:
-            # plain text
-            extracted_text = extract_text(det.file_location)
-            print(f"text {extracted_text} - {idx}")
-            content += (
-                f"""
-                <text>
-                {extracted_text}
-                </text>
-                """
-                + "\n"
-            )
+            try:
+                content = await asyncio.wait_for(task, timeout=45)
+                print(content)
+                # If we get here, it succeeded within 45s — break out of the loop
+                break
+
+            except asyncio.TimeoutError:
+                # Cancel the timed-out task
+                task.cancel()
+
+                if attempt < max_retries:
+                    print(f"Attempt {attempt} timed out. Retrying...")
+                else:
+                    print(
+                        f"Attempt {attempt} timed out. Maximum retries reached; giving up."
+                    )
+                    # No more retries; you can handle it (e.g. return, raise, etc.)
+                    # break or raise an exception, depending on your needs
+                    exit()
 
     # 7) Write the page's content to disk
     with open(
@@ -245,30 +272,39 @@ def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
     return content
 
 
-def extraction_pipeline_from_pdf(pdf_path: str) -> str:
+async def async_extraction_pipeline_from_pdf(
+    pdf_path: str, chapter_num: int = 0, start_page: int = 0
+) -> str:
     """
-    Converts each page of the given PDF into an image and calls the
-    existing extraction_pipeline() on each page image. Aggregates all
-    extracted content into a single string.
+    Async version of 'extraction_pipeline_from_pdf' that converts pages to images,
+    then awaits 'extraction_pipeline(...)' on each page (which is also async).
+    Returns combined text from all pages.
     """
-    # Convert PDF to a list of PIL Images
-    pages = convert_from_path(pdf_path, dpi=300)
+    # Convert only the pages from start_page onward
+    pages = convert_from_path(pdf_path, dpi=300, first_page=(start_page + 1))
 
     os.makedirs("pages", exist_ok=True)
     all_pages_content = []
 
     for i, page in enumerate(pages):
-        # Save the current PDF page as a PNG
-        page_filename = f"pages/page_{i}.png"
+        real_page_index = start_page + i
+        page_filename = f"pages/page_{real_page_index}.png"
         page.save(page_filename, "PNG")
 
-        # Call the pipeline for this image
-        page_content = extraction_pipeline(page_filename, chapter_num=0, page_num=i)
-        all_pages_content.append(f"--- Page {i+1} ---\n{page_content}")
+        # Instead of calling asyncio.run(...), we just 'await' the pipeline call
+        page_content = await extraction_pipeline(
+            page_filename, chapter_num, page_num=real_page_index
+        )
 
-    # Combine text from all pages
+        # Accumulate your results if needed
+        all_pages_content.append(f"--- Page {real_page_index + 1} ---\n{page_content}")
+
     return "\n".join(all_pages_content)
 
 
 if __name__ == "__main__":
-    print(extraction_pipeline_from_pdf("files/automata.pdf"))
+    # Now do a single call to asyncio.run with the entire multi-page process.
+    output = asyncio.run(
+        async_extraction_pipeline_from_pdf("files/automata_cpt_2.pdf", chapter_num=1)
+    )
+    print(output)

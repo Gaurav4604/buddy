@@ -2,7 +2,9 @@
                 <title>
                 0.5.1 Alphalets
 
-0.5.1 Alphabets
+
+    0.5.1 Alphabets
+
                 </title>
                 
 
@@ -22,6 +24,8 @@ An alphabet is a finite, non-empty set of symbols. It is conventional to use the
 
                 <text>
                 1. Σ=0,1, the set of binary digits.
+
+1. © = 0, 1, the set of binary digits.
                 </text>
                 
 
@@ -33,17 +37,10 @@ An alphabet is a finite, non-empty set of symbols. It is conventional to use the
                 
 
                 <text>
-                A _string_ is a finite sequence of symbols drawn from an alphabet. A string is also sometimes called a *word*. Some examples of strings are:
+                A _string_ is a finite sequence of symbols drawn from an alphabet. A string is also sometimes called a _word_. Some examples of strings are:
 
 
-    eginalign*    	extFinite Sequence of Symbols     	extDrawn from an Alphabet     	extAlso Sometimes Called a Word     	extExamples:
-     	extExample 1:    	extHello World!
-     	extExample 2:    	extOpenAI ChatGPT
-     	extExample 3:    	extMathematics
-     	extExample 4:    	extProgramming Languages
-     	extExample 5:    	extNatural Language Processing
-     	extNote:    	extThese examples illustrate the diversity and versatility of strings in various contexts. 
-    eginalign*
+    eginalign* 	extString   = 	extfinite sequence of symbols    	extdrawn from an alphabet.    	extA string is also sometimes called a word.    	extSome examples of strings are:	extExample 1:   	ext
 
                 </text>
                 
@@ -60,6 +57,8 @@ An alphabet is a finite, non-empty set of symbols. It is conventional to use the
 
                 <text>
                 ## 2. THEORY is a string from the Roman alphabet Σ=A,B,⋯, Z.
+
+2. THEORY isa string from the Roman alphabet © = A, B,—, Z.
                 </text>
                 
 
@@ -97,18 +96,19 @@ An alphabet is a finite, non-empty set of symbols. It is conventional to use the
                 # Powers of an alphabet
 
 Powers of an alphabet
+
                 </title>
                 
 
                 <text>
-                We are often interested in the set of all strings of a certain length, say k, drawn from an alphabet Σ. This can be constructed by taking the Cartesian product, of Σ with itself k times: Σ×Σ×⋯Σ. We can represent this symbolically, using exponential notation, as Σ^k.
+                We are often interested in the set of all strings of a certain length, say k, drawn from an alphabet Σ. This can be constructed by taking the Cartesian product of Σ with itself k times: Σ×Σ×⋯Σ. We can represent this symbolically, using exponential notation, as Σ^k.
                 </text>
                 
 
                 <text>
                 early Σ^0=ϵ, for any alphabet Σ, because ϵ is the only string whose length is zero.
 
-**Math Extraction:**
+**Math:**
 
 Σ^0 = {ϵ}, for any alphabet Σ, because ϵ is the only string whose length is zero.
                 </text>
@@ -149,7 +149,7 @@ For the alphabet © = N, E, S, W, we find:
                 
 
                 <text>
-                The set of _all_ strings that can be drawn from an alphabet is conventionally denoted, using the so-called Kleene star, by Σ^*, and of course has an infinite number of members. For the alphabet Σ=0,1. The set of all strings that can be drawn from an alphabet is conventionally denoted, using the so-called Kleene star, by    *, and of course has an infinite number of members. For the alphabet x = 0,1.
+                The set of _all_ strings that can be drawn from an alphabet is conventionally denoted, using the so-called _Kleene star_, by Σ^*, and of course has an infinite number of members. For the alphabet Σ=0,1. The set of all strings that can be drawn from an alphabet is conventionally denoted, using the so-called Kleene star, by    *, and of course has an infinite number of members. For the alphabet x = 0,1.
                 </text>
                 
 
@@ -161,6 +161,10 @@ For the alphabet © = N, E, S, W, we find:
                 
 
                 <text>
-                Clearly, Σ* = Σ⁰ ∪ Σ¹ ∪ Σ² ∪ ⋯
+                Clearly, Σ* = Σ0 ∪ Σ1 ∪ Σ2 ∪ ⋯
+
+**Merged Text:**
+
+Clearly, 5* = S°US'US?2U—
                 </text>
                 

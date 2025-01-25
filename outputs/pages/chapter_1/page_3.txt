@@ -1,0 +1,141 @@
+
+            <text>
+            When we process the input symbol 0, the NFA makes two transitions to q₀ and q₁. There are again two current states, and the diagram is:
+
+When we process the input symbol 0,
+the NFA makes two transitions to gg and qi. There are again two current states,
+and the diagram is:
+            </text>
+            
+
+            <text>
+            When we process the input symbol 0, there are two cases to handle: There is no outgoing transition from state q_1, so it is unable to handle the 0. State q_0 has two outgoing transitions labelled with 0, so the NFA enters states q_0 and q_1. The overall effect is for the NFA diagram to not change:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/images/chapter_1/page_2_2.jpg
+        </path>
+        <description>
+        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two incoming transitions: one from 0 and another from 1. From q0, there is a transition to q1 on the input of '0'. From q1, there are two outgoing transitions: one to q2 with an unspecified label and another back to q0 with an unspecified label. The final state is q2.
+        </description>
+        </image>
+        
+
+            <text>
+            To process the input symbol 1, we again must handle two cases. The dot in q₀ results in the next state being q₀. The dot in q₁ results in the next state being q₂. There are two current states q₀ and q₂, and the diagram now looks like this:
+
+
+            </text>
+            
+
+            <text>
+            Since q₂ is an accepting state, the NFA has recognized a string that ends in 01.
+            </text>
+            
+
+            <title>
+            # 2.2   Formal definitions of an NFA
+
+2.2 Formal definitions of an NFA
+            </title>
+            
+
+            <title>
+            # 2.2.1 Five-tuple definition of an NFA
+
+2.2.1 Five-tuple definition of an NFA
+            </title>
+            
+
+            <text>
+            A non-deterministic finite automaton (NFA) consists of:
+
+
+    A  non-deterministic finite automaton (NFA)  consists of:
+
+            </text>
+            
+
+            <text>
+            1. A finite set of _states_, usually denoted by Q
+2. A finite set of _input symbols_, usually denoted by ™.
+3. A transition function δ: Q × Σ → Q, that takes a state and an input symbol, and returns a set of new states. The transition function is usually denoted by δ.
+4. A set of start-states Q₀ ⊆ Q. Q₀ is a set containing one or more of the states in Q.
+5. A set of final or accepting states F' ⊆ Q, usually denoted by F’. Clearly, F’ is a subset of Q.
+            </text>
+            
+
+            <text>
+            1. A finite set of states, usually denoted by Q
+
+            </text>
+            
+
+            <text>
+            2. A finite set of _input symbols_, usually denoted by ™.
+            </text>
+            
+
+            <text>
+            3. A transition function Q×Σ→Q, that takes a state and an input symbol, and returns a set of new states. The transition function is usually denoted by δ.
+            </text>
+            
+
+            <text>
+            set of *start-states* Q_0 ⊆ Q, Q_0 is a set containing one or more of the states in Q.
+            </text>
+            
+
+            <text>
+            4. A set of _start-states_ Q₀ ⊆ Q. Q₀ is a set containing one or more of the states in Q.
+            </text>
+            
+
+            <text>
+            5. A set of _final_ or _accepting_ states F⊆Q, usually denoted by F. Clearly, F is a subset of Q.
+
+5. A set of final or accepting states F' CQ, usually denoted by F’. Clearly, F' is a subset of Q.
+            </text>
+            
+
+            <text>
+            Notice that there are two minor differences between a DFA and an NFA. The first difference is that the transition function for a DFA returns a single state, whereas for an NFA it returns a set of states.
+            </text>
+            
+
+            <text>
+            The second difference follows from the first, and is that a DFA has a _single_ start state, whereas an NFA has a _set_ of start states.
+
+
+    eginalign* 	extDFA:     	extSingle start state 	extNFA:     	extSet of start states	extDifference:     	extA DFA has a single start state, whereas an NFA has a set of start states.
+    eginalign*
+
+            </text>
+            
+
+            <text>
+            A non-deterministic finite automaton named N can be represented by a 5-tuple: 
+
+
+    egincases Q    finite set of states
+    Σ   input alphabet
+     q_0    start state
+     F    set of final states
+    δ   transition function
+
+            </text>
+            
+
+            <formula>
+            
+    N=(Q,Σ,δ,Q_0,F)
+
+            </formula>
+            
+
+            <text>
+            where Q is the set of states, Σ is the set of input symbols, δ is the transition function, Q₀ is the set of initial states, and F is the set of final states.
+            </text>
+            

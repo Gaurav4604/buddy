@@ -3,7 +3,6 @@ from texify.inference import batch_inference
 from texify.model.model import load_model
 from texify.model.processor import load_processor
 from pylatexenc.latex2text import LatexNodes2Text
-import ollama
 from pydantic import BaseModel
 import pytesseract
 import os
@@ -12,16 +11,18 @@ from doclayout_yolo import YOLOv10
 import base64
 from transformers.utils import logging
 import warnings
+import ollama
+import asyncio
 
 logging.set_verbosity(40)
 warnings.filterwarnings("ignore", category=FutureWarning)
-
 
 latex_model = load_model()
 latex_processor = load_processor()
 
 
 model = YOLOv10("inf.pt")
+client = ollama.AsyncClient()
 
 
 class PolishedDoc(BaseModel):
@@ -73,7 +74,7 @@ def save_detections(result: list, save_path: str = "result.jpg"):
     cv2.imwrite(save_path, annotated_frame)
 
 
-def extract_table(image: str) -> Table:
+async def extract_table(image: str) -> Table:
     """
     Extracts the contents of a Table, and returns it as headers and rows
     Args:
@@ -81,7 +82,7 @@ def extract_table(image: str) -> Table:
     Returns:
         Table: contents of table, as headers and rows
     """
-    res = ollama.chat(
+    res = await client.chat(
         model="minicpm-v-2",
         messages=[
             {
@@ -92,11 +93,12 @@ def extract_table(image: str) -> Table:
         ],
         format=Table.model_json_schema(),
         options={"temperature": 0},
+        keep_alive=0,
     )
     return Table.model_validate_json(res["message"]["content"])
 
 
-def extract_image(image: str) -> Table:
+async def extract_image(image: str) -> Table:
     """
     Extracts the contents of a Image, and returns it as description
     Args:
@@ -104,7 +106,7 @@ def extract_image(image: str) -> Table:
     Returns:
         str: contents of Image
     """
-    res = ollama.chat(
+    res = await client.chat(
         model="minicpm-v-2",
         messages=[
             {
@@ -114,6 +116,7 @@ def extract_image(image: str) -> Table:
             }
         ],
         format=ImageDescription.model_json_schema(),
+        keep_alive=0,
     )
     print(res["message"]["content"])
     return ImageDescription.model_validate_json(res["message"]["content"]).description
@@ -137,7 +140,7 @@ based on both information sources
 """
 
 
-def extract_formula(image: str) -> str:
+async def extract_formula(image: str) -> str:
     """
     Extracts formula as LaTeX from the given image
     Args:
@@ -149,7 +152,7 @@ def extract_formula(image: str) -> str:
     output_ocr = pytesseract.image_to_string(img)
     output_1 = batch_inference([img], latex_model, latex_processor)
 
-    res = ollama.chat(
+    res = await client.chat(
         model="marco-o1",
         messages=[
             {
@@ -159,6 +162,7 @@ def extract_formula(image: str) -> str:
         ],
         format=Formula.model_json_schema(),
         options={"temperature": 0.2},
+        keep_alive=0,
     )
 
     text_content = LatexNodes2Text().latex_to_text(
@@ -191,7 +195,7 @@ give me a merged response, with valid math, and retain all text info
 """
 
 
-def extract_text(image: str) -> str:
+async def extract_text(image: str) -> str:
     """
     Extracts text from image
     Args:
@@ -203,7 +207,7 @@ def extract_text(image: str) -> str:
     text_content_latex = LatexNodes2Text().latex_to_text(result[0]).strip()
 
     tesseract_text = pytesseract.image_to_string(image)
-    res = ollama.chat(
+    res = await client.chat(
         model="marco-o1",
         messages=[
             {
@@ -217,6 +221,7 @@ def extract_text(image: str) -> str:
         ],
         format=DocContent.model_json_schema(),
         options={"temperature": 0.2},
+        keep_alive=0,
     )
     result = DocContent.model_validate_json(res["message"]["content"]).text
 

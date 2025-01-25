@@ -14,12 +14,14 @@
                 <title>
                 # 0.4 Another example - text recognition
 
-0.4 Another example - text recognition
+
+    0.4 Another example - text recognition
+
                 </title>
                 
 
                 <text>
-                We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognise the words “for”, and “float”, in a stream of text. We could construct a finite state machine, where the sequence of events is the sequence of characters in the input stream. The resulting FSM is shown in figure 4.
+                We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognize the words 'for' and 'float' in a stream of text. We could construct a finite state machine, where the sequence of events is the sequence of characters in the input stream. The resulting FSM is shown in figure 4.
                 </text>
                 
 

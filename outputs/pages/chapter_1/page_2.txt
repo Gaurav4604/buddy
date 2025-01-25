@@ -1,0 +1,98 @@
+
+            <text>
+            * The diagram has fewer transitions than the earlier DFA, so it appears simpler.
+* There are two transitions from state q0, labelled 0. Thus when a 0 is received, the NFA enters both state q0 and state q1. We will see how to think about this situation shortly.
+* There is no transition corresponding to 0 from state q1, and no transitions at all from state q2. If these situations occur, the thread of the NFA’s existence that corresponds to these states simply “dies”. Other threads may continue to exist.
+            </text>
+            
+
+            <text>
+            The central idea of this NFA is to try to "guess" when the final 01 has begun. Whenever it is in state q₀, and it sees a zero, it guesses that the 0 is the beginning of the final 01, so it enters state q₁. (If it guessed correctly, a subsequent 1 will cause it to enter state q₂.) However, just in case it makes a bad guess, and the 0 is not the beginning of a 01 sequence, the NFA "hedges its bets" and also remains in state q₀.
+            </text>
+            
+
+            <title>
+            # 2.1.1 Example — the zeroOne NFA processing a string
+
+2.1.1 Example — the zeroOne NFA processing a string
+            </title>
+            
+
+            <text>
+            is works, let us process the same string 011001 that was handled by the previous DR.
+
+is works, let us process the same string 011001 that was handled by the previous DF
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/images/chapter_1/page_1_4.jpg
+        </path>
+        <description>
+        A sequence of three state diagrams representing a finite automaton with two states, q0 and q1. The diagram shows transitions between these states based on input symbols 0 or 1.
+        </description>
+        </image>
+        
+
+            <text>
+            # Initially, the NFA is in state q₀.
+
+
+            </text>
+            
+
+            <text>
+            After processing the input symbol 0, the NFA enters states q₀ and q₁. There are thus two dots showing the current state.
+            </text>
+            
+
+            <text>
+            To process the input symbol 1, we must handle two cases. The dot in q₀ results in the next state being q₀. The dot in q₁ results in the next state being q₂. There are two current states q₀ and q₂, and the diagram now looks like this:
+
+
+    If input symbol is 1:
+      Case 1: Dot in  q_0 ⇒Next state is  q_0. 
+      Case 2: Dot in  q_1 ⇒Next state is  q_2.
+
+
+There are two current states, q₀ and q₂.
+            </text>
+            
+
+            <text>
+            Since q₂ is an accepting state, the NFA has recognised a string that ends in 01.
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/images/chapter_1/page_1_9.jpg
+        </path>
+        <description>
+        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two outgoing transitions to q1 for inputs 0 and 1 respectively. From q1, there are no incoming or outgoing transitions indicated in the image.
+        </description>
+        </image>
+        
+
+            <text>
+            To process the input symbol 1, again we must handle two cases. The dot in q₀ results in the next state being q₀. q₂ has no outgoing transitions, so there is no next state. There is only one current state, and the diagram is:
+
+
+    Case 1:   The dot in  q_0  results in the next state being  q_0. 
+    Case 2:    q_2  has no outgoing transitions, so there is no next state.
+
+
+There is only one current state, and the diagram is:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/images/chapter_1/page_1_11.jpg
+        </path>
+        <description>
+        A state diagram with three states: q0, q1, and q2. State q0 has two transitions labeled 0 and 1 leading to states q1 and q2 respectively. There is a transition from q1 to q2 labeled 'l'. The arrows indicate the direction of the transitions.
+        </description>
+        </image>
+        

@@ -8,6 +8,7 @@ Chapter 0
                 <title>
                 Introduction
 
+
                 </title>
                 
 
@@ -44,7 +45,7 @@ Reactive programs have three main characteristics:
                 
 
                 <text>
-                * _They are driven by the availability of data._ When a particular piece of data becomes available for processing, we say that an event occurs (hence event-driven programs). From a software viewpoint, the order in which events can occur is unpredictable – e.g. a DVD player cannot predict which button a user will press next. This means that the number of execution paths in a reactive program is _much_ larger than in an interactive program. This fact alone makes writing correct code much more difficult (we have all experienced GUI programs that crash for no obvious reason).
+                * They are driven by the availability of data. When a particular piece of data becomes available for processing, we say that an event occurs (hence event-driven programs). From a software viewpoint, the order in which events can occur is unpredictable — e.g., a DVD player cannot predict which button a user will press next. This means that the number of execution paths in a reactive program is much larger than in an interactive program. This fact alone makes writing correct code much more difficult (we have all experienced GUI programs that crash for no obvious reason).
                 </text>
                 
 
@@ -56,10 +57,6 @@ Reactive programs have three main characteristics:
                 <text>
                 * _The user is always in control._ While the program is processing data, it cannot choose to ignore the user, rather it must respond to the user's events (mouse-clicks, or key-strokes) in a timely fashion.
 
-**Math:**
-
-* e The user is always in control. While the program is processing data, it cannot choose to ignore
-the user, rather it must respond to the user’s events (mouse-clicks, or key-strokes) in a timely
-fashion.
+**Math: e The user is always in control. While the program is processing data, it cannot choose to ignore the user, rather it must respond to the user’s events (mouse-clicks, or key-strokes) in a timely fashion.
                 </text>
                 

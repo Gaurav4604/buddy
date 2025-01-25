@@ -43,7 +43,7 @@ class TagsModel(BaseModel):
 
 
 class RAGtoolkit:
-    def __init__(self, chapter_num: int = 0):
+    def __init__(self, chapter_num: int = 0, page_num: int = 1):
         settings = Settings(is_persistent=True)
         self.splitter = TextSplitter(overlap=True, capacity=500, trim=True)
         self.tokenizer = AutoTokenizer.from_pretrained("allenai/specter2_base")
@@ -62,6 +62,10 @@ class RAGtoolkit:
             name="chapters_meta"
         )
         self.ollama_client = ollama.Client()
+
+        # tagging the object
+        self.chapter_name = f"chapter_{chapter_num}"
+        self.page_number = f"page_{page_num}"
 
     def _generate_embeddings(self, inputs: list[str]):
         inputs = self.tokenizer(
@@ -136,38 +140,61 @@ class RAGtoolkit:
             format=TagsModel.model_json_schema(),
             options={"num_ctx": 8192},
         )
-        overall_summary = TagsModel.model_validate_json(res["message"]["content"])
+        overall_summary = TagsModel.model_validate_json(
+            res["message"]["content"]
+        ).summary
 
-        return {"tags": list(tags), "summarys": summarys, "summary": overall_summary}
+        return {"tags": list(tags), "summary": overall_summary}
 
     # chunks for the given chapter to be added
     def add_docs(self, docs: list[str]):
         self._doc_collection.upsert(
             documents=docs,
-            ids=[uuid.uuid1() for _ in range(docs)],
+            metadatas=[
+                {"file_name": f"{self.chapter_name}/{self.page_number}.txt"}
+                for _ in range(len(docs))
+            ],
+            ids=[str(uuid.uuid1()) for _ in range(len(docs))],
             embeddings=self._generate_embeddings(docs),
         )
 
+    def add_meta_data(self, tags: list[str], summary: str):
+        doc = "tags: - \n" + " - ".join(tags) + "\n"
+        doc += summary
+
+        self._chapter_meta_collection.upsert(
+            documents=[doc],
+            metadatas=[{"file_name": self.chapter_name}],
+            ids=[self.chapter_name],
+            embeddings=self._generate_embeddings(doc),
+        )
+
     def query_docs(self, query: str) -> QueryResult:
-        question_embedding = self._generate_embeddings(query)[0]
-        res = self._collection.query(
-            query_embeddings=[question_embedding], query_texts=[query]
+        res = self._doc_collection.query(
+            query_embeddings=self._generate_embeddings(query), query_texts=[query]
         )
         return res
 
+    def query_metadata(self, query: str) -> QueryResult:
+        res = self._chapter_meta_collection.query(
+            query_embeddings=self._generate_embeddings(query), query_texts=[query]
+        )
+        return res
+
+    def get_summary(self) -> str:
+        res = self._chapter_meta_collection.query(
+            query_texts=[""],
+            where={"file_name": self.chapter_name},
+            query_embeddings=self._generate_embeddings(""),
+            n_results=1,
+        )
+        return res["documents"][0]
+
 
 # each chapter will have its own kit access
-kit = RAGtoolkit()
+# kit = RAGtoolkit()
 
-print(kit.generate_meta("outputs/pages/chapter_0"))
-
-# data = open("outputs/pages/chapter_0/page_4.txt", "r", encoding="utf-8").read()
-
-# chunks = kit.generate_chunks(data)
-
-# for chunk in chunks:
-#     print(chunk)
-#     print("-----NEW CHUNK------")
+# print(kit.generate_meta("outputs/pages/chapter_0"))
 
 
 """
