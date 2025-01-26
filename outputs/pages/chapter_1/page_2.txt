@@ -7,7 +7,7 @@
             
 
             <text>
-            The central idea of this NFA is to try to "guess" when the final 01 has begun. Whenever it is in state q₀, and it sees a zero, it guesses that the 0 is the beginning of the final 01, so it enters state q₁. (If it guessed correctly, a subsequent 1 will cause it to enter state q₂.) However, just in case it makes a bad guess, and the 0 is not the beginning of a 01 sequence, the NFA "hedges its bets" and also remains in state q₀.
+            The central idea of this NFA is to try to “guess” when the final 01 has begun. Whenever it is in state q_0, and it sees a zero, it guesses that the 0 is the beginning of the final 01, so it enters state q_1. (If it guessed correctly, a subsequent 1 will cause it to enter state q_2.) However, just in case it makes a bad guess, and the 0 is not the beginning of a 01 sequence, the NFA “hedges its bets” and also remains in state q_0.
             </text>
             
 
@@ -30,7 +30,7 @@ is works, let us process the same string 011001 that was handled by the previous
         outputs/images/chapter_1/page_1_4.jpg
         </path>
         <description>
-        A sequence of three state diagrams representing a finite automaton with two states, q0 and q1. The diagram shows transitions between these states based on input symbols 0 or 1.
+        diagrams showing different states and transitions in a finite state machine
         </description>
         </image>
         
@@ -50,18 +50,17 @@ is works, let us process the same string 011001 that was handled by the previous
             <text>
             To process the input symbol 1, we must handle two cases. The dot in q₀ results in the next state being q₀. The dot in q₁ results in the next state being q₂. There are two current states q₀ and q₂, and the diagram now looks like this:
 
-
-    If input symbol is 1:
-      Case 1: Dot in  q_0 ⇒Next state is  q_0. 
-      Case 2: Dot in  q_1 ⇒Next state is  q_2.
-
-
-There are two current states, q₀ and q₂.
+To process the input symbol 1, we must
+handle two cases. The dot in go results
+in the next state being qo. The dot in q
+results in the next state being qo. There
+are two current states gg and q2, and the
+diagram now looks like this:
             </text>
             
 
             <text>
-            Since q₂ is an accepting state, the NFA has recognised a string that ends in 01.
+            Since q₂ is an accepting state, the NFA has recognized a string that ends in 01.
             </text>
             
 
@@ -70,7 +69,7 @@ There are two current states, q₀ and q₂.
         outputs/images/chapter_1/page_1_9.jpg
         </path>
         <description>
-        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two outgoing transitions to q1 for inputs 0 and 1 respectively. From q1, there are no incoming or outgoing transitions indicated in the image.
+        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two transitions: one to q1 on input 0, and another to itself on input 1. State q1 has a single transition from it to q2 on input 1. There are no other inputs or states in the diagram.
         </description>
         </image>
         
@@ -79,11 +78,9 @@ There are two current states, q₀ and q₂.
             To process the input symbol 1, again we must handle two cases. The dot in q₀ results in the next state being q₀. q₂ has no outgoing transitions, so there is no next state. There is only one current state, and the diagram is:
 
 
-    Case 1:   The dot in  q_0  results in the next state being  q_0. 
-    Case 2:    q_2  has no outgoing transitions, so there is no next state.
+    Case 1:   
+    Case 2:
 
-
-There is only one current state, and the diagram is:
             </text>
             
 
@@ -92,7 +89,7 @@ There is only one current state, and the diagram is:
         outputs/images/chapter_1/page_1_11.jpg
         </path>
         <description>
-        A state diagram with three states: q0, q1, and q2. State q0 has two transitions labeled 0 and 1 leading to states q1 and q2 respectively. There is a transition from q1 to q2 labeled 'l'. The arrows indicate the direction of the transitions.
+        A state diagram with three states: q0, q1, and q2. The initial state is q0, which has two transitions labeled 0 and 1 leading to q1. From q1, there are two transitions labeled 0 and 1 leading to q2.
         </description>
         </image>
         

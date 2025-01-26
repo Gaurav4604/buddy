@@ -18,7 +18,7 @@ and the diagram is:
         outputs/images/chapter_1/page_2_2.jpg
         </path>
         <description>
-        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two incoming transitions: one from 0 and another from 1. From q0, there is a transition to q1 on the input of '0'. From q1, there are two outgoing transitions: one to q2 with an unspecified label and another back to q0 with an unspecified label. The final state is q2.
+        A simple finite state machine with three states: q0, q1 and q2. The initial state is q0. There are two input symbols 0 and 1 that can be read by the transition function from any state to another state. For example, there is a transition labeled '0' from q0 to q1, which means when an input symbol of 0 is received while in state q0, then move to state q1.
         </description>
         </image>
         
@@ -53,7 +53,7 @@ and the diagram is:
             A non-deterministic finite automaton (NFA) consists of:
 
 
-    A  non-deterministic finite automaton (NFA)  consists of:
+    A  non-deterministic finite automaton (NFA) consists of:
 
             </text>
             
@@ -74,12 +74,14 @@ and the diagram is:
             
 
             <text>
-            2. A finite set of _input symbols_, usually denoted by ™.
+            2. A finite set of _input symbols_, usually denoted by Σ.
+
+2. A finite set of input symbols, usually denoted by ™.
             </text>
             
 
             <text>
-            3. A transition function Q×Σ→Q, that takes a state and an input symbol, and returns a set of new states. The transition function is usually denoted by δ.
+            3. A transition function δ: Q×Σ→Q, that takes a state and an input symbol, and returns a set of new states. The transition function is usually denoted by δ.
             </text>
             
 
@@ -109,8 +111,7 @@ and the diagram is:
             The second difference follows from the first, and is that a DFA has a _single_ start state, whereas an NFA has a _set_ of start states.
 
 
-    eginalign* 	extDFA:     	extSingle start state 	extNFA:     	extSet of start states	extDifference:     	extA DFA has a single start state, whereas an NFA has a set of start states.
-    eginalign*
+    eginalign* 	extDFA:     	extSingle start state. 	extNFA:     	extSet of start states.
 
             </text>
             
@@ -118,13 +119,7 @@ and the diagram is:
             <text>
             A non-deterministic finite automaton named N can be represented by a 5-tuple: 
 
-
-    egincases Q    finite set of states
-    Σ   input alphabet
-     q_0    start state
-     F    set of final states
-    δ   transition function
-
+A non-determinsitic finite automaton named N can be represented by a 5-tuple:
             </text>
             
 

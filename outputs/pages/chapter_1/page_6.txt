@@ -44,10 +44,13 @@
             
 
             <text>
-            * The final-set of D (= F_D), is the set of d-states in Q_D, such that each d-state contains at least one accepting state of N. We can specify this as:
+            * The final-set of D (=F_D), is the set of d-states in Q_D, such that each d-state contains at least one accepting state of N. We can specify this as:
 
 
-    F_D = { q ∈ Q_D |∃ n ∈ N: q  accepts  n }
+    The final-set of  D (= F_p) 
+       is the set of  d-states in  Q_p, 
+       such that each  d-state contains at least one accepting state of  N. 
+       We can specify this as:
 
             </text>
             
@@ -91,7 +94,7 @@ For each d-state d in Qp, and for each symbol t in ©, we can define 5p(d, t) by
             
 
             <text>
-            Since N has 3 states, there are 2^3-1=7 non-empty subsets, as we have just seen.)
+            Since N has 3 states, there are 2³ - 1 = 7 non-empty subsets, as we have just seen.
             </text>
             
 

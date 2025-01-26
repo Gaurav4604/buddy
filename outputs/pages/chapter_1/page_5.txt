@@ -24,7 +24,7 @@ We can specify A, the string transition function, that takes a current state-set
             
 
             <formula>
-            Δ: {0}×Σ^*→{0}
+            Δ: {Q}×Σ^*→{Q}
             </formula>
             
 
@@ -56,7 +56,7 @@ If there is no input, the NFA stays in the current state-set, P. Thus the rule i
             
 
             <text>
-            **Recurrence case**] If we are given a string of symbols s₁s₂s₃⋯sₙ, we "chop" the first symbol s₁ from the string, and use Δ to compute the state-set, T, that would be reached, starting at each state p in P:
+            **Recurrence case**] If we are given a string of symbols s₁s₂s₃⋯sₙ, we 'chop' the first symbol s₁ from the string, and use Δ to compute the state-set, T, that would be reached, starting at each state p in P:
 
 Recurrence case | If we are given a string of symbols s₁s₂s₃⋯sₙ, we “chop” the first symbol s₁ from the string, and use A to compute the state-set, T, that would be reached, starting at each state p in P:
             </text>
@@ -72,7 +72,7 @@ Recurrence case | If we are given a string of symbols s₁s₂s₃⋯sₙ, we �
             <text>
             We then use the Δ̂ function to process the remainder of the string, starting at T: Δ̂(T,⊗₂⊗₃⋯⊗ₙ). Combining the pieces, we get:
 
-We then use the A function to process the remainder of the string, starting at T: A(T, s₂₈₃—Sₙ).
+We then use the A function to process the remainder of the string, starting at T: A(T, s₂83—Sₙ).
 Combining the pieces, we get:
             </text>
             
@@ -123,8 +123,6 @@ The language L(V) of this NFA is defined by:
             
 
             <text>
-            Note that we must define the acceptance test slightly differently from a DFA. In a DFA, the δ̂ function returns a single state, and we check to see if that state is in F. For an NFA, Δ̂ returns a set of states. If one or more of those states is in F, then the NFA is in an accepting state. We express this condition by computing the intersection between the result of Δ̂ and F, Δ̂(⋯)∩ F. If the intersection is _non-null_, we know that the NFA has reached an accepting state.
-
-Note that we must define the acceptance test slightly differently from a DFA. In a DFA, the 6 function returns a single state, and we check to see if that state is in F'. For an NFA, A returns a set of states. If one or more of those states is in F”, then the NFA is in an accepting state. We express this condition by computing the intersection between the result of A and F, A(—) A F. If the intersection is non-null, we know that the NFA has reached an accepting state.
+            Note that we must define the acceptance test slightly differently from a DFA. In a DFA, the δ̂ function returns a single state, and we check to see if that state is in F. For an NFA, Δ̂ returns a set of states. If one or more of those states is in F, then the NFA is in an accepting state. We express this condition by computing the intersection between the result of Δ̂ and F, Δ̂(⋯)∩ F. If the intersection is non-null, we know that the NFA has reached an accepting state.
             </text>
             

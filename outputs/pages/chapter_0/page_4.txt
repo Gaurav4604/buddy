@@ -1,66 +1,66 @@
 
-                <title>
-                # 0.3.1 Some nomenclature
+            <title>
+            # 0.3.1 Some nomenclature
 
 0.3.1 Some nomenclature
-                </title>
-                
+            </title>
+            
 
-                <text>
-                A finite state machine has one or more _states_, represented on a state-diagram as circles. As a result of an external _event_, the FSM can make a _transition_ from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an _initial state_, represented on the diagram by a lightning-strike. The _current state_ is represented by a large dot inside the state.
-                </text>
-                
+            <text>
+            A finite state machine has one or more _states_, represented on a state-diagram as circles. As a result of an external _event_, the FSM can make a _transition_ from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an _initial state_, represented on the diagram by a lightning-strike. The _current state_ is represented by a large dot inside the state.
+            </text>
+            
 
-                <title>
-                # 0.4 Another example - text recognition
+            <title>
+            # 0.4 Another example - text recognition
 
 
     0.4 Another example - text recognition
 
-                </title>
-                
-
-                <text>
-                We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognize the words 'for' and 'float' in a stream of text. We could construct a finite state machine, where the sequence of events is the sequence of characters in the input stream. The resulting FSM is shown in figure 4.
-                </text>
-                
-
-            <image>
-            <path>
-            outputs/images/chapter_0/page_3_4.jpg
-            </path>
-            <description>
-            A state diagram with various states and transitions between them. The start point is labeled 'start' and there are multiple paths leading to different end points such as 'for', 'float', etc.
-            </description>
-            </image>
+            </title>
             
 
-                <caption>
-                # Figure 4: The text recogniser
+            <text>
+            We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognize the words 'for' and 'float' in a stream of text. We could construct a finite state machine, where the sequence of events is the sequence of characters in the input stream. The resulting FSM is shown in figure 4.
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/images/chapter_0/page_3_4.jpg
+        </path>
+        <description>
+        A diagram showing a state transition process from 'start' to various states including 'f', 'fo', 'for', and finally 'float'. The arrows indicate transitions between these states, with labels such as f, o, r, l, a, t representing different steps or conditions in the process.
+        </description>
+        </image>
+        
+
+            <caption>
+            # Figure 4: The text recogniser
 
 
-    Figure 4: The text recogniser
+    Figure  4: The text recogniser
 
-                </caption>
-                
+            </caption>
+            
 
-                <text>
-                In the FSM there are states named after the partially-recognised words: f, fo, fl, flo, and floa. There are also two accepting states named for and float, shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state fo, the machine will not recognise the character x, because there is no transition labelled with the event x, from state fo. If an unrecognised event occurs, the machine “dies”, and ceases to process symbols — it no longer has a current state. Effectively, the dot has been lost.
-                </text>
-                
+            <text>
+            In the FSM there are states named after the partially-recognised words: f, fo, fl, flo, and floa. There are also two accepting states named for and float, shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state fo, the machine will not recognise the character x, because there is no transition labelled with the event x, from state fo. If an unrecognised event occurs, the machine “dies”, and ceases to process symbols — it no longer has a current state. Effectively, the dot has been lost.
+            </text>
+            
 
-                <text>
-                Diagrams of this kind often result from describing the behavior of a _regular expression_, a topic we will deal with later.
-                </text>
-                
+            <text>
+            Diagrams of this kind often result from describing the behavior of a _regular expression_, a topic we will deal with later.
+            </text>
+            
 
-                <title>
-                0.5 Central concepts
+            <title>
+            0.5 Central concepts
 
-                </title>
-                
+            </title>
+            
 
-                <text>
-                There are a number of basic concepts that are central to the study of finite automata. These concepts are _alphabet_ (a set of symbols), _string_ (a list of symbols from an alphabet), and _language_ (a set of strings from the same alphabet).
-                </text>
-                
+            <text>
+            There are a number of basic concepts that are central to the study of finite automata. These concepts are _alphabet_ (a set of symbols), _string_ (a list of symbols from an alphabet), and _language_ (a set of strings from the same alphabet).
+            </text>
+            

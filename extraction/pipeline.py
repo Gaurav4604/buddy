@@ -1,11 +1,13 @@
 from utils import (
     DetectionInfo,
     model,
+    classify_table_formula,
     extract_formula,
     extract_table,
     extract_text,
     extract_image,
     save_detections,
+    pad_image_to_aspect_ratio,
 )
 import os
 import shutil
@@ -13,6 +15,7 @@ from PIL import Image
 from pdf2image import convert_from_path
 from typing import Any
 import asyncio
+import json
 
 
 async def get_content(idx, det, chapter_num, page_num, content="") -> str:
@@ -47,31 +50,37 @@ async def get_content(idx, det, chapter_num, page_num, content="") -> str:
             """
             + "\n"
         )
-    elif det.class_id == 8:
-        # Possibly a formula
-        formula = await extract_formula(det.file_location)
-        print(f"formula {formula} - {idx}")
-        content += (
-            f"""
+    elif det.class_id == 8 or det.class_id == 5:
+        # because it "needs" a specific ratio
+        pad_image_to_aspect_ratio(det.file_location, det.file_location, 0.15)
+
+        table_or_formula = await classify_table_formula(det.file_location)
+        print(table_or_formula)
+        is_table = "table" in table_or_formula
+
+        if is_table:
+            table = await extract_table(det.file_location)
+            print(f"table {table} - {idx}")
+            content += (
+                f"""
+                <table>
+                {table.construct_table()}
+                </table>
+                """
+                + "\n"
+            )
+        else:
+            # model confuses between table and formula
+            formula = await extract_formula(det.file_location)
+            print(f"formula {formula} - {idx}")
+            content += (
+                f"""
             <formula>
             {formula}
             </formula>
             """
-            + "\n"
-        )
-    elif det.class_id == 5:
-        # Possibly a table
-        table = await extract_table(det.file_location)
-        print(f"table {table} - {idx}")
-        content += (
-            f"""
-            <table>
-            {table.construct_table()}
-            </table>
-            """
-            + "\n"
-        )
-
+                + "\n"
+            )
     elif det.class_id == 0:
         # title text
         extracted_text = await extract_text(det.file_location)
@@ -233,6 +242,7 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
         # {0: 'title', 1: 'plain text', 2: 'abandon', 3: 'figure', 4: 'figure_caption', 5: 'table', 6: 'table_caption', 7: 'table_footnote', 8: 'isolate_formula', 9: 'formula_caption'}
         # content +=
         max_retries = 3
+        execution_timeout = 30 if not (det.class_id == 8 or det.class_id == 5) else 45
         for attempt in range(1, max_retries + 1):
             # Recreate the task each time we retry
             task = asyncio.create_task(
@@ -240,7 +250,7 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
             )
 
             try:
-                content = await asyncio.wait_for(task, timeout=45)
+                content = await asyncio.wait_for(task, timeout=execution_timeout)
                 print(content)
                 # If we get here, it succeeded within 45s — break out of the loop
                 break
@@ -250,6 +260,7 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
                 task.cancel()
 
                 if attempt < max_retries:
+                    execution_timeout += 15
                     print(f"Attempt {attempt} timed out. Retrying...")
                 else:
                     print(
@@ -299,12 +310,42 @@ async def async_extraction_pipeline_from_pdf(
         # Accumulate your results if needed
         all_pages_content.append(f"--- Page {real_page_index + 1} ---\n{page_content}")
 
+    page_count_save(chapter_num, len(pages))
     return "\n".join(all_pages_content)
 
 
-if __name__ == "__main__":
-    # Now do a single call to asyncio.run with the entire multi-page process.
-    output = asyncio.run(
-        async_extraction_pipeline_from_pdf("files/automata_cpt_2.pdf", chapter_num=1)
+def page_count_save(chapter_num: int = 0, page_count: int = 0):
+    # File name
+    file_name = "outputs/pages/chapters_tree.json"
+
+    # Check if the file exists; if not, create an empty dictionary
+    if os.path.exists(file_name):
+        with open(file_name, "r") as file:
+            data = json.load(file)
+    else:
+        data = {}
+
+    # Add the new chapter_num as a key with the list of page numbers
+    if chapter_num > 0 and page_count > 0:
+        data[chapter_num] = list(range(1, page_count + 1))
+
+    # Save the updated data back to the file
+    with open(file_name, "w") as file:
+        json.dump(data, file, indent=4)
+
+    print(f"Saved chapter {chapter_num} with page count {page_count} to {file_name}.")
+
+
+async def main():
+    # cpt_1 = await async_extraction_pipeline_from_pdf(
+    #     "files/automata_cpt_1.pdf", chapter_num=0, start_page=4
+    # )
+    cpt_2 = await async_extraction_pipeline_from_pdf(
+        "files/automata_cpt_2.pdf", chapter_num=1, start_page=6
     )
+    return [cpt_2]
+
+
+if __name__ == "__main__":
+    output = asyncio.run(main())
     print(output)

@@ -1,6 +1,7 @@
 
             <title>
             chapteer2
+
 Chapter 2
             </title>
             
@@ -15,7 +16,7 @@ Non-deterministic automata
             <text>
             The automata we have studied so far are called Deterministic Finite-state Automata (DFA) because when the DFA receive an input it is able to precisely determine its next state. *Deterministic behaviour is a highly desirable characteristic*, because it guarantees that we can implement a DFA as a program on a computer.
 
-The automata we have studied so far are called Deterministic Finite-state Automata (DFA) because when the DFA receive an input it is able to precisely determine its next state. Deterministic behavior is a highly desirable characteristic, because it guarantees that we can implement a DFA as a program on a computer.
+The automata we have studied so far are called Deterministic Finite-state Automata (DFA) because when the DFA receive an input it is able to precisely determine its next state. Deterministic behaviour is a highly desirable characteristic, because it guarantees that we can implement a DFA as a program on a computer.
             </text>
             
 
@@ -68,7 +69,7 @@ The automata we have studied so far are called Deterministic Finite-state Automa
         outputs/images/chapter_1/page_0_11.jpg
         </path>
         <description>
-        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two outgoing transitions: one to q1 on input 0 and another to q1 on input 1. From q1, there are two incoming transitions back to q0 (on inputs 0 and 1) and a single outgoing transition to q2 on input I. The final state is q2.
+        A state diagram with three states, q0, q1, and q2. The initial state is q0, which has two transitions: one to q1 on input 0 and another to q1 on input 1. From q1, there are two possible paths: a transition to q2 on input 1 or staying in q1 with no further inputs specified.
         </description>
         </image>
         

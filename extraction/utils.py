@@ -6,13 +6,12 @@ from pylatexenc.latex2text import LatexNodes2Text
 from pydantic import BaseModel
 import pytesseract
 import os
-from PIL import Image
+from PIL import Image, ImageOps
 from doclayout_yolo import YOLOv10
 import base64
 from transformers.utils import logging
 import warnings
 import ollama
-import asyncio
 
 logging.set_verbosity(40)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -41,6 +40,10 @@ class Formula(BaseModel):
     formula: str
 
 
+class DetectTableFormula(BaseModel):
+    table_or_formula: str
+
+
 class Table(BaseModel):
     headers: list[str]
     rows: list[list[str]]
@@ -60,6 +63,33 @@ class Table(BaseModel):
         )
 
 
+def pad_image_to_aspect_ratio(image_path, output_path, target_aspect_ratio):
+    # Open the original image
+    img = Image.open(image_path)
+    original_width, original_height = img.size
+
+    # Calculate target dimensions
+    target_width = original_width
+    target_height = int(target_width * target_aspect_ratio)
+
+    if target_height < original_height:
+        target_height = original_height
+        target_width = int(target_height / target_aspect_ratio)
+
+    # Calculate padding
+    padding_left = (target_width - original_width) // 2
+    padding_top = (target_height - original_height) // 2
+    padding_right = target_width - original_width - padding_left
+    padding_bottom = target_height - original_height - padding_top
+
+    # Apply padding
+    padding = (padding_left, padding_top, padding_right, padding_bottom)
+    padded_img = ImageOps.expand(img, padding, fill="white")
+
+    # Save the padded image
+    padded_img.save(output_path)
+
+
 def convert_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         image_data = image_file.read()
@@ -72,6 +102,32 @@ def save_detections(result: list, save_path: str = "result.jpg"):
     # Annotate and save the result
     annotated_frame = result[0].plot(pil=True, line_width=5, font_size=20)
     cv2.imwrite(save_path, annotated_frame)
+
+
+async def classify_table_formula(image: str) -> str:
+    """
+    Classifies whether the image is a table or a formula
+    Args:
+        image (str): the image url of table to be extracted
+    Returns:
+        str: classification
+    """
+    res = await client.chat(
+        model="minicpm-v-2",
+        messages=[
+            {
+                "role": "user",
+                "content": "is this a table? or a formula?",
+                "images": [convert_to_base64(image)],
+            }
+        ],
+        format=DetectTableFormula.model_json_schema(),
+        options={"temperature": 0},
+        keep_alive=0,
+    )
+    return DetectTableFormula.model_validate_json(
+        res["message"]["content"]
+    ).table_or_formula.lower()
 
 
 async def extract_table(image: str) -> Table:
@@ -98,7 +154,7 @@ async def extract_table(image: str) -> Table:
     return Table.model_validate_json(res["message"]["content"])
 
 
-async def extract_image(image: str) -> Table:
+async def extract_image(image: str) -> str:
     """
     Extracts the contents of a Image, and returns it as description
     Args:

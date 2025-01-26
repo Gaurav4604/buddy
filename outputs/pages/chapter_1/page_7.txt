@@ -4,27 +4,27 @@
             </text>
             
 
-            <table>
-            
+                <table>
+                
 <headers>
     ['δ_D', '0', '1']
 </headers>
 <rows>
-        <row>['→ {q_0}', '{q_0, q_1}', '{q_0}']</row>
-	<row>['→ {q_1}', '{q_1}', '{}']</row>
-	<row>['* {q_2}', '*', '{}']</row>
-	<row>['{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
-	<row>['{q_0, q_2}', '{q_0, q_1}', '{q_0}']</row>
-	<row>['* {q_0, q_2}', '* {q_0, q_1}', '* {q_0}']</row>
-	<row>['* {q_1, q_2}', '* {q_1, q_2}', '* {q_2}']</row>
-	<row>['{q_0, q_1, q_2}', '{q_0, q_1, q_2}', '{q_0, q_2}']</row>
+        <row>['→ {q_0}', '{q_0, q_1}', '{q_0}', '{q_0}']</row>
+	<row>['→ {q_1}', '{q_0, q_1}', '∅', '{q_2}']</row>
+	<row>['* {q_2}', '{q_0, q_1}', '∅', '∅']</row>
+	<row>['{q_0, q_1}', '{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
+	<row>['* {q_0, q_2}', '{q_0, q_1}', '{q_0, q_1}', '{q_0}']</row>
+	<row>['{q_1, q_2}', '∅', '∅', '{q_2}']</row>
+	<row>['* {q_1, q_2}', '∅', '∅', '{q_2}']</row>
+	<row>['* {q_0, q_1, q_2}', '{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
 </rows>
         
-            </table>
-            
+                </table>
+                
 
             <text>
-            To show how this table was derived, let us generate the entries for the d-state q₀, q₂. Consider first the case when the next input symbol is a 0. Within the d-state q₀, q₂ there are two states to consider, when we evaluate the Δ_N transition function:
+            To show how this table was derived, let us generate the entries for the d-state q₀, q₂. Consider first the case when the next input symbol is a 0. Within the d-state q₀, q₂ there are two states to consider, when we evaluate the Δₙ transition function:
             </text>
             
 
@@ -40,7 +40,6 @@
 
             <text>
             ider the case when the input symbol is a 1. Once again, within the d-state there a
-
             </text>
             
 
@@ -74,7 +73,7 @@
         outputs/images/chapter_1/page_6_11.jpg
         </path>
         <description>
-        A state diagram with three states: {q0}, {q1}, and {q2}. The initial state is q0, which has two transitions to q1 (with probabilities 0 and 1) and one transition from q1 back to q0. State q1 also has a self-loop with probability 0, but no other transitions. Finally, state q2 has a single transition from q1 with probability 1.
+        A state diagram with two states, q0 and q1. The initial state is q0, which has transitions to both q1 and itself labeled by 0 or i respectively. State q1 also has a transition back to q0 labeled by o. There are no self-loops in the diagram.
         </description>
         </image>
         
