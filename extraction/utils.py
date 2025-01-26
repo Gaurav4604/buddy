@@ -112,19 +112,30 @@ async def classify_table_formula(image: str) -> str:
     Returns:
         str: classification
     """
-    res = await client.chat(
-        model="minicpm-v-2",
-        messages=[
-            {
-                "role": "user",
-                "content": "is this a table? or a formula?",
-                "images": [convert_to_base64(image)],
-            }
-        ],
-        format=DetectTableFormula.model_json_schema(),
-        options={"temperature": 0},
-        keep_alive=0,
-    )
+
+    async def get_inference(image: str):
+        res = await client.chat(
+            model="minicpm-v-2",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "is this a table? or a formula?",
+                    "images": [convert_to_base64(image)],
+                }
+            ],
+            format=DetectTableFormula.model_json_schema(),
+            options={"temperature": 0},
+            keep_alive=0,
+        )
+        return res
+
+    try:
+        res = await get_inference(image)
+    except:
+        # because it "needs" a specific ratio
+        pad_image_to_aspect_ratio(image, image, 0.15)
+        res = await get_inference(image)
+
     return DetectTableFormula.model_validate_json(
         res["message"]["content"]
     ).table_or_formula.lower()
@@ -138,19 +149,30 @@ async def extract_table(image: str) -> Table:
     Returns:
         Table: contents of table, as headers and rows
     """
-    res = await client.chat(
-        model="minicpm-v-2",
-        messages=[
-            {
-                "role": "user",
-                "content": "give me the contents of this table",
-                "images": [convert_to_base64(image)],
-            }
-        ],
-        format=Table.model_json_schema(),
-        options={"temperature": 0},
-        keep_alive=0,
-    )
+
+    async def get_inference(image: str):
+        res = await client.chat(
+            model="minicpm-v-2",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "give me the contents of this table",
+                    "images": [convert_to_base64(image)],
+                }
+            ],
+            format=Table.model_json_schema(),
+            options={"temperature": 0},
+            keep_alive=0,
+        )
+        return res
+
+    try:
+        res = await get_inference(image)
+    except:
+        # because it "needs" a specific ratio
+        pad_image_to_aspect_ratio(image, image, 0.15)
+        res = await get_inference(image)
+
     return Table.model_validate_json(res["message"]["content"])
 
 
@@ -162,19 +184,29 @@ async def extract_image(image: str) -> str:
     Returns:
         str: contents of Image
     """
-    res = await client.chat(
-        model="minicpm-v-2",
-        messages=[
-            {
-                "role": "user",
-                "content": "give me the contents of this Image",
-                "images": [convert_to_base64(image)],
-            }
-        ],
-        format=ImageDescription.model_json_schema(),
-        keep_alive=0,
-    )
-    print(res["message"]["content"])
+
+    async def get_inference(image: str):
+        res = await client.chat(
+            model="minicpm-v-2",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "give me the contents of this Image",
+                    "images": [convert_to_base64(image)],
+                }
+            ],
+            format=ImageDescription.model_json_schema(),
+            keep_alive=0,
+        )
+        return res
+
+    try:
+        res = await get_inference(image)
+    except:
+        # because it "needs" a specific ratio
+        pad_image_to_aspect_ratio(image, image, 0.15)
+        res = await get_inference(image)
+
     return ImageDescription.model_validate_json(res["message"]["content"]).description
 
 

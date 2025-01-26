@@ -51,9 +51,6 @@ async def get_content(idx, det, chapter_num, page_num, content="") -> str:
             + "\n"
         )
     elif det.class_id == 8 or det.class_id == 5:
-        # because it "needs" a specific ratio
-        pad_image_to_aspect_ratio(det.file_location, det.file_location, 0.15)
-
         table_or_formula = await classify_table_formula(det.file_location)
         print(table_or_formula)
         is_table = "table" in table_or_formula
@@ -326,8 +323,8 @@ def page_count_save(chapter_num: int = 0, page_count: int = 0):
         data = {}
 
     # Add the new chapter_num as a key with the list of page numbers
-    if chapter_num > 0 and page_count > 0:
-        data[chapter_num] = list(range(1, page_count + 1))
+    if chapter_num >= 0 and page_count > 0:
+        data[str(chapter_num)] = list(range(1, page_count + 1))
 
     # Save the updated data back to the file
     with open(file_name, "w") as file:
@@ -337,15 +334,14 @@ def page_count_save(chapter_num: int = 0, page_count: int = 0):
 
 
 async def main():
-    # cpt_1 = await async_extraction_pipeline_from_pdf(
-    #     "files/automata_cpt_1.pdf", chapter_num=0, start_page=4
-    # )
-    cpt_2 = await async_extraction_pipeline_from_pdf(
-        "files/automata_cpt_2.pdf", chapter_num=1, start_page=6
+    cpt_1 = await async_extraction_pipeline_from_pdf(
+        "files/automata_cpt_1.pdf", chapter_num=0
     )
-    return [cpt_2]
+    cpt_2 = await async_extraction_pipeline_from_pdf(
+        "files/automata_cpt_2.pdf", chapter_num=1
+    )
+    return [cpt_1, cpt_2]
 
 
 if __name__ == "__main__":
-    output = asyncio.run(main())
-    print(output)
+    asyncio.run(main())

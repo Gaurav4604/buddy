@@ -10,14 +10,14 @@
     ['δ_D', '0', '1']
 </headers>
 <rows>
-        <row>['→ {q_0}', '{q_0, q_1}', '{q_0}', '{q_0}']</row>
-	<row>['→ {q_1}', '{q_0, q_1}', '∅', '{q_2}']</row>
-	<row>['* {q_2}', '{q_0, q_1}', '∅', '∅']</row>
-	<row>['{q_0, q_1}', '{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
-	<row>['* {q_0, q_2}', '{q_0, q_1}', '{q_0, q_1}', '{q_0}']</row>
-	<row>['{q_1, q_2}', '∅', '∅', '{q_2}']</row>
-	<row>['* {q_1, q_2}', '∅', '∅', '{q_2}']</row>
-	<row>['* {q_0, q_1, q_2}', '{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
+        <row>['→ {q_0}', '{q_0, q_1}', '{q_0}']</row>
+	<row>['→ {q_1}', '{q_1}', '{}']</row>
+	<row>['* {q_2}', '*', '{}']</row>
+	<row>['{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
+	<row>['{q_0, q_2}', '{q_0, q_1}', '{q_0}']</row>
+	<row>['* {q_0, q_2}', '* {q_0, q_1}', '* {q_0}']</row>
+	<row>['* {q_1, q_2}', '* {q_1, q_2}', '* {q_2}']</row>
+	<row>['{q_0, q_1, q_2}', '{q_0, q_1, q_2}', '{q_0, q_2}']</row>
 </rows>
         
                 </table>
@@ -73,7 +73,7 @@
         outputs/images/chapter_1/page_6_11.jpg
         </path>
         <description>
-        A state diagram with two states, q0 and q1. The initial state is q0, which has transitions to both q1 and itself labeled by 0 or i respectively. State q1 also has a transition back to q0 labeled by o. There are no self-loops in the diagram.
+        A state diagram with two states, q0 and q1. The initial state is q0, which has transitions to both q1 and itself (labeled 'i'). State q1 also has a transition back to q0 ('o') and another transition to the final state q2 ('1'). Both states have no outgoing edges from them.
         </description>
         </image>
         

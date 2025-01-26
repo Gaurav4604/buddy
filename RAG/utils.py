@@ -22,11 +22,11 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 meta_generation_prompt = """
-You are a summary and tags generator,
+You are a summary, tags and topics generator,
 your role is to look at the document provided,
-and generate category tags associated to it,
-along with a 5 line summary,
-you should limit the number of tags to 3.
+and generate category tags associated to it
+along with all topics present in it and a 5 line summary,
+you should limit the number of tags and topics to 3.
 """
 
 summary_merge_prompt = """
@@ -37,8 +37,9 @@ and merge them into a single summary, and associate
 """
 
 
-class TagsModel(BaseModel):
+class TagsTopicsAndSummaryModel(BaseModel):
     tags: list[str]
+    topics: list[str]
     summary: str
 
 
@@ -109,6 +110,7 @@ class RAGtoolkit:
 
     def generate_meta(self, docs_dir: str) -> dict:
         tags = set()
+        topics = set()
         files = [
             join(docs_dir, f) for f in listdir(docs_dir) if isfile(join(docs_dir, f))
         ]
@@ -121,14 +123,16 @@ class RAGtoolkit:
                         {"role": "system", "content": meta_generation_prompt},
                         {"role": "user", "content": f.read()},
                     ],
-                    format=TagsModel.model_json_schema(),
+                    format=TagsTopicsAndSummaryModel.model_json_schema(),
                     options={"num_ctx": 8192},
                 )
-                page_level_meta = TagsModel.model_validate_json(
+                page_level_meta = TagsTopicsAndSummaryModel.model_validate_json(
                     res["message"]["content"]
                 )
                 for tag in page_level_meta.tags:
                     tags.add(tag)
+                for topic in page_level_meta.topics:
+                    topics.add(topic)
                 summarys.append(page_level_meta.summary)
 
         res = self.ollama_client.chat(
@@ -137,14 +141,14 @@ class RAGtoolkit:
                 {"role": "system", "content": summary_merge_prompt},
                 {"role": "user", "content": summarys[0] + ", ".join(summarys[1:])},
             ],
-            format=TagsModel.model_json_schema(),
+            format=TagsTopicsAndSummaryModel.model_json_schema(),
             options={"num_ctx": 8192},
         )
-        overall_summary = TagsModel.model_validate_json(
+        overall_summary = TagsTopicsAndSummaryModel.model_validate_json(
             res["message"]["content"]
         ).summary
 
-        return {"tags": list(tags), "summary": overall_summary}
+        return {"tags": list(tags), "topics": list(topics), "summary": overall_summary}
 
     # chunks for the given chapter to be added
     def add_docs(self, docs: list[str]):
@@ -158,13 +162,20 @@ class RAGtoolkit:
             embeddings=self._generate_embeddings(docs),
         )
 
-    def add_meta_data(self, tags: list[str], summary: str):
-        doc = "tags: - \n" + " - ".join(tags) + "\n"
+    def add_meta_data(self, tags: list[str], topics: list[str], summary: str):
+        doc = "<TAGS> tags:" + " - ".join(tags) + "</TAGS>\n"
+        doc = "<TOPICS> topics:" + " - ".join(topics) + "</TOPICS>\n"
         doc += summary
 
         self._chapter_meta_collection.upsert(
             documents=[doc],
-            metadatas=[{"file_name": self.chapter_name}],
+            metadatas=[
+                {
+                    "file_name": self.chapter_name,
+                    "tags": str(tags),
+                    "topics": str(topics),
+                }
+            ],
             ids=[self.chapter_name],
             embeddings=self._generate_embeddings(doc),
         )
@@ -189,6 +200,15 @@ class RAGtoolkit:
             n_results=1,
         )
         return res["documents"][0]
+
+    def get_chapter_metadata(self) -> QueryResult:
+        res = self._chapter_meta_collection.query(
+            query_texts=[""],
+            where={"file_name": self.chapter_name},
+            query_embeddings=self._generate_embeddings(""),
+            n_results=1,
+        )
+        return res["metadatas"][0][0]
 
 
 # each chapter will have its own kit access

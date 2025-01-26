@@ -13,10 +13,19 @@
             </text>
             
 
-            <formula>
-            [                                  5czeroOne;                                        5cδ                                        1c0;                                        5c→ [    5c0; 5c{q_1;    5c∅; 5c*q_2;        ]                                        1c∅;                                        5c∅;                                         5c ]
-            </formula>
-            
+                <table>
+                
+<headers>
+    ['zeroOne', 'delta', '0', '1']
+</headers>
+<rows>
+        <row>['→ q₀', '{q₀, q₁}', '{q₀}', '{q₀}']</row>
+	<row>['q₁', '∅', '{q₂}', '{q₂}']</row>
+	<row>['*q₂', '{q₀, q₁}', '∅', '∅']</row>
+</rows>
+        
+                </table>
+                
 
             <text>
             The only difference between this table and the one for a DFA is that the _next-state_ entries in the table are a set of states, instead of being a single state. For example, the entry for state q₀ given the symbol 0 is the set q₀, q₁. When there is no next state, we show the next state as an empty set, ∅.
@@ -43,7 +52,7 @@
             
 
             <text>
-            If an NFA is in the set of states P, and receives an input symbol s, then the next state is determined by evaluating δ for each state in that set (which will return a set of states), and then computing the union of those sets.
+            If an NFA is in the set of states P, and receives an input symbol s, then the next state is determined by evaluating delta for each state in that set (which will return a set of states), and then computing the union of those sets.
             </text>
             
 
@@ -55,9 +64,7 @@
             
 
             <formula>
-            
-    Δ(P, s) = ⋃_p ∈ Pδ(p, s)
-
+            Δ(P, s) = ⋃_p ∈ Pδ(p, s)
             </formula>
             
 
@@ -79,13 +86,13 @@
             
 
             <text>
-            We start with the NFA in its initial state-set, R₀ = Q₀, and use the extended transition function Δ to process the first input symbol to get the next the next state-set:
+            We start with the NFA in its initial state-set, R₀ = Q₀, and use the extended transition function Δ to process the first input symbol to get the next state-set:
             </text>
             
 
             <formula>
             
-    R_1 = Δ(R_0, s_1)
+    R_y = A(R_o, S_1)
 
             </formula>
             
@@ -105,19 +112,19 @@ R₁ is the set of new states that the NFA enters after receiving the input symb
             
 
             <text>
-            Continuing in this manner until all input symbols have been processed, we successively enter sets of states R₃, R₄,…, Rₙ. At each step,
+            Continuing in this manner until all input symbols have been processed, we successively enter sets of states R₃, R₄,..., Rₙ. At each step,
 
             </text>
             
 
             <formula>
             
-    R_i = Δ(R_i-1, S_i)
+    R_i = Δ(R_i-1, s_i)
 
             </formula>
             
 
             <text>
-            If one of the states in Rₙ is an accepting state (i.e., if Rₙ ∩ F ≠ ∅), then the string of input symbols s₁s₂s₃⋯sₙ is "accepted". If not, it is "rejected".
+            If one of the states in Rₙ is an accepting state (i.e., if Rₙ ∩ F ≠ ∅), then the string of input symbols s₁s₂s₃⋯sₙ is "accepted". If not, it is "rejected".
             </text>
             
