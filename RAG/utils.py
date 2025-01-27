@@ -201,7 +201,7 @@ class RAGtoolkit:
         )
         return res["documents"][0]
 
-    def get_chapter_metadata(self) -> QueryResult:
+    def get_chapter_metadata(self) -> dict:
         res = self._chapter_meta_collection.query(
             query_texts=[""],
             where={"file_name": self.chapter_name},
@@ -209,6 +209,13 @@ class RAGtoolkit:
             n_results=1,
         )
         return res["metadatas"][0][0]
+
+    def get_all_metadata(self) -> dict:
+        res = self._chapter_meta_collection.query(
+            query_texts=[""],
+            query_embeddings=self._generate_embeddings(""),
+        )
+        return res["metadatas"][0]
 
 
 # each chapter will have its own kit access

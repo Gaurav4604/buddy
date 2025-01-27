@@ -5,7 +5,11 @@ from utils import RAGtoolkit
 client = ollama.AsyncClient()
 
 
-async def RAGPipeline(query: str) -> str:
-    # get the chapter associated to query
-    generic_kit = RAGtoolkit()
-    res = generic_kit.query_metadata(query)
+# async def RAGPipeline(query: str) -> str:
+#     # get the chapter associated to query
+#     generic_kit = RAGtoolkit()
+#     res = generic_kit.query_metadata(query)
+
+
+generic_kit = RAGtoolkit()
+print(generic_kit.get_all_metadata())

@@ -56,4 +56,4 @@ chapter_2_kit = RAGtoolkit(chapter_num=1)
 
 
 # print(chapter_2_kit.get_summary())
-print(chapter_2_kit.get_chapter_metadata())
+print(chapter_2_kit.get_chapter_metadata()["topics"])
