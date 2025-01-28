@@ -73,6 +73,7 @@ class RAGtoolkit:
 
         # tagging the object
         self.chapter_name = f"chapter_{chapter_num}"
+        self.chapter_num = chapter_num
         self.page_number = f"page_{page_num}"
 
     def _generate_embeddings(self, inputs: list[str]):
@@ -179,6 +180,7 @@ class RAGtoolkit:
             metadatas=[
                 {
                     "file_name": self.chapter_name,
+                    "chapter_num": self.chapter_num,
                     "tags": str(tags),
                     "topics": str(topics),
                 }
@@ -208,7 +210,7 @@ class RAGtoolkit:
             query_embeddings=self._generate_embeddings(""),
             n_results=1,
         )
-        return res["documents"][0]
+        return res["documents"][0][0]
 
     def get_chapter_metadata(self) -> dict:
         res = self._chapter_meta_collection.query(
@@ -224,4 +226,39 @@ class RAGtoolkit:
             query_texts=[""],
             query_embeddings=self._generate_embeddings(""),
         )
-        return res["metadatas"][0]
+        metadata = []
+        for meta in res["metadatas"][0]:
+            toolkit = RAGtoolkit(int(meta["chapter_num"]))
+            summary_dict = {"summary": toolkit.get_summary(), **meta}
+            metadata.append(summary_dict)
+
+        return metadata
+
+
+# cause metadata won't accept list data, it has to be str
+def convert_string_to_list(list_str: str) -> list[str]:
+    """
+    Convert a string that looks like a list into an actual list.
+
+    Args:
+        list_str (str): The input string that contains a list.
+
+    Returns:
+        list[str]: A list of strings if the input string is valid, otherwise an empty list.
+    """
+
+    # Use regular expression to find the list
+    match = re.search(r"\[(.*)\]", list_str)
+    if match:
+        content = match.group(1).strip()
+        # Split the content by commas and strip quotes from each item
+        actual_list = [
+            item.strip("'\"")
+            for item in content.replace('"', "").replace("'", "").split(",")
+        ]
+        actual_list = [item.strip() for item in actual_list]
+
+        return actual_list
+    else:
+        print("No list found in the string")
+        return []
