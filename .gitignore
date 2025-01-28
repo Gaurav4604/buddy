@@ -1,3 +1,5 @@
 buddy/**
 
 *.gguf
+
+cache/**

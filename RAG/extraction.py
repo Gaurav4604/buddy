@@ -41,19 +41,5 @@ def dump_extraction_to_db():
             )
 
 
-# if __name__ == "__main__":
-#     dump_extraction_to_db()
-
-chapter_2_kit = RAGtoolkit(chapter_num=1)
-
-# result = chapter_2_kit.query_docs("what is a NFA?")
-
-# print(result["metadatas"])
-
-# for r in result["documents"][0]:
-#     print(r)
-#     print("------------")
-
-
-# print(chapter_2_kit.get_summary())
-print(chapter_2_kit.get_chapter_metadata()["topics"])
+if __name__ == "__main__":
+    dump_extraction_to_db()

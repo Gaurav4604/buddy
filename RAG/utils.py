@@ -15,6 +15,7 @@ import ollama
 import uuid
 from pydantic import BaseModel
 import re
+import os
 
 
 logging.set_verbosity(40)
@@ -36,6 +37,8 @@ and merge them into a single summary, and associate
 5 tags with the same.
 """
 
+os.makedirs("cache", exist_ok=True)
+
 
 class TagsTopicsAndSummaryModel(BaseModel):
     tags: list[str]
@@ -47,8 +50,12 @@ class RAGtoolkit:
     def __init__(self, chapter_num: int = 0, page_num: int = 1):
         settings = Settings(is_persistent=True)
         self.splitter = TextSplitter(overlap=True, capacity=500, trim=True)
-        self.tokenizer = AutoTokenizer.from_pretrained("allenai/specter2_base")
-        self.model = AutoAdapterModel.from_pretrained("allenai/specter2_base")
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            "allenai/specter2_base", cache_dir="cache"
+        )
+        self.model = AutoAdapterModel.from_pretrained(
+            "allenai/specter2_base", cache_dir="cache"
+        )
         self.model.load_adapter(
             "allenai/specter2", source="hf", load_as="proximity", set_active=True
         )
@@ -180,9 +187,11 @@ class RAGtoolkit:
             embeddings=self._generate_embeddings(doc),
         )
 
-    def query_docs(self, query: str) -> QueryResult:
+    def query_docs(self, query: str, n_results: int = 2) -> QueryResult:
         res = self._doc_collection.query(
-            query_embeddings=self._generate_embeddings(query), query_texts=[query]
+            query_embeddings=self._generate_embeddings(query),
+            query_texts=[query],
+            n_results=n_results,
         )
         return res
 
@@ -210,34 +219,9 @@ class RAGtoolkit:
         )
         return res["metadatas"][0][0]
 
-    def get_all_metadata(self) -> dict:
+    def get_all_metadata(self) -> list:
         res = self._chapter_meta_collection.query(
             query_texts=[""],
             query_embeddings=self._generate_embeddings(""),
         )
         return res["metadatas"][0]
-
-
-# each chapter will have its own kit access
-# kit = RAGtoolkit()
-
-# print(kit.generate_meta("outputs/pages/chapter_0"))
-
-
-"""
-summaries obtained
-tags generated
-chunks extracted
-
-next steps:
-- merge with main
-- embed docs, pack with page no. info for each embedding metadata (to be done on chunk)
-- add fn to add meta-data associated to file (concate tags with summary -> dump into metadata collection db with chapter no. as metadata)
-- add fn to query meta-data associated with file
-
-- final pipeline for QnA RAG?
-    - get chapters associated to query (using metadata collection)
-    - query required chapter collections with query again
-    - use results to ask LLM question
-    - respond with answer
-"""
