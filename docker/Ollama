@@ -4,8 +4,12 @@ FROM ollama/ollama:latest
 # Set environment variables for Ollama
 ENV OLLAMA_MODELS=/root/.ollama/models
 
-# Download the llama3.2 model during the build process
-RUN ollama serve & sleep 5 && ollama pull llama3.2 && ollama pull bespoke-minicheck && ollama pull minicpm-v
+COPY ./Modelfile .
+COPY ./installation.sh .
+
+RUN chmod +x ./installation.sh
+
+RUN ./installation.sh
 
 # Expose the port for Ollama service
 EXPOSE 11434

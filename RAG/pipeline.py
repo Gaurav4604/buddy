@@ -74,7 +74,7 @@ using the following context, answer this question
 """
 
 
-async def DocumentQnA(question: str) -> QuestionAnswer:
+async def _documentQnA(question: str) -> QuestionAnswer:
     # step 1 get all metadata, use it in tandem with question, to decide which documents to use
     generic_kit = RAGtoolkit()
     metadatas = generic_kit.get_all_metadata()
@@ -204,7 +204,7 @@ NOTE: limit the number of questions to "3"
 """
 
 
-async def get_questions(chunks: list[str], topic: str) -> QuestionForTopic:
+async def _get_questions(chunks: list[str], topic: str) -> QuestionForTopic:
     res = await client.chat(
         model="deepseek-r1",
         messages=[
@@ -221,11 +221,20 @@ async def get_questions(chunks: list[str], topic: str) -> QuestionForTopic:
     return output
 
 
-async def QuestionsGeneration(
+async def generate_questions(
     topics: list[str] = [], chapter_num: int = 0
 ) -> list[QuestionForTopic]:
     """
-    if topics are provided, then chapter is ignored
+    ----
+    Args:
+        `topics: list[str]`
+        `chapter_num: int`
+    Returns:
+        `list[QuestionForTopic]`
+
+    generates questions for each of the provided topic or for all topics of a chapter,
+    if topics are provided, chapter num is ignored
+
     """
 
     topic_list: list[Topics] = []
@@ -273,10 +282,9 @@ async def QuestionsGeneration(
             chunks = chapter_toolkit.query_docs(topic, n_results=10)["documents"][0]
             if len(chunks) > 0:
                 for attempt in range(1, max_retries + 1):
-                    task = asyncio.create_task(get_questions(chunks, topic))
+                    task = asyncio.create_task(_get_questions(chunks, topic))
                     try:
                         output = await asyncio.wait_for(task, timeout=execution_timeout)
-                        print(output)
                         questions.append(output)
                         break
                     except asyncio.TimeoutError:
@@ -295,6 +303,25 @@ async def QuestionsGeneration(
     return questions
 
 
+async def answer_questions(questions: list[str] = []) -> list[QuestionAnswer]:
+    """
+    ----
+    Args:
+        `questions: list[str]`
+    Returns:
+        `list[QuestionAnswer]`
+
+    answers all questions asked, using the documents present
+    """
+    answers: list[QuestionAnswer] = []
+    for question in questions:
+        answer = await _documentQnA(question)
+        print(f"Question {answer.question}")
+        print(f"Answer {answer.answer}")
+        answers.append(answer)
+    return answers
+
+
 async def main():
     # ans = await DocumentQnA("What is a transition function?")
     # print(ans)
@@ -304,8 +331,12 @@ async def main():
     answer="The transition function describes how an automaton changes its state based on input.
     It's denoted by δ(q, a) = p, where q and p are states and a is an input symbol."
     """
-    topics = ["FSA", "Language", "FSM", "Alphabet", "DFA", "NFA"]
-    await QuestionsGeneration(topics, chapter_num=0)
+    topics = ["FSA", "NFA"]
+    questions = await generate_questions(topics)
+    for question in questions:
+        # print(f"Questions {question.questions}")
+        print(question.topic)
+        await answer_questions(question.questions)
 
 
 if __name__ == "__main__":
@@ -313,6 +344,5 @@ if __name__ == "__main__":
 
 
 """
-2. Questions generation pipeline -> used to generate questions on per chapter basis, or per topic basis
 3. Answers generation pipeline -> used to generate answers for each of the question
 """
