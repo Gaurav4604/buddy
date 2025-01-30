@@ -1,0 +1,43 @@
+services:
+  buddy:
+    build:
+      dockerfile: ./docker/Python
+    container_name: buddy_app
+    volumes:
+      - ./files:/app/files
+      - ./outputs:/app/outputs
+      - ./cache:/app/cache
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_URL=http://ollama:11434
+      - TOKENIZERS_PARALLELISM=false
+    networks:
+      - buddy_ollama_network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  ollama:
+    build:
+      dockerfile: ./docker/Ollama
+    container_name: ollama_container
+    ports:
+      - "11434:11434"
+    networks:
+      - buddy_ollama_network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+networks:
+  buddy_ollama_network:
+    driver: bridge

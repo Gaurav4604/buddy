@@ -2,9 +2,11 @@ import ollama
 import asyncio
 from utils import RAGtoolkit, convert_string_to_list
 from pydantic import BaseModel
+import os
 
+ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
-client = ollama.AsyncClient()
+client = ollama.AsyncClient(host=ollama_url)
 
 
 class SelectedDocument(BaseModel):
@@ -323,20 +325,20 @@ async def answer_questions(questions: list[str] = []) -> list[QuestionAnswer]:
 
 
 async def main():
-    # ans = await DocumentQnA("What is a transition function?")
-    # print(ans)
+    ans = await answer_questions(["What is a transition function?"])
+    print(ans)
     """
     output:
     question='What is a transition function?'
     answer="The transition function describes how an automaton changes its state based on input.
     It's denoted by δ(q, a) = p, where q and p are states and a is an input symbol."
     """
-    topics = ["FSA", "NFA"]
-    questions = await generate_questions(topics)
-    for question in questions:
-        # print(f"Questions {question.questions}")
-        print(question.topic)
-        await answer_questions(question.questions)
+    # topics = ["FSA", "NFA"]
+    # questions = await generate_questions(topics)
+    # for question in questions:
+    #     # print(f"Questions {question.questions}")
+    #     print(question.topic)
+    #     await answer_questions(question.questions)
 
 
 if __name__ == "__main__":

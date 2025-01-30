@@ -21,7 +21,11 @@ latex_processor = load_processor()
 
 
 model = YOLOv10("inf.pt")
-client = ollama.AsyncClient()
+
+ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
+
+
+client = ollama.AsyncClient(host=ollama_url)
 
 
 class PolishedDoc(BaseModel):

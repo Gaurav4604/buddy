@@ -1,6 +1,7 @@
 from utils import RAGtoolkit
 from os.path import isfile
 import json
+import time
 
 
 def dump_extraction_to_db():

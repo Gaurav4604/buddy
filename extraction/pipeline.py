@@ -118,41 +118,6 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
     original_img = Image.open(input_img).convert("RGB")
     save_detections(det_res, input_img)
 
-    # -- Helper functions for bounding boxes --
-
-    def bbox_area(left: float, top: float, right: float, bottom: float) -> float:
-        """Returns area of the bounding box defined by [left, top, right, bottom]."""
-        return max(0.0, right - left) * max(0.0, bottom - top)
-
-    def compute_overlap_ratio(
-        new_box: tuple[float, float, float, float],
-        existing_box: tuple[float, float, float, float],
-    ) -> float:
-        """
-        Returns the fraction of 'new_box' area overlapped by 'existing_box'.
-        Overlap ratio = overlap_area / area(new_box).
-        """
-        n_left, n_top, n_right, n_bottom = new_box
-        e_left, e_top, e_right, e_bottom = existing_box
-
-        # Intersection coords
-        inter_left = max(n_left, e_left)
-        inter_top = max(n_top, e_top)
-        inter_right = min(n_right, e_right)
-        inter_bottom = min(n_bottom, e_bottom)
-
-        if inter_right < inter_left or inter_bottom < inter_top:
-            # No overlap
-            return 0.0
-
-        overlap_area = (inter_right - inter_left) * (inter_bottom - inter_top)
-        new_area = bbox_area(n_left, n_top, n_right, n_bottom)
-
-        if new_area == 0:
-            return 0.0
-
-        return overlap_area / new_area
-
     # 3) Parse YOLO outputs and build a list of DetectionInfo objects
     all_detections: list[DetectionInfo] = []
 
@@ -175,39 +140,7 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
                 xywh=tuple(box_xywh),
                 file_location="",
             )
-
-            # If it's class_id == 3, we add it straight away (following your original logic).
-            # Else we check bounding box overlaps.
-            if cls_id == 3:
-                all_detections.append(det_info)
-            else:
-                # Convert YOLO xywh -> [left, top, right, bottom]
-                cx, cy, w, h = box_xywh
-                left = cx - w / 2
-                top = cy - h / 2
-                right = cx + w / 2
-                bottom = cy + h / 2
-                new_box = (left, top, right, bottom)
-
-                # Compare with existing detections
-                skip_this_box = False
-                for existing_det in all_detections:
-                    # Convert existing_det xywh -> [left, top, right, bottom]
-                    e_cx, e_cy, e_w, e_h = existing_det.xywh
-                    e_left = e_cx - e_w / 2
-                    e_top = e_cy - e_h / 2
-                    e_right = e_cx + e_w / 2
-                    e_bottom = e_cy + e_h / 2
-                    existing_box = (e_left, e_top, e_right, e_bottom)
-
-                    # If the new box is 99% or more overlapped by an existing box, skip it
-                    overlap_ratio = compute_overlap_ratio(new_box, existing_box)
-                    if overlap_ratio >= 0.99:
-                        skip_this_box = True
-                        break
-
-                if not skip_this_box:
-                    all_detections.append(det_info)
+            all_detections.append(det_info)
 
     # 4) Sort all detections top-to-bottom, then left-to-right
     all_detections.sort(key=lambda det: (det.top, det.left))

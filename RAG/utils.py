@@ -1,8 +1,19 @@
 from transformers import AutoTokenizer
 from adapters import AutoAdapterModel
 from semantic_text_splitter import TextSplitter
+import os
 from os import listdir
 from os.path import isfile, join
+
+
+ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
+
+# for docker image setup to use the right sqlite
+if ollama_url != "http://localhost:11434":
+    __import__("pysqlite3")
+    import sys
+
+    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 
 import chromadb
@@ -69,7 +80,7 @@ class RAGtoolkit:
         self._chapter_meta_collection = self.client.get_or_create_collection(
             name="chapters_meta"
         )
-        self.ollama_client = ollama.Client()
+        self.ollama_client = ollama.Client(host=ollama_url)
 
         # tagging the object
         self.chapter_name = f"chapter_{chapter_num}"

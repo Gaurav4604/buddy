@@ -9,3 +9,7 @@ torch
 torchvision
 torchaudio
 chromadb
+transformers
+adapters
+Pillow
+semantic-text-splitter
