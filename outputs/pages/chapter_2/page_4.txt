@@ -1,0 +1,42 @@
+
+            <title>
+            2.2 Col ConsTRUCTION
+
+2.2 COI CONSTRUCTION
+            </title>
+            
+
+            <text>
+            Generating novel research ideas requires a profound comprehension of the respective research domain, coupled with a rigorous reasoning process. Previous endeavors (Lu et al. [2024], [2024], [2025]) have sought to augment LLMs with relevant papers to facilitate the citation process. However, these methods simply mix these papers into the prompt without effective organization. This scenario is akin to dropping an LLM at a chaotic intersection with no map in sight, leaving it uncertain about which path to take. To address this issue, we propose a Chain-of-Ideas agent framework.
+            </text>
+            
+
+            <text>
+            As shown in Figure[2], a Col, represented as 1_−M→⋯→1_0→⋯→1_N, is a sequence consisting of M+N+1 ideas extracted from M+N+1 research papers respectively, where they together show the evolution progress within a given research field. Specifically, given an initial research topic, we prompt the LLM to generate multiple queries, q^1,⋯,q^K, that reflect K different perspectives of this topic. The properties given in Table[20] are based on the existence of a sequence of K branches of Col. This reduces the chance of a sequence of K parameters. The most important property is that the outcome is not sufficient to capture the most significant development and direction. For each query q^k, we use it to iterate a top-ranked paper, which we call another paper P_0^c. In Figure[2] To [40], we can let P_0^c and P_0^c. Accordingly, a Col is constructed, the vectorized from the corresponding actor-prey to related progress in both directions; forward, tracing the progression of ideas, and backward, tracing their origins.
+            </text>
+            
+
+            <text>
+            In the forward direction, starting from P_G^d, we identify subsequent papers that directly cite it by leveraging the Semantic Scholar APP. We use OpenAI's text-embedding-3-1argd to rank these papers based on their cosine similarities to the concatenation of the initial research topic and the abstract of the anchor paper. Subsequently, we select the highest-ranked paper as P_1^d to extend the Col in the forward direction (e.g., GoT in Figure 2). This process is repeated iteratively from P_1^d to P_F^d until either the length of the Col reaches a preset value or the LLM finds that there is no valuable follow-up work (Table 8).
+            </text>
+            
+
+            <text>
+            In the backward direction, starting from the anchor paper Pk, we instruct an LLM to thoroughly review the full paper and identify candidate references based on the following criteria: 1) references that Pk directly built upon, 2) references that serve as baselines in Pk, and 3) references that tackle the same topic as Pk. With those candidate references, we ask the LLM to determine the most relevant one to the anchor paper (Tables [9] and [10], denoted as P*1 (e.g., SC in Figure [2]), to extend the Col backward. This backward extension is also carried out iteratively from Pk to pk(i41) to identify preceding papers (e.g., tracing backward from SC to CoT in Figure [2]). It terminates when the length of Col reaches a preset value or we encounter a milestone paper (defined as one with over 1,000 citations), indicating that the idea from the milestone paper could serve as a strong starting point for the Col. Additionally, we instruct the LLM to terminate the search if no reference relevant to the original research topic is found (Table [8). After we collect K paper chains, denoted as P1, P2, ..., PK, we ask the LLM to extract ideas from these papers and inherit the progressive relation of the paper chains to form our Cols I1, I2, ..., Ik. Then for each Col, we ask the LLM to summarize the existing research trends by analyzing the evolution between any two adjacent ideas (Table [11]). For example, the upper part of Figure [2] shows the evolution process from CoT to GoT step-by-step. Additionally, we extract experiment designs and the definition of key entities from these papers (Tables [9] and [10). The above information including Cols and the derived knowledge will be used in the following idea generation and experiment design stages.
+            </text>
+            
+
+            <title>
+            2.3 IDEA GENERATION
+            </title>
+            
+
+            <text>
+            In this section, we use the above-constructed Cols and their developing trends to guide the generation of a novel idea. For each generated Col, the first step is to predict possible future trends. As shown in the lower-left section of Figure [2], we prompt the LLM with the Col, the developing trends of
+            </text>
+            
+
+            <formula>
+             
+            </formula>
+            

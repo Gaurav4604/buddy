@@ -7,12 +7,12 @@
             
 
             <text>
-            The central idea of this NFA is to try to “guess” when the final 01 has begun. Whenever it is in state q_0, and it sees a zero, it guesses that the 0 is the beginning of the final 01, so it enters state q_1. (If it guessed correctly, a subsequent 1 will cause it to enter state q_2.) However, just in case it makes a bad guess, and the 0 is not the beginning of a 01 sequence, the NFA “hedges its bets” and also remains in state q_0.
+            The central idea of this NFA is to try to "guess" when the final 01 has begun. Whenever it is in state q₀, and it sees a zero, it guesses that the 0 is the beginning of the final 01, so it enters state q₁. (If it guessed correctly, a subsequent 1 will cause it to enter state q₂.) However, just in case it makes a bad guess, and the 0 is not the beginning of a 01 sequence, the NFA "hedges its bets" and also remains in state q₀.
             </text>
             
 
             <title>
-            # 2.1.1 Example — the zeroOne NFA processing a string
+            # 2.1.1   Example — the zeroOne NFA processing a string
 
 2.1.1 Example — the zeroOne NFA processing a string
             </title>
@@ -30,7 +30,7 @@ is works, let us process the same string 011001 that was handled by the previous
         outputs/images/chapter_1/page_1_4.jpg
         </path>
         <description>
-        diagrams showing different states and transitions in a finite state machine
+        A sequence of three state diagrams representing a finite automaton with two states (q0 and q1) and one transition between them. The initial state is q0, which transitions to q1 upon input 'a' or 'b'. From q1, there are outputs 0 and 1 leading back to q0, while from q2, the output is a single dot indicating an acceptance condition.
         </description>
         </image>
         
@@ -60,7 +60,7 @@ diagram now looks like this:
             
 
             <text>
-            Since q₂ is an accepting state, the NFA has recognized a string that ends in 01.
+            Since q_2 is an accepting state, the NFA has recognised a string that ends in 01.
             </text>
             
 
@@ -69,7 +69,7 @@ diagram now looks like this:
         outputs/images/chapter_1/page_1_9.jpg
         </path>
         <description>
-        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two transitions: one to q1 on input 0, and another to itself on input 1. State q1 has a single transition from it to q2 on input 1. There are no other inputs or states in the diagram.
+        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two transitions: one to q1 on input 0 and another to an undefined next state (indicated by a wavy arrow) on input 1. State q1 has no outgoing edges from it. From q1, there is a transition labeled 'l' leading to the final state q2.
         </description>
         </image>
         
@@ -89,7 +89,7 @@ diagram now looks like this:
         outputs/images/chapter_1/page_1_11.jpg
         </path>
         <description>
-        A state diagram with three states: q0, q1, and q2. The initial state is q0, which has two transitions labeled 0 and 1 leading to q1. From q1, there are two transitions labeled 0 and 1 leading to q2.
+        A state diagram with three states: q0, q1, and q2. The initial state is q0, which has two transitions to q1 based on input 0 or 1. From q1, there are two possible outputs (0 or 1) leading back to the same state q1. Finally, from q2, there is a transition with an output of either 0 or 1 that leads directly to another state q2.
         </description>
         </image>
         

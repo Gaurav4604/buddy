@@ -30,7 +30,7 @@
         outputs/images/chapter_0/page_3_4.jpg
         </path>
         <description>
-        A diagram showing a state transition process from 'start' to various states including 'f', 'fo', 'for', and finally 'float'. The arrows indicate transitions between these states, with labels such as f, o, r, l, a, t representing different steps or conditions in the process.
+        A diagram showing a flowchart with various nodes and arrows indicating transitions between them. The chart starts at 'start' node, moves to 'f', then loops back through 'fo', continues on to 'for', goes down to 'fl1', returns up again via 'flo', ends in the final state 'float'. Arrows indicate direction of flow from one node to another.
         </description>
         </image>
         
@@ -46,17 +46,14 @@
 
             <text>
             In the FSM there are states named after the partially-recognised words: f, fo, fl, flo, and floa. There are also two accepting states named for and float, shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state fo, the machine will not recognise the character x, because there is no transition labelled with the event x, from state fo. If an unrecognised event occurs, the machine “dies”, and ceases to process symbols — it no longer has a current state. Effectively, the dot has been lost.
-            </text>
-            
 
-            <text>
-            Diagrams of this kind often result from describing the behavior of a _regular expression_, a topic we will deal with later.
+Diagrams of this kind often result from describing the behaviour of a regular expression, a topic we will deal with later.
             </text>
             
 
             <title>
-            0.5 Central concepts
-
+            0.5  Central concept
+0.5 Central concepts
             </title>
             
 

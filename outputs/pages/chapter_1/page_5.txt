@@ -1,25 +1,23 @@
 
             <title>
-            # 2.4   The string transition function for an NFA.
+            # 2.4 The string transition function for an NFA
 
 2.4 The string transition function for an NFA
             </title>
             
 
             <text>
-            The extended transition function, Δ allows us to specify how an NFA in state-set Q will move to state-set R upon receipt of a symbol s. We show this by writing R = Δ(Q,s).
-            </text>
-            
+            The extended transition function, Δ allows us to specify how an NFA in state-set Q will move to state-set R upon receipt of a symbol s. We show this by writing R = Δ(Q, s).
 
-            <text>
-            We are interested in knowing what state-set an NFA will reach, starting at Q₀, if it is presented with a string of symbols w = s₁s₂s₃⋯sₙ.
-            </text>
-            
+We are interested in knowing what state-set an NFA will reach, starting at Q₀, if it is presented with a string of symbols w = s₁s₂s₃⋯sₙ.
 
-            <text>
-            We can specify Δ̃, the string transition function, that takes a current state-set P, and a string of input symbols w = s₁s₂s₃⋯sₙ, and generates the state-set R that the NFA will reach after processing those symbols: R = Δ̃(P, w), like this:
+We can specify Δ, the string transition function, that takes a current state-set P and a string of input symbols v = s₁s₂s₃⋯sₙ, and generates the state-set R that the NFA will reach after processing those symbols: R = Δ̂(P, w), like this:
 
-We can specify A, the string transition function, that takes a current state-set P, and a string of input symbols w = s₁s₂s₃⋯sₙ, and generates the state-set R that the NFA will reach after processing those symbols: R = A(P, w), like this:
+The extended transition function, A allows us to specify how an NFA in state-set Q will move to state-set R upon receipt of a symbol s. We show this by writing R = A(Q, s).
+
+We are interested in knowing what state-set an NFA will reach, starting at Q₀, if it is presented with a string of symbols w = 5₁8₂5₃ — 8p.
+
+We can specify A, the string transition function, that takes a current state-set P and a string of input symbols w = s₁s₂s₃—8, and generates the state-set R that the NFA will reach after processing those symbols: R = A(P, w), like this:
             </text>
             
 
@@ -29,24 +27,19 @@ We can specify A, the string transition function, that takes a current state-set
             
 
             <text>
-            Note that Q is a _set of sets of states_ — the set of all subsets that can be created by selecting states from Q.
+            Note that Q is a _set of sets of states_ – the set of all subsets that can be created by selecting states from Q.
 
-(Note that @Q is a set of sets of states — the set of all subsets that can be created by selecting states from Q.)
+We can define Δ̂ recursively, like this:
+
             </text>
             
 
             <text>
-            # We can define Δ̂ recursively, like this:
+            Base case If there is no input, the NFA stays in the current state-set, P. Thus the rule is:
 
-A can be defined recursively as follows:
-            </text>
-            
+Base case
 
-            <text>
-            Base case
 If there is no input, the NFA stays in the current state-set, P. Thus the rule is:
-
-
             </text>
             
 
@@ -56,9 +49,9 @@ If there is no input, the NFA stays in the current state-set, P. Thus the rule i
             
 
             <text>
-            **Recurrence case**] If we are given a string of symbols s₁s₂s₃⋯sₙ, we "chop" the first symbol s₁ from the string, and use Δ to compute the state-set, T, that would be reached, starting at each state p in P:
+            **Recurrence case**] If we are given a string of symbols s₁s₂s₃⋯sₙ, we 'chop' the first symbol s₁ from the string, and use Δ to compute the state-set, T, that would be reached, starting at each state p in P:
 
-Recurrence case | If we are given a string of symbols s₁s₂s₃⋯sₙ, we “chop” the first symbol s₁ from the string, and use Δ to compute the state-set, T, that would be reached, starting at each state p in P:
+Recurrence case | If we are given a string of symbols s₁s₂s₃⋯sₙ, we “chop” the first symbol s₁ from the string, and use A to compute the state-set, T, that would be reached, starting at each state p in P:
             </text>
             
 
@@ -70,15 +63,15 @@ Recurrence case | If we are given a string of symbols s₁s₂s₃⋯sₙ, we �
             
 
             <text>
-            We then use the Δ̂ function to process the remainder of the string, starting at T: Δ̂(T,⊗_2⊗_3⋯⊗_n). Combining the pieces, we get:
+            We then use the Δ̂ function to process the remainder of the string, starting at T: Δ̂(T, ∘_2∘_3⋯∘_n). Combining the pieces, we get:
 
-We then use the A function to process the remainder of the string, starting at T: A(T, s₂₈₃—Sₙ).
+We then use the A function to process the remainder of the string, starting at T: A(T, 5283 — Sn).
 Combining the pieces, we get:
             </text>
             
 
             <formula>
-            Δ̂(P, s_1 s_2 s_3⋯ s_n) = Δ̂(Δ(P, s_1)), s_2 s_3⋯ s_n)
+            Δ̂(P, s_1s_2s_3⋯ s_n) = Δ̂(Δ(P, s_1)), s_2s_3⋯ s_n)
             </formula>
             
 
@@ -97,7 +90,9 @@ Combining the pieces, we get:
             <text>
             We can define the language of an NFA in a very similar way to a DFA. The language is the set of all input strings that take the NFA from its initial state to an accepting state. Thus, for the NFA JN, defined by:
 
-We can define the language of an NFA in a very similar way to a DFA. The language is the set of all input strings that take the NFA from its initial state to an accepting state. Thus, for the NFA JN, defined by:
+We can define the language of an NFA in a very similar way to a DFA. The language is the set of
+all input strings that take the NFA from its initial state to an accepting state. Thus, for the NFA JN,
+defined by:
             </text>
             
 
@@ -122,9 +117,14 @@ We can define the language of an NFA in a very similar way to a DFA. The languag
             </formula>
             
 
+            <formula>
+            
+    L(N)={w∈Σ^*|Δ̂(Q_0,w)∩ F≠∅}
+
+            </formula>
+            
+
             <text>
             Note that we must define the acceptance test slightly differently from a DFA. In a DFA, the δ̂ function returns a single state, and we check to see if that state is in F. For an NFA, Δ̂ returns a set of states. If one or more of those states is in F, then the NFA is in an accepting state. We express this condition by computing the intersection between the result of Δ̂ and F, Δ̂(⋯)∩ F. If the intersection is non-null, we know that the NFA has reached an accepting state.
-
-Note that we must define the acceptance test slightly differently from a DFA. In a DFA, the δ̂ function returns a single state, and we check to see if that state is in F'. For an NFA, Δ̂ returns a set of states. If one or more of those states is in F”, then the NFA is in an accepting state. We express this condition by computing the intersection between the result of Δ̂ and F, Δ̂(—) A F. If the intersection is non-null, we know that the NFA has reached an accepting state.
             </text>
             

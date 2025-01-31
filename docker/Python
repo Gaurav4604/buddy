@@ -35,4 +35,4 @@ COPY ./RAG/* /app/RAG/
 RUN pip install pysqlite3-binary
 
 
-CMD ["python", "/app/RAG/pipeline.py"]
+ENTRYPOINT ["python", "/app/RAG/pipeline.py"]

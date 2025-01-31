@@ -4,7 +4,7 @@
         outputs/images/chapter_0/page_2_0.jpg
         </path>
         <description>
-        A simple diagram showing a switch with two positions: OFF and ON. The arrow labeled 'tap' indicates that pressing or tapping on either position will change it to the opposite one.
+        A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing it will change the state from OFF to ON or vice versa.
         </description>
         </image>
         
@@ -15,26 +15,20 @@
             
 
             <text>
-            In the diagram, the two circles, named off and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap. We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, labelled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named off.) A diagram such as this is called a finite state machine(FSM).
-            </text>
-            
+            In the diagram, the two circles, named _offset_ and _on_, represent the state of the light. The state of the light can be changed by the occurrence of an event, named _tap_. We show a transition from one state to another by a directed arc (a line with an arrow on one end) from one state to another, labeled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named _offset_). A diagram such as this is called a finite state machine (FSM).
 
-            <text>
-            This state-diagram very neatly and succinctly captures the behavior of the light: Initially, the light is off, and the FSM is in state off. Upon receipt of a tap event, the system changes state to on, indicating that the light is now on. The FSM is now in state on. Upon receipt of a tap event, the system changes state to off, indicating that the light is now off. The FSM is now in state off.
-            </text>
-            
+This state-diagram very neatly and succinctly captures the behavior of the light: Initially, the light is off, and the FSM is in state _offset_. Upon receipt of a tap event, the system changes state to on, indicating that the light is now on. The FSM is now in state _on_. Upon receipt of a tap event again, the system changes state back to off, indicating that the light is now off. The FSM is now in state _off_.
 
-            <text>
-            We can show the current state by putting a dot inside it. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
+We can show the current state by putting a dot inside it. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
             </text>
             
 
         <image>
         <path>
-        outputs/images/chapter_0/page_2_5.jpg
+        outputs/images/chapter_0/page_2_3.jpg
         </path>
         <description>
-        A simple diagram showing a toggle switch with an arrow indicating that it can be turned on or off. The word 'OFF' is written in bold inside one circle, and the word 'ON' is written in bold inside another circle connected by two arrows labeled 'tap'. There are also two additional lines pointing to each of these circles from above.
+        A simple diagram showing a toggle switch with an arrow indicating that it can be turned on or off by tapping. The word 'tap' is written inside each circle representing the state (OFF and ON). There are two arrows pointing from OFF to ON, suggesting that one tap will turn the switch on.
         </description>
         </image>
         
@@ -46,17 +40,14 @@
 
             <text>
             All this behaviour can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state. By reading the diagram, it is easy to see what will happen in every situation.
-            </text>
-            
 
-            <text>
-            Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the _ON_ state, as shown in fig. 3.
+Consider our previous diagram, with the tap-light in the OFF state. If we receive a tap event, the diagram changes to the ON state, as shown in fig. 3.
             </text>
             
 
         <image>
         <path>
-        outputs/images/chapter_0/page_2_9.jpg
+        outputs/images/chapter_0/page_2_6.jpg
         </path>
         <description>
         A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing or tapping on either state will change it to the opposite one.

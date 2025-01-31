@@ -253,7 +253,7 @@ async def extract_formula(image: str) -> str:
             }
         ],
         format=Formula.model_json_schema(),
-        options={"temperature": 0.2},
+        options={"temperature": 0, "num_ctx": 4096},
         keep_alive=0,
     )
 
@@ -296,23 +296,31 @@ async def extract_text(image: str) -> str:
         str: string containing image text
     """
     result = batch_inference([Image.open(image)], latex_model, latex_processor)
+
+    print("text result " + str(result))
     text_content_latex = LatexNodes2Text().latex_to_text(result[0]).strip()
 
     tesseract_text = pytesseract.image_to_string(image)
+
+    print("tessaract text " + str(tesseract_text))
     res = await client.chat(
-        model="marco-o1",
+        model="deepseek-r1",
         messages=[
             {
-                "role": "system",
+                "role": "user",
                 "content": system_merge,
             },
             {
                 "role": "user",
                 "content": template_files.format(text_content_latex, tesseract_text),
             },
+            {
+                "role": "user",
+                "content": "clean up any un-neccesary repetitions and retain only the valid extraction",
+            },
         ],
         format=DocContent.model_json_schema(),
-        options={"temperature": 0.2},
+        options={"temperature": 0, "num_ctx": 4096},
         keep_alive=0,
     )
     result = DocContent.model_validate_json(res["message"]["content"]).text
@@ -325,8 +333,6 @@ class DetectionInfo:
     def __init__(
         self,
         class_id: int,
-        confidence: float,
-        xywh: tuple[float, float, float, float],
         file_location: str = "",
     ):
         """
@@ -336,8 +342,6 @@ class DetectionInfo:
         file_location = This can be set later if needed
         """
         self.class_id = class_id
-        self.confidence = confidence
-        self.xywh = xywh
         self.file_location = file_location
 
     def set_file_location(self, location: str):

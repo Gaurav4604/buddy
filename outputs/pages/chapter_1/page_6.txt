@@ -8,45 +8,27 @@
 
             <text>
             An NFA is often easier to construct than a DFA for a given language, which is sufficient justification for studying NFAs. You may be surprised to know that every NFA can be converted into an equivalent DFA, so it is always possible to implement an NFA.
+
+In the worst case, an NFA with n states will require a DFA with 2ⁿ — 1 states. Fortunately, this case arises only rarely in practice, and a typical DFA has about the same number of states as the original NFA.
+
+We can construct a DFA from an NFA by first creating all the non-empty subsets of the states of the NFA (there will be 2ⁿ — 1 such subsets, for an NFA with n states). Let us call each subset a d-state. We then build a DFA with a separate state for each d-state.
+
+The goal is to take an NFA N = (Qₙ, Σ, δᵢ, Q₀ₙ, Fₙ) and generate a corresponding DFA D = (Q₀, Σ, δ₀, Q₀₀, F₀) such that L(N) = L(D).
+
+We notice that the two automata have the same input alphabet, Σ, and the initial state of D (q₀₀) is the d-state containing all the initial states of N (Q₀ₙ). The remaining parts of the automaton D can be constructed as follows:
             </text>
             
 
             <text>
-            In the worst case, an NFA with n states will require a DFA with 2ⁿ⁻¹ states. Fortunately, this case arises only rarely in practice, and a typical DFA has about the same number of states as the original NFA.
-            </text>
-            
-
-            <text>
-            We can construct a DFA from an NFA by first creating all the non-empty subsets of the states of the NFA (there will be 2ⁿ — 1 such subsets, for an NFA with n states). Let us call each subset a d-state. We then build a DFA with a separate state for each d-state.
-            </text>
-            
-
-            <text>
-            The goal is to take an NFA N=(Q_N,Σ,δ_N,Q_0N,F_N), and generate a corresponding DFA D=(Q_D,Σ,δ_D,q_0D,F_D) such that L(N)=L(D).
-            </text>
-            
-
-            <text>
-            We notice that the two automata have the same input alphabet, Σ, and the initial state of D (q₀D) is the d-state containing all the initial states of N (Q₀N).
-            </text>
-            
-
-            <text>
-            The remaining parts of the automaton D can be constructed like this:
-
-
-            </text>
-            
-
-            <text>
-            * Q_D is the set of all non-empty subsets of Q_N. We refer to each of these as a _d-state_. Since Q_N has n states, there will be 2^n subsets. After eliminating the empty subset, Q_D will have 2^n-1 d-states. Fortunately, in practical cases, many of these d-states will be unreachable from the initial d-state, and so can be thrown away. This can substantially reduce the complexity of the final DFA.
+            * Q_D is the set of all non-empty subsets of Q_N. We refer to each of these as a d-state_. Since Q_N has n states, there will be 2^n subsets. After eliminating the empty subset, Q_D will have 2^n-1 d-states. Fortunately, in practical cases, many of these d-states will be unreachable from the initial d-state, and so can be thrown away. This can substantially reduce the complexity of the final DFA.
             </text>
             
 
             <text>
             * The final-set of D (=F_D), is the set of d-states in Q_D, such that each d-state contains at least one accepting state of N. We can specify this as:
 
-* e The final-set of D (= Fp), is the set of d-states in Qp, such that each d-state contains at least one accepting state of N. We can specify this as:
+**Math Extraction:**
+e The final-set of D (= Fp), is the set of d-states in Qp, such that each d-state contains at least one accepting state of N. We can specify this as:
             </text>
             
 
@@ -58,7 +40,7 @@
             
 
             <text>
-            * For each d-state d in Q_D, and for each symbol t in Σ, we can define δ_D(d,t) by looking at each of the corresponding NFA states s ∈ d, and then seeing how N would handle each of those states for an input symbol t. Then we compute the union of those states, to get the actual d-state. Formally:
+            * For each d-state d in Q_D, and for each symbol t in Σ, we can define δ_D(d,t) by looking at each of the corresponding NFA states s∈ d, and then seeing how N would handle each of those states for an input symbol t. Then we compute the union of those states, to get the actual d-state. Formally:
 
 * For each d-state din Qp, and for each symbol t in ©, we can define 5p(d, t) by looking at each of the corresponding NFA states s € d, and then seeing how N would handle each of those states for an input symbol t. Then we compute the union of those states, to get the actual d-state. Formally:
             </text>
@@ -82,25 +64,18 @@
             
 
             <formula>
-            
-    Q_D={{q_0},{q_1},{q_2},{q_0,q_1},{q_0,q_2},{q_1,q_2},{q_0,q_1,q_2}}
-
+            Q_D={{q_0},{q_1},{q_2},{q_0,q_1},{q_0,q_2},{q_1,q_2},{q_0,q_1,q_2}}
             </formula>
             
 
             <text>
-            Since N has 3 states, there are 2^3-1=7 non-empty subsets, as we have just seen.)
+            Since N has 3 states, there are 2³ - 1 = 7 non-empty subsets, as we have just seen.
             </text>
             
 
             <text>
-            The final states of the DFA are q₂, q₀, q₂, q₁, q₂, and q₀, q₁, q₂, since these d-states all include the final state q₂ of the original NFA.
-            </text>
-            
+            The final states of the DFA are q₂, q₀, q₂, q₁, q₂, and q₀, q₁, q₂, since these d-states all include the final state q₂ of the original NFA. When we construct the transition function, we find: 
 
-            <text>
-            When we construct the transition function, we find:
-
-When we construct the transition function, we find:
+The final states of the DFA are q₀, q₀, q₂, q₁, q₂, and q₀, q₁, q₂, since these d-states all include the final state q₂ of the original NFA. When we construct the transition function, we find:
             </text>
             

@@ -1,0 +1,86 @@
+
+            <text>
+            Table 2: Ablation study on the design of CoI agent. The original CoI agent gets 50 points because it receives 50 ties after batting with itself.
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['CoI Agent', 'Novelty', 'Significance', 'Clarity', 'Feasibility', 'Effectiveness', 'Average']
+</headers>
+<rows>
+        <row>['– CoI', '41', '39', '44', '49', '39', '42.4']</row>
+	<row>['– Future Trend', '40', '43', '51', '53', '44', '46.2']</row>
+	<row>['– Entities', '46', '49', '42', '47', '43', '45.4']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            Omits the Future Trend Prediction module, prompting the LLM to consolidate ideas directly based on the provided input information. 3) — Entities: Skips inputting entity definitions during idea generation. To ensure fair comparison, each variant is scored against the full Col Agent, with 2/1/0 points for win/tie/lose in 50 matches, for a maximum of 100 points.
+            </text>
+            
+
+            <text>
+            Results in Table [2] show that all variants negatively affect idea quality. Excluding the Col construction stage has the most significant impact, emphasizing the importance of organizing literature based on progressive relationships to enhance the LLM’s understanding of trends. Removing the Future Trend Prediction reduces novelty as the LLM lacks insight into potential forward-thinking ideas. Although slight improvements in clarity and feasibility are observed, these are not substantial, likely due to evaluation variability. Finally, omitting entity information reduces clarity and effectiveness, as the LLM generates more abstract ideas without grounding in specific concepts. This highlights the value of entity information in enhancing the clarity and practical relevance of ideas.
+            </text>
+            
+
+            <title>
+            4.3 CASE STUDY
+
+4.3. CASE STUDY
+            </title>
+            
+
+            <text>
+            We present an intriguing case study in Table [3] with the same topic of our paper — generating novel research ideas using LLMs. Given the input topic, our Col agent first constructs the chain of ideas, extending Ip in both forward and backward directions. Then the agent analyzes current research trends for any two adjacent ideas. For instance, it identifies that the core development from J_, to Jo is the generation of ideas rather than hypotheses. After digesting the existing trends, the Col agent realizes that LLMs have great potential in idea generation but are limited in novelty and diversity. Therefore, it proposes an evolutionary algorithm, which specifically models the variations between parents and children, as a possible future trend for novel and diverse idea generation. Finally, the agent consolidates its final idea by drawing on future trends and with practical implementations, such as crossover and mutation, to ensure effective realization. Therefore, the generated idea is viable and novel, deserving further exploration in our future work.
+            </text>
+            
+
+            <text>
+            # Table 4: Results of experiment design including both model and human evaluations, as well as their agreements. Tech. refers to the Technical Quality criterion.
+
+Table 4: Results of experiment design
+including both model and human eval-
+uations, as well as their agreements.
+Tech. refers to the Technical Quality
+criterion.
+            </text>
+            
+
+            <title>
+            4.4 EXPERIMENT DESIGN
+            </title>
+            
+
+            <text>
+            As a byproduct of idea generation, we also require these baselines to develop potential experiment designs for realizing their proposed ideas. Table [4] presents the arena-style results for experiment designs for both model-based and human-based evaluations. Our Col Agent demonstrates superior performance across all evaluated criteria in two evaluation settings, achieving the highest scores among all automated methods. Notably, it surpasses RAG, the second-best automated method, by 70 ELO points in human evaluation. Furthermore, there is a high degree of model-human agreement in the experimental designs. Despite the clarity and reasonable technical details of the experiment designs produced by the Col Agent in support of the proposed ideas, they tend to be less feasible compared to those designs in the existing literature. This phenomenon is also observed during the idea generation phase. Consequently, feasibility represents a significant bottleneck in automatic idea generation, highlighting the need for future research to address this challenge.
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Feasibility', 'Tech.', 'Clarity', 'Authority']
+</headers>
+<rows>
+        <row>['Real Paper', '1100', '1122', '1090', '1103']</row>
+	<row>['CoI Agent (ours)', '1029', '1096', '1043', '1056']</row>
+	<row>['RAG', '1022', '970', '1016', '1003']</row>
+	<row>['ResearchAgent', '960', '1020', '980', '987']</row>
+	<row>['GPT-Researcher', '1001', '965', '992', '986']</row>
+	<row>['AI-Scientist', '888', '827', '879', '865']</row>
+	<row>['Real Paper', '1138', '1111', '1041', '1110']</row>
+	<row>['CoI Agent (ours)', '1092', '1123', '1111', '1121']</row>
+	<row>['RAG', '1035', '1041', '1048', '1042']</row>
+	<row>['GPT-Researcher', '988', '977', '971', '978']</row>
+	<row>['ResearchAgent', '939', '959', '964', '954']</row>
+	<row>['AI-Scientist', '809', '788', '725', '794']</row>
+	<row>['Agreement', '70.7%', '75.9%', '72.1%', '73.0%']</row>
+</rows>
+        
+                </table>
+                

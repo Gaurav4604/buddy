@@ -10,14 +10,13 @@
     ['δ_D', '0', '1']
 </headers>
 <rows>
-        <row>['→ {q_0}', '{q_0, q_1}', '{q_0}']</row>
-	<row>['→ {q_1}', '{q_1}', '{}']</row>
-	<row>['* {q_2}', '*', '{}']</row>
+        <row>['→ {q_0}', '{q_0, q_1}', '{q_0, q_0}']</row>
+	<row>['{q_1}', '∅', '{q_2}']</row>
+	<row>['* {q_2}', '∅', '∅']</row>
 	<row>['{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
-	<row>['{q_0, q_2}', '{q_0, q_1}', '{q_0}']</row>
-	<row>['* {q_0, q_2}', '* {q_0, q_1}', '* {q_0}']</row>
-	<row>['* {q_1, q_2}', '* {q_1, q_2}', '* {q_2}']</row>
-	<row>['{q_0, q_1, q_2}', '{q_0, q_1, q_2}', '{q_0, q_2}']</row>
+	<row>['{q_0, q_2}', '* {q_0, q_1}', '{q_0, q_0}']</row>
+	<row>['* {q_1, q_2}', '∅', '{q_2}']</row>
+	<row>['* {q_0, q_1, q_2}', '{q_0, q_1}', '{q_0, q_2}']</row>
 </rows>
         
                 </table>
@@ -35,45 +34,34 @@
 
             <text>
             We thus see that δ_D(q_0,q_2,0)=q_0,q_1, so q_0,q_1 goes into the 0 column.
-            </text>
-            
 
-            <text>
-            ider the case when the input symbol is a 1. Once again, within the d-state there a
+Now consider the case when the input symbol is a 1. Once again, within the d-state there are two states:
+
             </text>
             
 
             <formula>
-            Δ_N({q_0, q_2}, 1) = δ_N(q_0, 1) ∪δ_N(q_2, 1) = {q_0}∪∅ = {q_0}
+            Δ_N({q_0, q_2}, 1) = δ_N(q_0, 1) ∪δ_N(q_2, 1) = {q_0} ∪∅= {q_0}
             </formula>
             
 
             <text>
             We thus see that δ_D(q_0,q_2,1)=q_0. Which now goes into the 1 column.
-            </text>
-            
 
-            <text>
-            The remaining entries in the table are computed in a similar way.
-            </text>
-            
+The remaining entries in the table are computed in a similar way.
 
-            <text>
-            If we examine the table carefully, starting at the initial d-state q₀, we find we can reach only the d-states q₀,q₁, q₀, and q₀,q₂. All the other d-states are unreachable, and can safely be ignored. Notice that the DFA now has only three states, exactly the same as the original NFA! This is much better than the (potential) worst case of 7 states.
-            </text>
-            
+If we examine the table carefully, starting at the initial d-state q_0, find we can reach only the d-states q_0,q_1, q_0, and q_0,q_2. All the other d-states are unreachable, and can safely be ignored. Notice that the DFA now has only three states, exactly the same as the original NFA This is much better than the (potential) worst case of 7 states.
 
-            <text>
-            If we draw the DFA transition diagram that corresponds to this table, we get this diagram:
+If we draw the DFA transition diagram that corresponds to this table, we get this diagram:
             </text>
             
 
         <image>
         <path>
-        outputs/images/chapter_1/page_6_11.jpg
+        outputs/images/chapter_1/page_6_7.jpg
         </path>
         <description>
-        A state diagram with two states, q0 and q1. The initial state is q0, which has transitions to both q1 and itself (labeled 'i'). State q1 also has a transition back to q0 ('o') and another transition to the final state q2 ('1'). Both states have no outgoing edges from them.
+        A state diagram with two states, q0 and q1. The initial state is q0, which has transitions to both q1 and itself labeled by 0 or l respectively. State q1 also has a transition back to q0 labeled by o. There are no other labels on the arrows between these nodes.
         </description>
         </image>
         

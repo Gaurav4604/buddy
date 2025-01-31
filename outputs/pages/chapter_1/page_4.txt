@@ -19,16 +19,30 @@
     ['zeroOne', 'delta', '0', '1']
 </headers>
 <rows>
-        <row>['→ q₀', '{q₀, q₁}', '{q₀}', '{q₀}']</row>
-	<row>['q₁', '∅', '{q₂}', '{q₂}']</row>
-	<row>['*q₂', '{q₀, q₁}', '∅', '∅']</row>
+        <row>['→ q₀', '{q₀, q₁}', '⁀', '{q₀}']</row>
+	<row>['q₁', '⁀', '⁀', '{q₂}']</row>
+	<row>['*q₂', '⁀', '⁀', '⁀']</row>
+</rows>
+        
+                </table>
+                
+
+                <table>
+                
+<headers>
+    ['zeroOne', 'delta', '0', '1']
+</headers>
+<rows>
+        <row>['→ q₀', '{q₀, q₁}', '⁀', '{q₀}']</row>
+	<row>['q₁', '⁀', '⁀', '{q₂}']</row>
+	<row>['*q₂', '⁀', '⁀', '⁀']</row>
 </rows>
         
                 </table>
                 
 
             <text>
-            The only difference between this table and the one for a DFA is that the _next-state_ entries in the table are a set of states, instead of being a single state. For example, the entry for state q₀ given the symbol 0 is the set q₀, q₁. When there is no next state, we show the next state as an empty set, ∅.
+            The only difference between this table and the one for a DFA is that the _next-state_ entries in the table are a _set_ of states, instead of being a single state. For example, the entry for state q₀ given the symbol 0 is the set q₀, q₁. When there is no next state, we show the next state as an empty set, ∅.
             </text>
             
 
@@ -40,7 +54,7 @@
             
 
             <title>
-            # 2.3.1   The extended transition function, Δ.
+            # 2.3.1   The extended transition function, Delta
 
 2.3.1 The extended transition function, Δ
             </title>
@@ -48,23 +62,17 @@
 
             <text>
             An NFA can simultaneously be in multiple states but, by convention, the transition function, δ, is specified in terms of a single state and single symbol, and returns a set of states. We will find it convenient to define a new function Δ that accepts as parameters a set of states, and a symbol, and returns a set of states.
-            </text>
-            
 
-            <text>
-            If an NFA is in the set of states P, and receives an input symbol s, then the next state is determined by evaluating delta for each state in that set (which will return a set of states), and then computing the union of those sets.
-            </text>
-            
+If an NFA is in the set of states P, and receives an input symbol s, then the next state is determined by evaluating δ for each state in that set (which will return a set of states), and then computing the union of those sets.
 
-            <text>
-            Formally:
-
-
+Formally:
             </text>
             
 
             <formula>
-            Δ(P, s) = ⋃_p ∈ Pδ(p, s)
+            
+    Δ(P, s) = ⋃_p ∈ Pδ(p, s)
+
             </formula>
             
 
@@ -77,22 +85,17 @@
 
             <text>
             To understand how an NFA decides whether to 'accept' a string of symbols, we need to see how it processes a string. The set of all strings that an NFA accepts is called its 'language'.
-            </text>
-            
 
-            <text>
-            Suppose s₁s₂s₃… sₙ is a sequence of input symbols drawn from Σ, (the set of input symbols that this NFA can process).
-            </text>
-            
+Suppose β₁⊗β₂⋯⊗ₙ is a sequence of input symbols drawn from Σ, (the set of input symbols that this NFA can process).
 
-            <text>
-            We start with the NFA in its initial state-set, R₀ = Q₀, and use the extended transition function Δ to process the first input symbol to get the next state-set:
+We start with the NFA in its initial state-set, R₀ = Q₀, and use the extended transition function Δ to process the first input symbol to get the next state-set:
+
             </text>
             
 
             <formula>
             
-    R_y = A(R_o, S_1)
+    R_1 = Δ(R_0, s_1)
 
             </formula>
             
@@ -112,7 +115,7 @@ R₁ is the set of new states that the NFA enters after receiving the input symb
             
 
             <text>
-            Continuing in this manner until all input symbols have been processed, we successively enter sets of states R₃, R₄,..., Rₙ. At each step,
+            Continuing in this manner until all input symbols have been processed, we successively enter sets of states R₃, R₄,…, Rₙ. At each step,
 
             </text>
             

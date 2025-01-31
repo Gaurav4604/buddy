@@ -1,8 +1,9 @@
 
             <title>
-            chapteer2
+            dnpter2
 
-Chapter 2
+**Chapter 2**
+
             </title>
             
 
@@ -14,24 +15,13 @@ Non-deterministic automata
             
 
             <text>
-            The automata we have studied so far are called Deterministic Finite-state Automata (DFA) because when the DFA receive an input it is able to precisely determine its next state. *Deterministic behaviour is a highly desirable characteristic*, because it guarantees that we can implement a DFA as a program on a computer.
+            The automata we have studied so far are called **Deterministic Finite-state Automata (DFA)** because when the DFA receive an input it is able to precisely determine its next state. Deterministic behaviour is a highly desirable characteristic, because it guarantees that we can implement a DFA as a program on a computer.
 
-The automata we have studied so far are called Deterministic Finite-state Automata (DFA) because when the DFA receive an input it is able to precisely determine its next state. Deterministic behaviour is a highly desirable characteristic, because it guarantees that we can implement a DFA as a program on a computer.
-            </text>
-            
+A Non-deterministic Finite state Automaton (NFA), has the property that it can be in more than one state at any one time. This (apparently weird) property allows us to express many automata more compactly than as a DFA.
 
-            <text>
-            A Non-deterministic Finite state Automaton (NFA), has the property that it can be in more than one state at any one time. This (apparently weird) property allows us to express many automata more compactly than as a DFA.
-            </text>
-            
+Non-determinism appears to be an undesirable property (if the NFA cannot determine which state to enter next, what is it to do?) but it is not. It turns out that every NFA can be converted to an equivalent (though sometimes much larger) Deterministic Finite-state Automaton (DFA), so NFAs can always be implemented, though with a bit more effort.
 
-            <text>
-            Non-determinism appears to be an undesirable property (if the NFA cannot determine which state to enter next, what is it to do?) but it is not. It turns out that every NFA can be converted to an equivalent (though sometimes much larger) DFA, so NFAs can always be implemented, though with a bit more effort.
-            </text>
-            
-
-            <text>
-            The attraction of the NFA is that we can more-easily specify the desired behavior. Then, using a mechanical procedure, we can convert the NFA to a DFA, and thus implement it. This two-step approach neatly simplifies the overall task.
+The attraction of the NFA is that we can more-easily specify the desired behavior. Then, using a mechanical procedure, we can convert the NFA to a DFA, and thus implement it. This two-step approach neatly simplifies the overall task.
             </text>
             
 
@@ -44,32 +34,21 @@ The automata we have studied so far are called Deterministic Finite-state Automa
 
             <text>
             In most respects, an NFA is the same as a DFA: It has a finite number of states; it accepts a finite set of input symbols; it begins in an initial state; and it has a set of accepting states. There is also a transition function, δ. Recall that in a DFA, δ(q,s) takes the current state, q, the current input symbol, s, and returns the next _state_ to enter.
-            </text>
-            
 
-            <text>
-            In an NFA, δ(q, s) takes a current state, q, the current input symbol s, and returns a _state-set_ (a set of states) that the NFA enters. The set can contain zero, one, or more states.
-            </text>
-            
+In an NFA, δ(q,5) takes a current state, q, the current input symbol s, and returns a state-set (a set of states) that the NFA enters. The set can contain zero, one, or more states.
 
-            <text>
-            Consider the zeroOne recognizer described earlier. We can express this as an NFA as shown in fig. 2.1.
-            </text>
-            
+Consider the zeroOne recogniser described earlier. We can express this as an NFA as shown in fig. 2.1.
 
-            <text>
-            # There are several things to notice about this diagram:
-
-
+There are several things to notice about this diagram:
             </text>
             
 
         <image>
         <path>
-        outputs/images/chapter_1/page_0_11.jpg
+        outputs/images/chapter_1/page_0_5.jpg
         </path>
         <description>
-        A state diagram with three states, q0, q1, and q2. The initial state is q0, which has two transitions: one to q1 on input 0 and another to q1 on input 1. From q1, there are two possible paths: a transition to q2 on input 1 or staying in q1 with no further inputs specified.
+        A state diagram showing a transition from q0 to q1, then to q2. The initial state is q0 and there are two transitions: one labeled 0 leading from q0 to q1, and another labeled 1 also leading from q0 to q1. From q1, there is a single transition labeled l leading to q2.
         </description>
         </image>
         

@@ -1,0 +1,84 @@
+
+            <text>
+            Table 3: Case study for the entire idea generation pipeline of our CoI agent.
+            </text>
+            
+
+            <text>
+            **Input topic**: *Using LLM agent to generate novel and original research ideas without human participation*
+            </text>
+            
+
+            <text>
+            Chain of Ideas:
+
+I_3 (Kim et al.|[2021): It addresses the challenge of discovering new materials through molecular generation. It introduces GCT, a Transformer with a variational autoencoder, to generate SMILES strings...
+
+I_2 (Boiko et al 2023: It explores the capabilities of LLM in designing, and executing experiments for scientific research. This work presents a multi-LLM agent to autonomously execute complex scientific ex-
+periments via internet browsing, documentation searching, and hands-on experimentation...
+
+Ty (Yang et al.| [2024b): It proposes a new dataset for social science hypotheses and develops a MOOSE framework with LLM prompting and feedback mechanisms to facilitate hypothesis generation...
+
+Io (Baek et al.|2024): It proposes a ResearchAgent framework for automatic idea generation. ResearchA-
+agent combines LLMs with an entity-centric knowledge graph and iterative feedback from reviewing agents,
+creating a structured and dynamic process for generating and refining research ideas...
+
+qh (Si et al.] [2024): The paper explores the capabilities of LLMs in generating novel research ideas and presents a large-scale comparison between LLM-generated ideas and those produced by 100 NLP expert researchers, revealing that LLMs can produce ideas deemed more novel than human-generated ideas...
+
+Current Trends:
+
+I_3 — I_2: The progression from J_3 to J_2 marks a significant shift from the application of neural models for molecular generation to the broader scope of automating scientific research using LLMs...
+
+I_2 — I_,: The transition from J_2 to J_; focuses on refining the autonomous induction capabilities of LLMs, specifically in generating novel and valid scientific hypotheses...
+
+I_, — Io: Io builds on the advancements made in J_1 by further extending the process of generating hypotheses to generating and refining research ideas autonomously...
+
+Io — I: The transition from Jo to J; emphasizes the importance of empirical validation of LLMs in generating novel research ideas and highlights the potential of LLMs to contribute to ideation...
+            </text>
+            
+
+            <text>
+            **Future Trend Prediction:** Given the previous research's progression and the identified gaps, a promising direction is to unleash the potential of LLM in ideation. We can develop a multi-agent system that leverages evolutionary algorithms to enhance the diversity and novelty of LLM-generated research ideas...
+            </text>
+            
+
+            <text>
+            **Final Idea:** EvoResearchAgent: Enhancing Diversity and Novelty in Idea Generation with Evolution
+
+* **Motivation:** Using LLMs for idea generation has shown promising advancements. However, challenges persist, particularly concerning the diversity and novelty of LLM-generated ideas. [Si et al., 2024] show that while LLMs can produce novel ideas, they often lack a broad range of perspectives and diversity. Additionally, [Bas et al., 2024] have emphasized the need for a more systematic approach to improving the quality of generated ideas. To address these issues, we propose EvoResearchAgent, a multi-agent system that leverages evolutionary algorithms to enhance the diversity and novelty of generated ideas ...
+
+* **Method:**
+    * **Idea Initialize:** An LLM generates some initial ideas as the start point of the evolutionary process .. .
+    * **Metrics:** Propose automatic metrics like topic diversity and novelty to evaluate the range of ideas .. .
+    * **Evolution Integration:*
+
+
+            </text>
+            
+
+            <text>
+            ## 4 Iteration: Repeat the selection, crossover, and mutation process iteratively
+
+4. Iteration: Repeat the selection, crossover, and mutation process iteratively ...
+            </text>
+            
+
+            <title>
+            4.5 LENGTH OF COI
+            </title>
+            
+
+        <image>
+        <path>
+        outputs/images/chapter_2/page_8_7.jpg
+        </path>
+        <description>
+        A line graph showing ELO scores over length on a logarithmic scale. The x-axis represents Length in 1024 units, and the y-axis shows ELO Scores from approximately 930 to just under 1050.
+        </description>
+        </image>
+        
+
+            <caption>
+            To examine the impact of the Col length on the quality of generated ideas, we constructed variants with differing maximum chain lengths. Furthermore, we also adopt the “- Col” variant in Sec. [4.2] as a 0-length variant, which uses 5 retrieved papers but does not organize them in a chain structure. Figure [6] presents the idea arena results among these length variants. We observe a substantial improvement of idea-generation quality when we increase the length from 0 to 3. This indicates a clear developmental trend analysis is more pivotal than the quantity of related literature. Furthermore, the quality of generated ideas continues to improve as the length of the Col increases. Longer Cols offer more reliable and comprehensive insights into
+            </caption>
+            

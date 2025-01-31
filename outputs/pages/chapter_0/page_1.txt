@@ -1,10 +1,7 @@
 
             <title>
-            chapeter 0
-
-
-    Chapter 0
-
+            dnpter 0
+Chapter 0
             </title>
             
 
@@ -12,36 +9,21 @@
             Introduction
 
 
+    ∫_a^b f(x) dx = F(b) - F(a)
+
             </title>
             
 
             <text>
-            Most of your programming experience will have been acquired by writing conventional data-processing style programs that read data, process it, and generate output. Programs that simply read and write files are among the oldest uses of computers, and are known as batch programs – the program runs, computes and, when it is finished, the result is available.
-            </text>
-            
+            Most of your programming experience will have been acquired by writing conventional data-processing style programs that read data, process it, and generate output. Programs that simply read and write files are among the oldest uses of computers, and are known as batch programs — the program runs, computes and, when it is finished, the result is available.
 
-            <text>
-            If the program interacts with a user, and asks for data as it is needed for the computation, it is called an interactive program. Interactive programs were the next stage in the evolution of computers and software. You have probably written many interactive programs during your coursework so far.
-            </text>
-            
+If the program interacts with a user, and asks for data as it is needed for the computation, it is called an interactive program. Interactive programs were the next stage in the evolution of computers and software. You have probably written many interactive programs during your coursework so far.
 
-            <text>
-            However, many programs in the real world need to be able to process data as it arrives at the system. These programs are called _reactive_ or _event-driven_ because they need to be able to react to the data as soon as it arrives.
-            </text>
-            
+However, many programs in the real world need to be able to process data as it arrives at the system. These programs are called reactive or event-driven because they need to be able to react to the data as soon as it arrives.
 
-            <text>
-            A familiar example of a reactive program is any program with a Graphical User Interface (GUI). Such a program does not wait for a specific button to be pressed, but is instead ready to respond to _any_ button that is pressed.
-            </text>
-            
+A familiar example of a reactive program is any program with a Graphical User Interface (GUI). Such a program does not wait for a specific button to be pressed, but is instead ready to respond to any button that is pressed.
 
-            <text>
-            Another application of reactive programs is embedded systems. These are systems that control electrical appliances such as DVD players, air conditioners, toasters, mobile phones, burglar alarms, car fuel injection systems, and many others. More than 99
-            </text>
-            
-
-            <text>
-            # Reactive programs have three main characteristics:
+Another application of reactive programs is embedded systems. These are systems that control electrical appliances such as DVD players, air conditioners, toasters, mobile phones, burglar alarms, car fuel injection systems, and many others. More than 99
 
 Reactive programs have three main characteristics:
             </text>
@@ -62,6 +44,8 @@ Reactive programs have three main characteristics:
 
 **Math:**
 
-* e The user is always in control. While the program is processing data, it cannot choose to ignore the user, rather it must respond to the user’s events (mouse-clicks, or key-strokes) in a timely fashion.
+* e The user is always in control. While the program is processing data, it cannot choose to ignore
+the user, rather it must respond to the user’s events (mouse-clicks, or key-strokes) in a timely
+fashion.
             </text>
             
