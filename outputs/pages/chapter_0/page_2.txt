@@ -2,70 +2,92 @@
             <title>
             # 0.1 What are event-driven systems?
 
-0.1 What are event-driven systems?
+
             </title>
             
 
             <text>
             As noted above, reactive or event-driven systems can cover a broad spectrum of applications. The most common are:
-
-As noted above, reactive or event-driven systems can cover a broad spectrum of applications. The
-most common are:
             </text>
             
 
             <text>
-            **Graphical User Interfaces (GUIs)** It is very difficult to write correct code for GUIs without using event-driven techniques. In this course, we will show you how to construct _bug-free_ GUIs.
+            
+
+**Graphical User Interfaces (GUIs)** It is very difficult to write correct code for GUIs without using event-driven techniques. In this course, we will show you how to construct _bug-free_ GUIs.
+
+
             </text>
             
 
             <text>
-            **Embedded Systems**: If you are an engineer, you will almost certainly be involved in designing or implementing an embedded control system for a product. The reason is simple: a microcontroller is the cheapest and most flexible way to implement the control section of almost every electronic product. Those of you who are studying the courses "Software Engineering and Project" or "Embedded Computer Systems" will find that knowledge of event-driven systems will significantly simplify the software for your projects.
+            
+
+**Embedded Systems**: If you are an engineer, you will almost certainly be involved in designing or implementing an embedded control system for a product. The reason is simple: a microcontroller is the cheapest and most flexible way to implement the control section of almost every electronic product. Those of you who are studying the courses "software Engineering and Project" or "Embedded Computer Systems" will find that knowledge of event-driven systems will significantly simplify the software for your projects.
+
+
             </text>
             
 
             <text>
-            **Communication Protocols**: Modern computer systems are extensively networked, to allow them to exchange data. All computer communication depends on a protocol for the exchange of data. Communication protocols need to be able to respond to events, such as: arrival of a message, arrival of an acknowledgement, timeout after sending a message, and so on. All these events can occur in any order. A protocol can only be implemented reliably using event-driven programming techniques.
+            
+
+**Communication Protocols**: Modern computer systems are extensively networked, to allow them to exchange data. All computer communication depends on a protocol for the exchange of data. Communication protocols need to be able to respond to events, such as: arrival of a message, arrival of an acknowledgement, timeout after sending a message, and so on. All these events can occur in any order. A protocol can _only_ be implemented reliably using event-driven programming techniques.
+
+
             </text>
             
 
             <text>
-            A "protocol stack" is a layered set of intercommunicating protocols that together permit computer-to-computer communication. Each layer in the stack is a reactive program. A protocol stack is thus, by its very nature, highly reactive, and highly concurrent.
+            A “protocol stack” is a layered set of intercommunicating protocols that together permit computer-to-computer communication. Each layer in the stack is a reactive program. A protocol stack is thus, by its very nature, highly reactive, and highly concurrent.
             </text>
             
 
             <text>
-            Despite the variety of applications for event-driven systems, there are some well understood techniques for designing and implementing these systems. They can significantly reduce the time, effort and the likelihood of bugs when writing your code. They also will make your program much easier to change in the future.
+            Despite the variety of applications for event-driven systems, there are some well understood techniques for designing and implementing these systems. They can significantly reduce the time, effort and the likelihood of bugs when writing your code. They also will make your program _much_ easier to change in the future.
 
 By making clear design and implementation decisions at the beginning, you will retain intellectual control over the complexity inherent in all reactive systems.
+
+
             </text>
             
 
             <title>
-            0.2 A little history
+            
+    0.2  A little history
 
             </title>
             
 
             <text>
-            The ideas behind finite state machines have been around for a long time now. In the 1930s, Alan Turing did research on computable functions, and invented the “Turing machine”, a simple processor that has been proved to have the same capabilities as any current-day computer.
+            The ideas behind finite state machines have been around for a long time now. In the 1930s, Alan Turing did research on computable functions, and invented the Turing machine's, a simple processor that has been proved to have the same capabilities as any current-day computer.
 
 In the 1940s, McCulloch and Pitts modelled the behaviour of nerve networks, using ideas similar to those presented in these notes.
 
-In the mid 1950s, papers by Mealy and Moore, from the Engineering community, had a big influence on the design of switching systems in telephone exchanges. Both described finite state machines as we now know them. We will look at the nature of their work a little later on.
+In the mid 1950s, papers by Mealy and Moore, from the Engineering community, had a big influence on the new version of viewing systems in telephone exchanges. Both described finite state machines as the new work of them. We will look at the nature of their work a little later on.
 
-At the end of the 1950s, Rabin and Scott published a paper that introduced non-deterministic finite state machines, and provided fruitful insights for further work. They received the ACM Turing award for this work.
+At the end of the 1950s, Rubin and Scott published a paper that introduced non-deterministic finite state machines, and provided fruitful insights for further work. They received the ACM Turing award for this work.
+
+
             </text>
             
 
             <title>
             # 0.3   An introductory example - the tap-light
 
-0.3 An introductory example - the tap-light
+
+    
+
+
+
+    
+
             </title>
             
 
             <text>
-            Let us consider a simple but familiar example: an electric table lamp that is controlled by simply 'tapping' it: when a user taps the lamp, it turns on; tap again, and it turns back off; tap again, and it turns back on; and so on. We can represent this behaviour in a state-diagram, as shown in fig. 1.
+            Let us consider a simple but familiar example: an electric table lamp that is controlled by simply "tapping" it: when a user taps the lamp, it turns on; tap again, and it turns back off; tap again, and it turns back on; and so on. We can represent this behaviour in a _state-diagram_, as shown in fig. 1.
+
+
             </text>
             

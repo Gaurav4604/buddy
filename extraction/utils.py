@@ -12,6 +12,7 @@ import base64
 from transformers.utils import logging
 import warnings
 import ollama
+import shutil
 
 logging.set_verbosity(40)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -28,8 +29,8 @@ ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
 client = ollama.AsyncClient(host=ollama_url)
 
 
-class PolishedDoc(BaseModel):
-    markdown: str
+class DocNeedsOCR(BaseModel):
+    invalid_latex: bool
 
 
 class DocContent(BaseModel):
@@ -263,27 +264,32 @@ async def extract_formula(image: str) -> str:
     return text_content
 
 
-system_merge = """
-You are a pdf to text conversion merger,
-your role is to look at a text extraction which has badly extracted math symbols
-along with a valid math extraction for the same file
-and merge the two files together, to build a common text, containing valid text
+system_text_instruct = """
+You are a text assesser, I will provide you LaTeX based extracted text,
+This text may contain invalid or mis-represented text symbols, 
+these symbols could be mis-represented
+using spelling errors or mis-spelt words
+
+your role is to look
+at the input text decide if it contains any such mis-representations
 """
 
-template_files = """
-I have a document page extracted out,
-it has an OCR based extraction,
-this does not have valid math symbols
+template_latex = """
+the following enclosed in tags is the LaTeX extraction,
+<latex-text>
+{}
+</latex-text>
+"""
+
+template_ocr = """
+the following is pure OCR extraction,
+which may contain some invalid math symbols, but perfect text without any spelling issues,
 <valid-text>
 {}
 </valid-text>
 
-this is a math based extraction latex format extraction
-<valid-math>
-{}
-</valid-math>
-
-give me a merged response, with valid math, and retain all text info
+substitute the latex text mis-representations with valid text,
+and return the final result
 """
 
 
@@ -295,37 +301,54 @@ async def extract_text(image: str) -> str:
     Returns:
         str: string containing image text
     """
-    result = batch_inference([Image.open(image)], latex_model, latex_processor)
+    latex_extract = batch_inference([Image.open(image)], latex_model, latex_processor)[
+        0
+    ]
+    messages = [
+        {
+            "role": "system",
+            "content": system_text_instruct,
+        },
+        {
+            "role": "user",
+            "content": template_latex.format(latex_extract),
+        },
+    ]
 
-    print("text result " + str(result))
-    text_content_latex = LatexNodes2Text().latex_to_text(result[0]).strip()
+    ctx_size = (8192 * 2) if len(latex_extract) > 800 else 8192
 
-    tesseract_text = pytesseract.image_to_string(image)
-
-    print("tessaract text " + str(tesseract_text))
     res = await client.chat(
-        model="deepseek-r1",
-        messages=[
-            {
-                "role": "user",
-                "content": system_merge,
-            },
-            {
-                "role": "user",
-                "content": template_files.format(text_content_latex, tesseract_text),
-            },
-            {
-                "role": "user",
-                "content": "clean up any un-neccesary repetitions and retain only the valid extraction",
-            },
-        ],
-        format=DocContent.model_json_schema(),
-        options={"temperature": 0, "num_ctx": 4096},
-        keep_alive=0,
+        model="llama3.2",
+        messages=messages,
+        format=DocNeedsOCR.model_json_schema(),
+        options={"temperature": 0, "num_ctx": ctx_size},
     )
-    result = DocContent.model_validate_json(res["message"]["content"]).text
+    invalid_latex = DocNeedsOCR.model_validate_json(
+        res["message"]["content"]
+    ).invalid_latex
 
-    return LatexNodes2Text().latex_to_text(result)
+    print(latex_extract.strip())
+    print(invalid_latex)
+
+    if invalid_latex:
+        tesseract_text = pytesseract.image_to_string(image)
+
+        print(tesseract_text)
+        messages.append(res.message)
+        messages.append(
+            {"role": "user", "content": template_ocr.format(tesseract_text)}
+        )
+        res = await client.chat(
+            model="llama3.2",
+            messages=messages,
+            format=DocContent.model_json_schema(),
+            options={"temperature": 0, "num_ctx": ctx_size},
+            keep_alive=0,
+        )
+        result = DocContent.model_validate_json(res["message"]["content"]).text
+        return result.strip()
+    else:
+        return LatexNodes2Text().latex_to_text(latex_extract)
 
 
 # 1) Define a class to hold detection info
@@ -372,3 +395,83 @@ class DetectionInfo:
         """Return the 'right' (x-max) of the bounding box."""
         cx, cy, w, h = self.xywh
         return cx + w / 2.0
+
+
+async def build_content(idx, det, chapter_num, page_num, content="") -> str:
+
+    if det.class_id == 3:  # image data
+        description = await extract_image(det.file_location)
+        save_path = f"outputs/images/chapter_{chapter_num}/page_{page_num}_{idx}.jpg"
+        shutil.copyfile(src=det.file_location, dst=save_path)
+        content += (
+            f"""
+        <image>
+        <path>
+        {save_path}
+        </path>
+        <description>
+        {description}
+        </description>
+        </image>
+        """
+            + "\n"
+        )
+    elif det.class_id == 4:
+        # caption text
+        extracted_text = await extract_text(det.file_location)
+        content += (
+            f"""
+            <caption>
+            {extracted_text}
+            </caption>
+            """
+            + "\n"
+        )
+    elif det.class_id == 8 or det.class_id == 5:
+        table_or_formula = await classify_table_formula(det.file_location)
+        is_table = "table" in table_or_formula
+
+        if is_table:
+            table = await extract_table(det.file_location)
+            content += (
+                f"""
+                <table>
+                {table.construct_table()}
+                </table>
+                """
+                + "\n"
+            )
+        else:
+            # model confuses between table and formula
+            formula = await extract_formula(det.file_location)
+            content += (
+                f"""
+            <formula>
+            {formula}
+            </formula>
+            """
+                + "\n"
+            )
+    elif det.class_id == 0:
+        # title text
+        extracted_text = await extract_text(det.file_location)
+        content += (
+            f"""
+            <title>
+            {extracted_text}
+            </title>
+            """
+            + "\n"
+        )
+    else:
+        # plain text
+        extracted_text = await extract_text(det.file_location)
+        content += (
+            f"""
+            <text>
+            {extracted_text}
+            </text>
+            """
+            + "\n"
+        )
+    return content

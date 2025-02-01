@@ -1,6 +1,6 @@
 
             <text>
-            zero one
+            zeroOne
             </text>
             
 
@@ -10,20 +10,20 @@
     ['δ_D', '0', '1']
 </headers>
 <rows>
-        <row>['→ {q_0}', '{q_0, q_1}', '{q_0, q_0}']</row>
+        <row>['→ {q_0}', '{q_0, q_1}', '{q_0}']</row>
 	<row>['{q_1}', '∅', '{q_2}']</row>
-	<row>['* {q_2}', '∅', '∅']</row>
+	<row>['{* {q_2}}', '∅', '∅']</row>
 	<row>['{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
-	<row>['{q_0, q_2}', '* {q_0, q_1}', '{q_0, q_0}']</row>
-	<row>['* {q_1, q_2}', '∅', '{q_2}']</row>
-	<row>['* {q_0, q_1, q_2}', '{q_0, q_1}', '{q_0, q_2}']</row>
+	<row>['{* {q_0, q_2}}', '{q_0, q_1}', '{q_0, q_1}']</row>
+	<row>['{* {q_1, q_2}}', '∅', '{q_2}']</row>
+	<row>['{* {q_0, q_1, q_2}}', '{q_0, q_1}', '{q_0, q_2}']</row>
 </rows>
         
                 </table>
                 
 
             <text>
-            To show how this table was derived, let us generate the entries for the d-state q₀, q₂. Consider first the case when the next input symbol is a 0. Within the d-state q₀, q₂ there are two states to consider, when we evaluate the Δₙ transition function:
+            To show how this table was derived, let us generate the entries for the d-state {q_0,q_2}. Consider first the case when the next input symbol is a 0. Within the d-state {q_0,q_2} there are two states to consider, when we evaluate the Δ_N transition function:
             </text>
             
 
@@ -33,24 +33,21 @@
             
 
             <text>
-            We thus see that δ_D(q_0,q_2,0)=q_0,q_1, so q_0,q_1 goes into the 0 column.
-
-Now consider the case when the input symbol is a 1. Once again, within the d-state there are two states:
-
+            We thus see that dp({q0, q2},0) = {go, a1}, So {q0, 1} goes into the 0 column. Now consider the case when the input symbol is a 1. Once again, within the d-state there are two states:
             </text>
             
 
             <formula>
-            Δ_N({q_0, q_2}, 1) = δ_N(q_0, 1) ∪δ_N(q_2, 1) = {q_0} ∪∅= {q_0}
+            Δ_N({q_0, q_2}, 1) = δ_N(q_0, 1) ∪δ_N(q_2, 1) = {q_0}∪∅ = {q_0}
             </formula>
             
 
             <text>
-            We thus see that δ_D(q_0,q_2,1)=q_0. Which now goes into the 1 column.
+            We thus see that δ_D({q_0,q_2},1)={q_0}. Which now goes into the 1 column.
 
 The remaining entries in the table are computed in a similar way.
 
-If we examine the table carefully, starting at the initial d-state q_0, find we can reach only the d-states q_0,q_1, q_0, and q_0,q_2. All the other d-states are unreachable, and can safely be ignored. Notice that the DFA now has only three states, exactly the same as the original NFA This is much better than the (potential) worst case of 7 states.
+If we examine the table carefully, starting at the initial d-states {q_0}, find we can reach only the d-states {q_0,q_1}, {q_0}, and {q_0,q_2}. All the other d-states are unreachable, and can safely be ignored. Notice that the DFA now has only three states, exactly the same as the original NFA This is much better than the (potential) worst case of 7 states.
 
 If we draw the DFA transition diagram that corresponds to this table, we get this diagram:
             </text>
@@ -61,12 +58,12 @@ If we draw the DFA transition diagram that corresponds to this table, we get thi
         outputs/images/chapter_1/page_6_7.jpg
         </path>
         <description>
-        A state diagram with two states, q0 and q1. The initial state is q0, which has transitions to both q1 and itself labeled by 0 or l respectively. State q1 also has a transition back to q0 labeled by o. There are no other labels on the arrows between these nodes.
+        A state diagram with two states, q0 and q1. The initial state is q0, which has transitions to both q1 and q2 based on input 0 or 1 respectively. State q1 also has a transition back to itself when input 0 is received, while state q2 does not have any outgoing edges.
         </description>
         </image>
         
 
             <text>
-            With the exception of the labels on the states, which are unimportant because they are just names, this diagram is identical to the DFA we derived in chapter 1. This is, of course, exactly what we expected!
+            With the exception of the labels on the states, which are unimportant, because they are just names, this diagram is _identical_ to the DFA we derived in chapter 1. This is, of course, exactly what we expected!
             </text>
             

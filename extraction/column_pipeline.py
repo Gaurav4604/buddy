@@ -1,4 +1,4 @@
-from utils import DetectionInfo, model, save_detections, build_content, extract_text
+from utils import DetectionInfo, model, save_detections, build_content
 import os
 import shutil
 from PIL import Image
@@ -6,11 +6,79 @@ from pdf2image import convert_from_path
 from typing import Any
 import asyncio
 import json
-import time
+
 import numpy as np
 
 
 DO_NOT_MERGE = {3, 5, 8}  # 3=image, 5=formula, 8=table
+
+
+import numpy as np
+from typing import List, Tuple
+
+
+def assign_columns_two_column(
+    boxes: List[Tuple[List[int], List[int], int]]
+) -> Tuple[
+    List[Tuple[List[int], List[int], int]], List[Tuple[List[int], List[int], int]]
+]:
+    """
+    Given a list of bounding boxes in the format [[x1, y1], [x2, y2], class_id],
+    assign each box to the left or right column in a two-column research paper layout.
+
+    Steps:
+      1. Use plain text boxes (class_id == 1 or 0) to determine the left column parameters:
+         - left_margin: the minimum x1 among plain text boxes.
+         - left_column_width: the median width (x2 - x1) of these plain text boxes.
+      2. For each box:
+           - If its left edge (x1) falls within the region [left_margin, left_margin + left_column_width],
+             assign it to the left column.
+           - However, if its width is >= 1.75 * left_column_width (i.e. it is very wide),
+             then treat it as an exception and assign it to the right column.
+           - Otherwise (i.e. if its x1 is not in the left column region), assign it to the right column.
+
+    Returns:
+      A tuple (left_column_boxes, right_column_boxes) where each element is a list of bounding boxes.
+    """
+    # Filter plain text boxes (class_id == 1 or 0) to determine left column region
+    plain_text_boxes = [box for box in boxes if (box[2] == 1 or box[2] == 0)]
+
+    if plain_text_boxes:
+        # left_margin is the smallest x1 among plain text items
+        left_margin = min(box[0][0] for box in plain_text_boxes)
+        # Compute widths for these boxes
+        widths = [box[1][0] - box[0][0] for box in plain_text_boxes]
+        left_column_width = np.median(widths)
+    else:
+        # Fallback: if no plain text is found, use overall minimum and median width
+        left_margin = min(box[0][0] for box in boxes) if boxes else 0
+        widths = [box[1][0] - box[0][0] for box in boxes]
+        left_column_width = np.median(widths) if widths else 0
+
+    left_column = []
+    right_column = []
+
+    for box in boxes:
+        tl, br, cls_id = box
+        x1 = tl[0]
+        width = br[0] - tl[0]
+
+        # If the box starts within the left column region...
+        if x1 < left_margin + left_column_width:
+            # ...but if it is unusually wide (>= 1.75x the left column width),
+            # we treat it as a "wide" element (assign to right column)
+            if width >= 1.75 * left_column_width:
+                right_column.append(box)
+            else:
+                left_column.append(box)
+        else:
+            right_column.append(box)
+
+    # Optionally, sort each column by the top coordinate (y1) so that reading order is top-to-bottom.
+    left_column.sort(key=lambda b: b[0][1])
+    right_column.sort(key=lambda b: b[0][1])
+
+    return left_column, right_column
 
 
 def xywh_to_tlbr(cx, cy, w, h):
@@ -162,22 +230,36 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
 
         for cls_id, conf, (cx, cy, w, h) in zip(cls_list, conf_list, xywh_list):
             # Skip if class is "abandon" (id == 2)
+            print(cls_id == 2, cls_id)
             if cls_id == 2:
                 continue
+            else:
+                tl, br = xywh_to_tlbr(cx, cy, w, h)
+                raw_boxes.append([tl, br, int(cls_id)])
 
-            tl, br = xywh_to_tlbr(cx, cy, w, h)
-            raw_boxes.append([tl, br, int(cls_id)])
+    left_boxes, right_boxes = assign_columns_two_column(raw_boxes)
 
     # 4) Separate into mergeable vs. non_mergeable
     #    e.g. you want to keep class IDs 3,4,5 separate from text
-    mergeable_boxes = [b for b in raw_boxes if b[2] not in DO_NOT_MERGE]
-    non_mergeable_boxes = [b for b in raw_boxes if b[2] in DO_NOT_MERGE]
+    mergeable_boxes = [b for b in left_boxes if b[2] not in DO_NOT_MERGE]
+    non_mergeable_boxes = [b for b in left_boxes if b[2] in DO_NOT_MERGE]
 
     # 5) Merge only the mergeable boxes
     merged_boxes = merge_boxes(mergeable_boxes, merge_margin=15)
 
     # 6) Combine them back
-    final_boxes = merged_boxes + non_mergeable_boxes
+    final_boxes_left = merged_boxes + non_mergeable_boxes
+
+    mergeable_boxes = [b for b in right_boxes if b[2] not in DO_NOT_MERGE]
+    non_mergeable_boxes = [b for b in right_boxes if b[2] in DO_NOT_MERGE]
+
+    # 5) Merge only the mergeable boxes
+    merged_boxes = merge_boxes(mergeable_boxes, merge_margin=15)
+
+    # 6) Combine them back
+    final_boxes_right = merged_boxes + non_mergeable_boxes
+
+    final_boxes = []
 
     # 7) Sort final boxes top-down, then left-right
     #    final_boxes is [ [x1,y1],[x2,y2], class_id ]
@@ -185,7 +267,11 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
         (x1, y1), (x2, y2), cls_id = box
         return (y1, x1)
 
-    final_boxes.sort(key=sort_key)
+    final_boxes_left.sort(key=sort_key)
+    final_boxes_right.sort(key=sort_key)
+
+    final_boxes.extend(final_boxes_left)
+    final_boxes.extend(final_boxes_right)
 
     # 6) Create the output directories if not exist
     os.makedirs("temp", exist_ok=True)
@@ -210,6 +296,7 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
         snippet = original_img.crop((x1, y1, x2, y2))
         snippet_path = f"temp/snippet_{idx}.png"
         snippet.save(snippet_path)
+        print(f"Saved snippet {idx} (class={cls_id}) -> {snippet_path}")
 
         all_detections.append(
             DetectionInfo(class_id=cls_id, file_location=snippet_path)
@@ -217,48 +304,49 @@ async def extraction_pipeline(input_img: str, chapter_num: int, page_num: int):
 
     # 6) Build textual content for this page
     content = ""
-    for idx, det in enumerate(all_detections):
-        # {0: 'title', 1: 'plain text', 2: 'abandon', 3: 'figure', 4: 'figure_caption', 5: 'table', 6: 'table_caption', 7: 'table_footnote', 8: 'isolate_formula', 9: 'formula_caption'}
-        # content +=
-        max_retries = 3
-        execution_timeout = 60 if not (det.class_id == 8 or det.class_id == 5) else 150
-        for attempt in range(1, max_retries + 1):
-            # Recreate the task each time we retry
-            task = asyncio.create_task(
-                build_content(idx, det, chapter_num, page_num, content)
-            )
+    # for idx, det in enumerate(all_detections):
+    #     # {0: 'title', 1: 'plain text', 2: 'abandon', 3: 'figure', 4: 'figure_caption', 5: 'table', 6: 'table_caption', 7: 'table_footnote', 8: 'isolate_formula', 9: 'formula_caption'}
+    #     # content +=
+    #     max_retries = 3
+    #     execution_timeout = 60 if not (det.class_id == 8 or det.class_id == 5) else 150
+    #     for attempt in range(1, max_retries + 1):
+    #         # Recreate the task each time we retry
+    #         task = asyncio.create_task(
+    #             build_content(idx, det, chapter_num, page_num, content)
+    #         )
 
-            try:
-                content = await asyncio.wait_for(task, timeout=execution_timeout)
-                # If we get here, it succeeded within 45s — break out of the loop
-                break
+    #         try:
+    #             content = await asyncio.wait_for(task, timeout=execution_timeout)
+    #             print(content)
+    #             # If we get here, it succeeded within 45s — break out of the loop
+    #             break
 
-            except asyncio.TimeoutError:
-                # Cancel the timed-out task
-                task.cancel()
+    #         except asyncio.TimeoutError:
+    #             # Cancel the timed-out task
+    #             task.cancel()
 
-                if attempt < max_retries:
-                    execution_timeout += 15
-                    print(f"Attempt {attempt} timed out. Retrying...")
-                else:
-                    print(
-                        f"Attempt {attempt} timed out. Maximum retries reached; giving up."
-                    )
-                    # No more retries; you can handle it (e.g. return, raise, etc.)
-                    # break or raise an exception, depending on your needs
-                    exit()
+    #             if attempt < max_retries:
+    #                 execution_timeout += 15
+    #                 print(f"Attempt {attempt} timed out. Retrying...")
+    #             else:
+    #                 print(
+    #                     f"Attempt {attempt} timed out. Maximum retries reached; giving up."
+    #                 )
+    #                 # No more retries; you can handle it (e.g. return, raise, etc.)
+    #                 # break or raise an exception, depending on your needs
+    #                 exit()
 
-    # 7) Write the page's content to disk
-    with open(
-        f"outputs/pages/chapter_{chapter_num}/page_{page_num + 1}.txt",
-        "w",
-        encoding="utf-8",
-    ) as f:
-        f.write(content)
+    # # 7) Write the page's content to disk
+    # with open(
+    #     f"outputs/pages/chapter_{chapter_num}/page_{page_num + 1}.txt",
+    #     "w",
+    #     encoding="utf-8",
+    # ) as f:
+    #     f.write(content)
 
-    # # Clean up /temp
-    shutil.rmtree("temp")
-    return content
+    # # # Clean up /temp
+    # shutil.rmtree("temp")
+    # return content
 
 
 async def async_extraction_pipeline_from_pdf(
@@ -275,26 +363,18 @@ async def async_extraction_pipeline_from_pdf(
     os.makedirs("pages", exist_ok=True)
     all_pages_content = []
 
-    print("Starting Extraction...")
-
     for i, page in enumerate(pages):
-        start_time = time.time()
-
         real_page_index = start_page + i
         page_filename = f"pages/page_{real_page_index}.png"
         page.save(page_filename, "PNG")
 
         # Instead of calling asyncio.run(...), we just 'await' the pipeline call
-        page_content = await extraction_pipeline(
-            page_filename, chapter_num, page_num=real_page_index
-        )
+        await extraction_pipeline(page_filename, chapter_num, page_num=real_page_index)
+        break
         # Accumulate your results if needed
-        all_pages_content.append(f"--- Page {real_page_index + 1} ---\n{page_content}")
+        # all_pages_content.append(f"--- Page {real_page_index + 1} ---\n{page_content}")
 
-        end_time = time.time()
-        print(f"time taken for extraction --- {end_time - start_time} ms---")
-
-    page_count_save(chapter_num, len(pages))
+    # page_count_save(chapter_num, len(pages))
     return "\n".join(all_pages_content)
 
 
@@ -321,15 +401,15 @@ def page_count_save(chapter_num: int = 0, page_count: int = 0):
 
 
 async def main():
-    cpt_1 = await async_extraction_pipeline_from_pdf(
-        "files/automata_cpt_1.pdf", chapter_num=0
-    )
-    cpt_2 = await async_extraction_pipeline_from_pdf(
-        "files/automata_cpt_2.pdf", chapter_num=1
-    )
-    # cpt_3 = await async_extraction_pipeline_from_pdf(
-    #     "files/research.pdf", chapter_num=2, start_page=9
+    # cpt_1 = await async_extraction_pipeline_from_pdf(
+    #     "files/automata_cpt_1.pdf", chapter_num=0, start_page=5
     # )
+    # cpt_2 = await async_extraction_pipeline_from_pdf(
+    #     "files/automata_cpt_2.pdf", chapter_num=1
+    # )
+    cpt_3 = await async_extraction_pipeline_from_pdf(
+        "files/research_column.pdf", chapter_num=3
+    )
 
 
 if __name__ == "__main__":

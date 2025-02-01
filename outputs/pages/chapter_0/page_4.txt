@@ -2,12 +2,20 @@
             <title>
             # 0.3.1 Some nomenclature
 
-0.3.1 Some nomenclature
+
+    
+
+
+
+    
+
             </title>
             
 
             <text>
             A finite state machine has one or more _states_, represented on a state-diagram as circles. As a result of an external _event_, the FSM can make a _transition_ from one state to another (possibly the same) state. A transition is represented on the diagram as a directed arc, labelled with the name of the event that causes the transition to be taken. The FSM has an _initial state_, represented on the diagram by a lightning-strike. The _current state_ is represented by a large dot inside the state.
+
+
             </text>
             
 
@@ -15,13 +23,19 @@
             # 0.4 Another example - text recognition
 
 
-    0.4 Another example - text recognition
+    
+
+
+
+    
 
             </title>
             
 
             <text>
-            We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognize the words 'for' and 'float' in a stream of text. We could construct a finite state machine, where the sequence of events is the sequence of characters in the input stream. The resulting FSM is shown in figure 4.
+            We consider here another example, that arises in text-processing programs, such as a compiler. Suppose we wish to recognise the words "for", and "floor", in a stream of text. We could construct a finite state machine, where the sequence of events is the sequence of characters in the input stream. The resulting FSM is shown in figure 4.
+
+
             </text>
             
 
@@ -30,7 +44,7 @@
         outputs/images/chapter_0/page_3_4.jpg
         </path>
         <description>
-        A diagram showing a flowchart with various nodes and arrows indicating transitions between them. The chart starts at 'start' node, moves to 'f', then loops back through 'fo', continues on to 'for', goes down to 'fl1', returns up again via 'flo', ends in the final state 'float'. Arrows indicate direction of flow from one node to another.
+        A diagram showing a sequence or flowchart with various nodes and arrows indicating transitions between them. The start node is labeled 'start' followed by several other nodes such as 'f', 'fo', 'for', 'fl1', 'flo', 'a', 'floa', and finally the end node 'float'. Arrows indicate the direction of transition from one node to another, with some arrows having labels like 'o', 'l', or 't'.
         </description>
         </image>
         
@@ -39,25 +53,34 @@
             # Figure 4: The text recogniser
 
 
-    Figure  4: The text recogniser
+    
+
+
+
+    
 
             </caption>
             
 
             <text>
-            In the FSM there are states named after the partially-recognised words: f, fo, fl, flo, and floa. There are also two accepting states named for and float, shown on the diagram as double-circled states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state fo, the machine will not recognise the character x, because there is no transition labelled with the event x, from state fo. If an unrecognised event occurs, the machine “dies”, and ceases to process symbols — it no longer has a current state. Effectively, the dot has been lost.
+            In the FSM there are states named after the partially-recognised words: f, f_0, fl, fl_0, and fl_00. There are also two _accepting_ states named f_0_or_ and fl_00, shown on the diagram as double-circle states. It is obvious that for each state, there are many possible input characters that will not be recognised. For example in state f_0, the machine will not recognise the character x, because there is no transition labelled with the event x, from state f_0. If an unoccupied event occurs, the machine "clies", and ceases to process symbols - it no longer has a _current state_. Effectively, the _dot_ bias element lost.
 
-Diagrams of this kind often result from describing the behaviour of a regular expression, a topic we will deal with later.
+Usually, of this kind often result from describing the behaviour of a _regular expression_, a topic we will deal with later.
+
+
             </text>
             
 
             <title>
-            0.5  Central concept
-0.5 Central concepts
+            
+    0.5  Central concept
+
             </title>
             
 
             <text>
             There are a number of basic concepts that are central to the study of finite automata. These concepts are _alphabet_ (a set of symbols), _string_ (a list of symbols from an alphabet), and _language_ (a set of strings from the same alphabet).
+
+
             </text>
             
