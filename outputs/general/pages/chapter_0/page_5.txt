@@ -1,0 +1,126 @@
+
+        <image>
+        <path>
+        outputs/general/images/chapter_0/page_4_0.jpg
+        </path>
+        <description>
+        <title> MIPS index of Χ </title><body> <div class='image'> <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/MIPS_index_of_Z.svg/1200px-MIPS_index_of_Z.svg.png' alt='MIPS index of Z'> </div> <p> MIPS builder (stale δ') Index builder (stale δ') -&gt; (fresh χ) &ndash; &ndash; (fresh χ) &ndash; &ndash; (stale δ') MLM trainer (fresh χ) Updates δ' &leftarrow χ </p> <div class='image'> <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/MIPS_index_of_Z.svg/1200px-MIPS_index_of_Z.svg.png' alt='MIPS index of Z'> </div> 
+        </description>
+        </image>
+        
+
+            <caption>
+            _Figure 3_. REALLY pre-training with asynchronous MIPS refreshes.
+
+
+            </caption>
+            
+
+            <text>
+            in Figure 3, the trainer sends the index builder a snapshot of its parameters, θ^'. The trainer then continues to train while the index builder uses θ^' to construct a new index in the background. As soon as the index builder is done, it sends the new index back to the trainer, and the process repeats.
+
+
+            </text>
+            
+
+            <text>
+            While asynchronous refreshes can be used for both pre-training and fine-tuning, in our experiments we only use it for pre-training. For fine-tuning, we just build the MIPS index once (using the pre-trained θ) for simplicity and do not update _.[3] Note that we still fine-tune _, so the retrieval function is still updated from the query side.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**What does the retriever learn?** Since the knowledge retrieval of REALLY is latent, it is not obvious how the training objective encourages meaningful retrievals. Here, we show how it rewards retrievals that improve prediction accuracy.
+
+
+            </text>
+            
+
+            <text>
+            For a given query x and document z, recall that f(x,z) is the "relevance score" that the knowledge retrieve assigns to document z. We can see how a single step of gradient descent during REALLY pre-training alters this score by analyzing the gradient with respect to the parameters of the knowledge retriever, θ:
+            </text>
+            
+
+            <formula>
+            
+    ∇log p(y | x) = ∑_z ∈𝒵 r(z) ∇ f(x, z) 
+     r(z) = [p(y | z, x)/p(y | x) - 1] p(z | x).
+
+            </formula>
+            
+
+            <text>
+            For each document z, the gradient encourages the retriever to change the score f(x,z) by r(z) – increasing if r(z) is positive, and decreasing if negative. The multiplier r(z) is positive if and only if p(y | z,x)>p(y | x). The term p(y | z,x) is the probability of predicting the correct output y when using document z. The term p(y | x) is the expected value of p(y | x,z) when randomly sampling a document from p(z | x). Hence, document z receives a positive update whenever it performs better than expected.
+
+
+            </text>
+            
+
+            <title>
+            
+
+## 3.4. Injecting inductive biases into pre-training
+            </title>
+            
+
+            <text>
+            In the process of developing REALM, we discovered several additional strategies that further guide the model towards 
+            </text>
+            
+
+            <text>
+            ^3This works because pre-training already yields a good _ function. However, it is possible that refreshing the index would further improve performance.
+
+
+            </text>
+            
+
+            <text>
+            meaningful retrievals, described below.
+            </text>
+            
+
+            <text>
+            Salient span masking During REALM pre-training, we want to focus on examples x that require world knowledge to predict the masked tokens. As explained in Section 2, some MLM spans only require local context. To focus on problems that require world knowledge, we mask salient spans such as “United Kingdom” or “July 1969”. We use a BERT-based tagger trained on CoNLL-2003 data (Sang & De Meulder, 2003) to identify named entities, and a regular expression to identify dates. We select and mask one of these salient spans within a sentence for the masked language modeling task. We show that this significantly outperforms other masking strategies in Section 4.5.
+            </text>
+            
+
+            <text>
+            Null document Even with salient span masking, not all masked tokens require world knowledge to predict. We model this by adding an empty _null document_∅ to the top k retrieved documents, allowing appropriate credit to be assigned to a consistent sink when no retrieval is necessary.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Probibiting trivial retrievals** If the pre-training corpus 𝒳 and the knowledge corpus 𝒵 are the same, there exists a trivial retrieval candidate z that is _too_ informative: if the masked sentence x comes from document z, the knowledge augmented encoder can trivially predict y by looking at the unmasked version of x in z. This results in a large positive gradient for p(z| x). If this occurs too often, the knowledge retrieve ends up learning to look for exact string matches between x and z, which does not capture other forms of relevance. For this reason, we exclude this trivial candidate during pre-training.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Initialization**: At the beginning of training, if the retriever does not have good embeddings for _(x) and _(z), the retrieved documents z will likely be unre-related to x. This causes the knowledge augmented encoder to learn to ignore the retrieved documents. Once this occurs, the knowledge retriever does not receive a meaningful gradient and cannot improve, creating a viscous cycle. To avoid this cold-start problem, we warm-start _ and _ using a simple training objective known as the Inverse Cloze Task (ICT) where, given a sentence, the model is trained to retrieve the document where that sentence came from. We defer to Lee et al. (2019) for details. For the knowledge-augmented encoder, we warm-start it with BERT pre-training–specifically, the uncased BERT-base model (12 layers, 768 hidden units, 12 attention heads).
+
+
+            </text>
+            
+
+            <title>
+            4. Experiments
+            </title>
+            
+
+            <text>
+            We now evaluate our approach on the Open-QA task. In this section, we describe in detail the benchmarks used and the different approaches to which we compare empirically.
+
+
+            </text>
+            

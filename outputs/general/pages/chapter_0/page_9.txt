@@ -1,0 +1,93 @@
+
+            <text>
+            alignments between target and source tokens. Analogously, REALM also generates text with latent selection of relevant documents. A by-product of our method is that we offer a set of _model-centric_ unsupervised alignments between text in the pre-training corpus 𝒳 and knowledge corpus 𝒵.
+
+
+            </text>
+            
+
+            <title>
+            
+# 6. Future Work
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            The work presented here is the minimal instantiation of a family of REALM-like approaches where a representation is pre-trained to perform reasoning over a large corpus of knowledge on-the-fly during inference. We are particularly optimistic about generalizations of this work to (1) structured knowledge, which would result in a generalization of Peters et al. (2019) where we would also learn the decision of which entities are informative, (2) the multi-lingual setting, e.g., retrieving knowledge in a high-resource language to better represent text in a low-resource language, and (3) the multi-modal setting, e.g., retrieving images or videos that can provide knowledge rarely observed in text.
+
+
+            </text>
+            
+
+            <title>
+            
+    References
+
+            </title>
+            
+
+            <text>
+            Asai, A., Hashimoto, K., Hajishirzi, H., Socher, R., and Xiong, C. Learning to retrieve reasoning paths over wikipedia graph for question answering. arXiv preprint arXiv:1911.10470, 2019.
+
+Bahdanau, D., Cho, K., and Bengio, Y. Neural machine translation by jointly learning to align and translate. arXiv preprint arXiv: 1409.0473, 2014.
+
+Berant, J., Chou, A., Frostig, R., and Liang, P. Semantic parsing on freebase from question-answer pairs. In Proceedings of the 2013 Conference on Empirical Methods in Natural Language Processing, pp. 1533-1544, 2013.
+
+Brill, E., Dumais, S., and Banko, M. An analysis of the askmsr question-answering system. In Empirical Methods in Natural Language Processing, 2002.
+
+Chen, D., Fisch, A., Weston, J., and Bordes, A. Reading wikipedia to answer open-domain questions. In Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), volume 1, pp. 1870-1879, 2017.
+
+Clark, C. and Gardner, M. Simple and effective multi-paragraph reading comprehension. In Annual Meeting of the Association for Computational Linguistics, 2017.
+
+Dai, A. M. and Le, Q. V. Semi-supervised sequence learning. In Advances in neural information processing systems,
+
+Devlin, J., Chang, M.-W., Lee, K., and Toutanova, K. BERT: Pre-training of deep bidirectional transformers for language understanding at scale.
+            </text>
+            
+
+            <text>
+            language understanding. arXiv preprint arXiv:1810.04805,
+2018.
+
+Graves, A., Wayne, G., and Danihelka, I. Neural Turing
+machines. ArXiv, abs/1410.5401, 2014.
+
+Guu, K., Hashimoto, T. B., Oren, Y., and Liang, P. Generating sentences by editing prototypes. Transactions of the Association for Computational Linguistics, 6:437—450,
+2018.
+
+Hashimoto, T. B., Guu, K., Oren, Y., and Liang, P. S. A retrieve-and-edit framework for predicting structured outputs. In Advances in Neural Information Processing Systems, pp. 10052-10062, 2018.
+
+Joshi, M., Chen, D., Liu, Y., Weld, D. S., Zettlemoyer,
+L., and Levy, O. SpanBERT: Improving pre-training by representing and predicting spans. arXiv preprint arXiv: 1907.10529, 2019.
+
+Khandelwal, U., Levy, O., Jurafsky, D., Zettlemoyer, L., and Lewis, M. Generalization through memorization: Nearest neighbor language models. ArXiv, abs/1911.00172, 2019.
+
+Kiros, R., Zhu, Y., Salakhutdinov, R. R., Zemel, R., Urtasun,
+R., Torralba, A., and Fidler, S. Skip-thought vectors. In Advances in neural information processing systems, pp.
+3294-3302, 2015.
+
+Kwiatkowski, T., Palomaki, J., Rhinehart, O., Collins, M., Parikh, A., Alberti, C., Epstein, D., Polosukhin, I., Kelcey,
+M., Devlin, J., et al. Natural questions: a benchmark for question answering research. Transactions of the Association for Computational Linguistics, 2019.
+
+Lample, G., Sablayrolles, A., Ranzato, M., Denoyer, L., and Jégou, H. Large memory layers with product keys. In Advances in Neural Information Processing Systems, pp.
+8546-8557, 2019.
+
+Lee, K., Salant, S., Kwiatkowski, T., Parikh, A., Das,
+D., and Berant, J. Learning recurrent span representations for extractive question answering. arXiv preprint arXiv: 1611.01436, 2016.
+
+Lee, K., Chang, M.-W., and Toutanova, K. Latent retrieval for weakly supervised open domain question answering.
+In Proceedings of the Conference of Association for Computational Linguistics, 2019.
+
+Lewis, M., Liu, Y., Goyal, N., Ghazvininejad, M., Mo-
+hamed, A., Levy, O., Stoyanov, V., and Zettlemoyer, L. Bart: Denoising sequence-to-sequence pre-training for natural language generation, translation, and comprehension.
+ArXiv, abs/1910.13461, 2019.
+            </text>
+            

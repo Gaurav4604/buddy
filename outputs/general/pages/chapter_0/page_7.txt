@@ -1,0 +1,112 @@
+
+            <text>
+            Table 2. Ablation experiments on NQ's development set. Unless otherwise stated, the pre-training corpus 𝒳 is Wikipedia.
+
+
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Ablation', 'Exact Match Recall@5', 'Zero-shot Retrieval Recall@5']
+</headers>
+<rows>
+        <row>['REALM (\\(X = CC-News) 38.5 52.0 REALM 38.2 38.5', '', '']</row>
+	<row>['REALM retriever+Baseline encoder 37.4 38.5', 'Baseline retriever+REALM encoder 35.3 13.9', 'Baseline (ORQA) Baseline (ORQA) 31.3 13.9']</row>
+	<row>['REALM with random uniform masks 32.3 24.2 REALM with random span masks 35.3 26.1', '', '']</row>
+	<row>['30\\times stale MIPS 28.7 15.1', '']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            dates. During fine-tuning inference, we consider the top-5 candidates, and the entire model can be run on a single machine with a 12GB GPU. We reuse all hyperparameters from ORQA except we increase the number of training epochs to 4, 60, and 80 for NaturalQuestion-Open, WebQuestion, and CuratedTree respectively. We also report the comparable ORQA baselines with the increased training steps.
+
+
+            </text>
+            
+
+            <title>
+            
+
+**4.4.** **Main results**
+            </title>
+            
+
+            <text>
+            Table 1 shows the accuracy of different approaches on the three Open-QA datasets. REALLY outperform all previous approaches by a significant margin. Table 1 also shows the number of parameters for each model.
+
+
+            </text>
+            
+
+            <text>
+            As reported in the concurrent work of Roberts et al. (2020), the generative Open-QA systems based on T5 are surprisingly powerful, with the largest T5-11B model outperform 
+            </text>
+            
+
+            <text>
+            _Table 1._ Test results on Open-QA benchmarks. The number of trainbets examples are shown in parentheses below each benchmark. Projections are evaluated with exact match against any reference answer. Suppose retrieval denotes methods that use sparse features such as TT-IDF and BM25. Our model, RELM outperforms all existing systems.
+
+
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Name', 'Architectures', 'Pre-training', 'NQ (79k/4k)', 'WQ (3k/2k)', 'CT (1k/1k)', '# params']
+</headers>
+<rows>
+        <row>['BERT-Baseline (Lee et al., 2019)', 'Sparse Retr. + Transformer', 'BERT', '26.5', '17.7', '21.3', '110m']</row>
+	<row>['T5 (base) (Roberts et al., 2020)', 'Transformer Seq2Seq', 'T5 (Multitask)', '27.0', '29.1', '-', '223m']</row>
+	<row>['T5 (large) (Roberts et al., 2020)', 'Transformer Seq2Seq', 'T5 (Multitask)', '29.8', '32.2', '29.8', '738m']</row>
+	<row>['T5 (11b) (Roberts et al., 2020)', 'Transformer Seq2Seq', 'T5 (Multitask)', '34.5', '37.4', '-', '34.5', '11318m']</row>
+	<row>['DrQA (Chen et al., 2017)', 'Sparse Retr. + DocReader', 'N/A', '20.7', '25.7', '34m', '34m']</row>
+	<row>['HardEM (Min et al., 2019a)', 'Sparse Retr. + Transformer', 'BERT', '28.1', '-', '110m', '110m']</row>
+	<row>['GraphRetriever (Min et al., 2019b)', 'Sparse Retr. + Transformer', 'BERT', '31.8', '31.6', '110m', '110m']</row>
+	<row>['PathRetriever (Asai et al., 2019)', 'Sparse Retr. + Transformer', 'MLM', '32.6', '-', '110m', '110m']</row>
+	<row>['ORQA (Lee et al., 2019)', 'Dense Retr. + Transformer', 'ICT+BERT', '33.3', '36.4', '30.1', '330m']</row>
+	<row>['ORQA (more fine-tune epochs)', 'Dense Retr. + Transformer', 'ICT+BERT', '34.8', '35.4', '28.7', '330m']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            ing the previous best Open-QA system. Increasing the size of T5 yields consistent improvement, but comes at significant computational cost (from Base to 11B, the model is 50 times larger, and gains roughly 7 points in accuracy). In contrast, REALM outperforms the largest T5-11B model while being 30 times smaller. It is also important to note that T5 accesses additional reading comprehension data from SQUAD during its pre-training (100,000+ examples). Access to such data could also benefit REALM, but was not used in our experiments.
+
+
+            </text>
+            
+
+            <text>
+            Among all systems, the most direct comparison with REALLY is ORQA (Lee et al., 2019) where the fine-tuning setup and training data are identical. We also include a version of ORQA with extended fine-tuning steps to match that of REALLY fine-tuning, making all hyperparameters identical except for how the parameters were pre-trained.
+
+
+            </text>
+            
+
+            <text>
+            The improvement of REALLY over ORQA is purely due to better pre-training. The results also indicate that our method of pre-training can be applied both on (1) the single-corpus setting (𝒳= Wikipedia, 𝒵= Wikipedia), or (2) the separate-corpus setting (𝒳= CC-News, 𝒵= Wikipedia).
+
+
+            </text>
+            
+
+            <text>
+            Compared to other retrieval-based systems (Asai et al., 2019); (Min et al., 2019a,b) which often retrieve from 20 to 80 documents, our system gets the overall best performance while only retrieving 5 documents.
+            </text>
+            
+
+            <title>
+            4.5. Analysis
+            </title>
+            
+
+            <text>
+            In Table 2 we present results for NaturalQuestions-Open after ablating critical components of REALM. In addition to the end-to-end results, we also report how often the gold answer appears in the top-5 retrievals before applying any 
+            </text>
+            

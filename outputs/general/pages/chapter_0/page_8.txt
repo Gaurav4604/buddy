@@ -1,0 +1,97 @@
+
+            <text>
+            example where REALM utilizes retrieved documents to better predict masked tokens. It assigns much higher probability correct term, “Fermat”, compared to BERT. (Note that the blank corresponds to 3 BERT wordpieces.)
+            </text>
+            
+
+            <text>
+            fine-tuning. The latter metric more significantly isolates the contribution of improving the retriever during pre-training.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Encoder or Retriever** We first aim to determine whether REALM pre-training improves the retriever or the encoder, or both. To do so, we can reset the parameters of either the retriever or the encoder to their baseline state before REALM pre-training, and feed that into fine-tuning. Resetting both the retriever and encoder reduces the system to our main baseline, ORQA. We find that both the encoder and retriever benefit from REALLY training separately, but the best result requires both components acting in unison.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Masking scheme**  We compare our salient span masking scheme (Section 3.4) with (1) random token masking introduced in BERT (Devlin et al., 2018) and (2) random span masking proposed by SpanBERT (Joshi et al., 2019). While such salient span masking has not been shown to be impactful in previous work with standard BERT training (Joshi et al., 2019), it is crucial for REALM. Intuitively, the latent variable learning relies heavily on the utility of retrieval and is therefore more sensitive to a consistent learning signal.
+
+
+            </text>
+            
+
+            <text>
+            MIPS index refresh rate During pre-training, we run a parallel process to re-embed corpus documents and rebuild the MIPS index. This results in one index refresh per approximately 500 training steps. To demonstrate the importance of frequent index refreshes, we compare against using a slower refresh rate. The results in Table 2 suggests that a stale index can hurt model training, and further reducing this staleness could offer better optimization.
+            </text>
+            
+
+            <text>
+            
+
+**Examples of retrieved documents** Table 3 shows an example of the REALM masked language model prediction. In this example, "Format" is the correct word, and REALM (row (c)) gives the word a much high probability compared to the BERT model (row (a)). Since REALM manages to retrieve some documents with a related fact (row (b)), the marginalized probability of the correct answer dramatically increases. This shows that REALM is able to retrieve document to fill in the masked word even though it is trained with unsupervised text only.
+
+
+            </text>
+            
+
+            <text>
+            Table 3. An example where REALM utilizes retrieved documents to better predict masked tokens. It assigns much higher probability (0.129) to the correct term, “Fermat”, compared to BERT. (Note that the blank corresponds to 3 BERT wordpieces.)
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['x: ', 'An equilateral triangle is easily constructed using a straightedge and compass, because 3 is a ___ prime. (a) BERT p(y = “Fermat” | x ) = 1.1 × 10^-14 (No retrieval.)', '(b) REALM p(y = “Fermat” | x , z) = 1.0 (Conditional probability with document z =“257 is ... a Fermat prime. Thus a regular polygon with 257 sides is constructible with compass ...)', '(c) REALM p(y = “Fermat” | x ) = 0.129 (Marginal probability, marginalizing over top 8 retrieved documents.)']
+</headers>
+<rows>
+        <row>['(a) BERT ', 'p(y = “Fermat” | x ) = 1.1 × 10^-14 (No retrieval.)', '(b) REALM p(y = “Fermat” | x , z) = 1.0 (Conditional probability with document z =“257 is ... a Fermat prime. Thus a regular polygon with 257 sides is constructible with compass ...)', '(c) REALM p(y = “Fermat” | x ) = 0.129 (Marginal probability, marginalizing over top 8 retrieved documents.)']</row>
+</rows>
+        
+                </table>
+                
+
+            <title>
+            
+
+## 5 Discussion and Related Work
+            </title>
+            
+
+            <text>
+            We previously discussed related methods for Open-QA. Here we present several alternate ways of viewing REALM that connect it to a broader set of ideas beyond Open-QA:
+            </text>
+            
+
+            <text>
+            Language modeling with corpus as context Language representation models have been incorporating contexts of increasingly large scope when making predictions. Examples of this progression include models that condition on surrounding words (Mikolov et al., 2013a;b), sentences (Kiros et al., 2015; Peters et al., 2018), and paragraphs (Radford et al., 2018; Devlin et al., 2018). We can view REALM as a generalization of the above work to the next level of scope: the entire text corpus.
+            </text>
+            
+
+            <text>
+            Retrieve-and-edit with learned retrieval In order to better explain the variance in the input text and enable control-label generation, Guu et al. (2018) proposed a language model with the retrieve-and-edit framework (Hashimoto et al., 2018) that conditions on text with high lexical overlap. REALM has a similar approach, except that the model learns for itself which texts are most useful for reducing perplexity. By jointly learning the retriever, REALM has the capacity to depend on information beyond lexical overlap.
+            </text>
+            
+
+            <text>
+            
+
+**Scalable grounded neural memory** The document index can be viewed as a memory where the keys are the document embeddings. From this view, our work share motivations with works such as product key memory (Lample et al., 2019), which enables sub-linear memory access in a memory network (Weston et al., 2014; Graves et al., 2014; Sukhabatar et al., 2015), allowing these scalable memory layers to be integrated into large language models. One main difference is that our memories are grounded–each memory is associated with a document rather than unnamed value vectors. This level of interpretability is crucial for applications like Open-QA, where users would require provenance for a predicted answer to be trustworthy.
+
+
+            </text>
+            
+
+            <text>
+            Unsupervised Corpus Alignment In sequence-to-sequence models with attention (Bahdanau et al., 2014), text is generated with latent selection of relevant tokens. This results in a set of model-centric unsupervised corpus alignment.
+            </text>
+            
