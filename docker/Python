@@ -27,12 +27,11 @@ COPY inf.pt /app/inf.pt
 
 RUN pip install -r /app/requirements.txt
 
-COPY ./extraction/* /app/extraction/
-COPY ./RAG/* /app/RAG/
+COPY ./src/* /app/src/
 # COPY ./outputs/images/* /app/outputs/*
 
 
 RUN pip install pysqlite3-binary
 
 
-ENTRYPOINT ["python", "/app/RAG/pipeline.py"]
+ENTRYPOINT ["python", "/app/src/extraction/pipeline.py"]
