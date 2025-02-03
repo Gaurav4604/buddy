@@ -26,7 +26,6 @@ import ollama
 import uuid
 from pydantic import BaseModel
 import re
-import os
 
 
 logging.set_verbosity(40)

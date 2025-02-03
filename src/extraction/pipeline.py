@@ -1,7 +1,7 @@
 from structure_extraction.top_down import top_down_pipeline
 from structure_extraction.research import research_structure_pipeline
 
-from utils import DetectionInfo, build_content
+from utils import DetectionInfo, build_content, classify_top_down_or_reseach_flow
 import os
 import shutil
 from pdf2image import convert_from_path
@@ -132,7 +132,6 @@ async def async_extraction_pipeline_from_pdf(
         page_filename = f"pages/page_{real_page_index}.png"
         page.save(page_filename, "PNG")
 
-        # Instead of calling asyncio.run(...), we just 'await' the pipeline call
         page_content = await extraction_pipeline(
             page_filename,
             chapter_num,
