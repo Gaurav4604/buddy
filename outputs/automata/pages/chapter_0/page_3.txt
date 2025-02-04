@@ -1,0 +1,71 @@
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_0/page_2_0.jpg
+        </path>
+        <description>
+        A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing it will change the state from OFF to ON or vice versa.
+        </description>
+        </image>
+        
+
+            <caption>
+            
+    Figure 1: The tap-on/tap-off table light
+
+            </caption>
+            
+
+            <text>
+            In the diagram, the two circles, named _offset_ and _on_, represent the state of the light. The state of the light can be changed by the occurrence of an event, named _tap_. We show a transition from one slight can be drawn by a direct or variance of an event or two on one end from one state to another, labeled with the number of a direct. (In this transition, shown as a "lightening strike", that indicates the starting state of the diagram. (In this case, the starting state is named _offset_.) A diagram such as this is called a _finite state machine_(FSM).
+
+This state-diagram very neatly and succinctly captures the behavior of the light: Initially, the light is off, and the FSM is in state _of_f. Upon receipt of a _tap_ event, the skewness state to _on_, indicating that the light is now. The FSM is now in state _on_. Upon receipt of a _tap_ event, the system changes state to _of_f, indicating that the light is now off. The FSM is now in state _off_.
+
+We can show the current state by putting a dot inside it. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
+
+
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_0/page_2_3.jpg
+        </path>
+        <description>
+        A simple diagram showing a toggle switch with an arrow indicating that it can be turned on or off. The word 'OFF' is written in bold inside one circle, and the word 'ON' is written in bold inside another circle connected to the first by two arrows labeled 'tap'. There are also two additional arrows pointing from each of these circles back towards their respective labels.
+        </description>
+        </image>
+        
+
+            <caption>
+            
+    Figure 2: The tap-light in the O F F state
+
+            </caption>
+            
+
+            <text>
+            All this behaviour can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state. By reading the diagram, it is easy to see what will happen in every situation.
+
+Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the _ON_ state, as shown in fig. 3.
+
+
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_0/page_2_6.jpg
+        </path>
+        <description>
+        A simple diagram showing a toggle switch with two states: OFF and ON. The OFF state is on the left, labeled 'OFF', while the ON state is on the right, labeled 'ON'. Arrows indicate that pressing or tapping the switch can change it from OFF to ON.
+        </description>
+        </image>
+        
+
+            <caption>
+            
+    Figure 3: The tap-light in the O N state
+
+            </caption>
+            

@@ -107,6 +107,17 @@ conn = psycopg2.connect(
     connect_timeout=1,
 )
 
+conn.autocommit = True
+
+
+def define_table(table_name: str):
+    cursor.execute(
+        f"""
+        CREATE TABLE IF NOT EXISTS 
+        """
+    )
+
+
 cursor = conn.cursor()
 cursor.execute(
     """
@@ -121,3 +132,7 @@ for row in rows:
     print(row)
 
 conn.close()
+
+
+for embedding in generate_embeddings(["hi there", "bro this is a long string"]):
+    print(len(embedding))

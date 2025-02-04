@@ -1,93 +1,115 @@
-from transformers import AutoTokenizer
+from transformers import (
+    AutoTokenizer,
+    AutoModelForMaskedLM,
+    AutoModelForSequenceClassification,
+)
 from adapters import AutoAdapterModel
 from semantic_text_splitter import TextSplitter
 import os
-from os import listdir
-from os.path import isfile, join
+import torch
+from scipy.sparse import csr_matrix
+import numpy as np
 
-
-ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
-
-# for docker image setup to use the right sqlite
-if ollama_url != "http://localhost:11434":
-    __import__("pysqlite3")
-    import sys
-
-    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
-
-
-import chromadb
-from chromadb.config import Settings
-from chromadb.api.types import QueryResult
 from transformers.utils import logging
 import warnings
 
-import ollama
+
 import uuid
-from pydantic import BaseModel
 import re
 
 
 logging.set_verbosity(40)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-
-meta_generation_prompt = """
-You are a summary, tags and topics generator,
-your role is to look at the document provided,
-and generate category tags associated to it
-along with all topics present in it and a 5 line summary,
-you should limit the number of tags and topics to 3.
-"""
-
-summary_merge_prompt = """
-You are a summary merge manager,
-your role is to look at multi-page summaries,
-and merge them into a single summary, and associate
-5 tags with the same.
-"""
-
 os.makedirs("cache", exist_ok=True)
 
+import psycopg2
+from dotenv import load_dotenv
+from pgvector.psycopg2 import register_vector
+from psycopg2.extras import execute_values
 
-class TagsTopicsAndSummaryModel(BaseModel):
-    tags: list[str]
-    topics: list[str]
-    summary: str
+load_dotenv()
+
+conn = psycopg2.connect(
+    database=os.getenv("database"),
+    user=os.getenv("postgres"),
+    password=os.getenv("password"),
+    host=os.getenv("host"),
+    port=os.getenv("port"),
+    connect_timeout=1,
+)
+
+conn.autocommit = True
+
+splitter = TextSplitter(overlap=True, capacity=500, trim=True)
+
+dense_tokenizer = AutoTokenizer.from_pretrained(
+    "allenai/specter2_base", cache_dir="cache"
+)
+dense_model = AutoAdapterModel.from_pretrained(
+    "allenai/specter2_base", cache_dir="cache"
+)
+dense_model.load_adapter(
+    "allenai/specter2", source="hf", load_as="proximity", set_active=True
+)
+
+sparse_tokenizer = AutoTokenizer.from_pretrained(
+    "naver/splade-cocondenser-ensembledistil", cache_dir="cache"
+)
+sparse_model = AutoModelForMaskedLM.from_pretrained(
+    "naver/splade-cocondenser-ensembledistil", cache_dir="cache"
+)
+
+rerank_tokenizer = AutoTokenizer.from_pretrained(
+    "cross-encoder/msmarco-MiniLM-L12-en-de-v1", cache_dir="cache"
+)
+
+rerank_model = AutoModelForSequenceClassification.from_pretrained(
+    "cross-encoder/msmarco-MiniLM-L12-en-de-v1", cache_dir="cache"
+)
 
 
 class RAGtoolkit:
     def __init__(self, chapter_num: int = 0, page_num: int = 1):
-        settings = Settings(is_persistent=True)
-        self.splitter = TextSplitter(overlap=True, capacity=500, trim=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            "allenai/specter2_base", cache_dir="cache"
-        )
-        self.model = AutoAdapterModel.from_pretrained(
-            "allenai/specter2_base", cache_dir="cache"
-        )
-        self.model.load_adapter(
-            "allenai/specter2", source="hf", load_as="proximity", set_active=True
-        )
-        self.client = chromadb.Client(settings=settings)
-        # each chapter should get its own collection
-        self._doc_collection = self.client.get_or_create_collection(
-            name=f"chapter_{chapter_num}"
+
+        self.cursor = conn.cursor()
+
+        self.cursor.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+
+        # each chapter should get its own table
+        self.cursor.execute(
+            """
+        CREATE TABLE IF NOT EXISTS embeddings_dense (
+            id UUID PRIMARY KEY,
+            chapter_num INT,
+            page_num INT,
+            content TEXT,
+            embedding VECTOR(768)
+        );
+        """
         )
 
-        # this collection will be general to each chapter
-        self._chapter_meta_collection = self.client.get_or_create_collection(
-            name="chapters_meta"
+        self.cursor.execute(
+            """
+        CREATE TABLE IF NOT EXISTS embeddings_sparse (
+            id UUID PRIMARY KEY,
+            chapter_num INT,
+            page_num INT,
+            content TEXT,
+            sparse_embedding sparsevec(30522)
+        );
+        """
         )
-        self.ollama_client = ollama.Client(host=ollama_url)
+
+        register_vector(conn, arrays=True)
 
         # tagging the object
         self.chapter_name = f"chapter_{chapter_num}"
         self.chapter_num = chapter_num
-        self.page_number = f"page_{page_num}"
+        self.page_number = page_num
 
-    def _generate_embeddings(self, inputs: list[str]):
-        inputs = self.tokenizer(
+    def _generate_dense_embeddings(self, inputs: list[str]):
+        inputs = dense_tokenizer(
             inputs,
             padding=True,
             truncation=True,
@@ -95,10 +117,30 @@ class RAGtoolkit:
             return_token_type_ids=False,
             max_length=512,
         )
-        output = self.model(**inputs)
+        output = dense_model(**inputs)
         # take the first token in the batch as the embedding
         embeddings = output.last_hidden_state[:, 0, :].tolist()
         return embeddings
+
+    def _generate_sparse_embeddings(self, docs):
+        inputs = sparse_tokenizer(
+            docs, padding=True, truncation=True, return_tensors="pt", max_length=512
+        )
+        with torch.no_grad():
+            outputs = sparse_model(**inputs)
+            logits = outputs.logits
+            # Apply activation function (e.g., ReLU) to obtain sparse representations
+            activations = torch.relu(logits)
+            # Convert to sparse format
+            sparse_embeddings = []
+            for activation in activations:
+                indices = activation.nonzero(as_tuple=True)[1].cpu().numpy()
+                values = activation[activation != 0].cpu().numpy()
+                sparse_vector = csr_matrix(
+                    (values, (np.zeros_like(indices), indices)), shape=(1, 30522)
+                )
+                sparse_embeddings.append(sparse_vector)
+        return sparse_embeddings
 
     def generate_chunks(self, doc: str) -> list[str]:
         """
@@ -121,128 +163,126 @@ class RAGtoolkit:
             else:
                 # Otherwise, chunk the text via the default splitter
                 # (assuming self.splitter.chunks(...) returns list[str])
-                sub_chunks = self.splitter.chunks(segment)
+                sub_chunks = splitter.chunks(segment)
                 final_chunks.extend(sub_chunks)
 
         return final_chunks
 
-    def generate_meta(self, docs_dir: str) -> dict:
-        tags = set()
-        topics = set()
-        files = [
-            join(docs_dir, f) for f in listdir(docs_dir) if isfile(join(docs_dir, f))
-        ]
-        summarys = []
-        for file in files:
-            with open(file, "r", encoding="utf-8") as f:
-                res = self.ollama_client.chat(
-                    model="deepseek-r1",
-                    messages=[
-                        {"role": "system", "content": meta_generation_prompt},
-                        {"role": "user", "content": f.read()},
-                    ],
-                    format=TagsTopicsAndSummaryModel.model_json_schema(),
-                    options={"num_ctx": 8192},
-                )
-                page_level_meta = TagsTopicsAndSummaryModel.model_validate_json(
-                    res["message"]["content"]
-                )
-                for tag in page_level_meta.tags:
-                    tags.add(tag)
-                for topic in page_level_meta.topics:
-                    topics.add(topic)
-                summarys.append(page_level_meta.summary)
-
-        res = self.ollama_client.chat(
-            model="deepseek-r1",
-            messages=[
-                {"role": "system", "content": summary_merge_prompt},
-                {"role": "user", "content": summarys[0] + ", ".join(summarys[1:])},
-            ],
-            format=TagsTopicsAndSummaryModel.model_json_schema(),
-            options={"num_ctx": 8192},
-        )
-        overall_summary = TagsTopicsAndSummaryModel.model_validate_json(
-            res["message"]["content"]
-        ).summary
-
-        return {"tags": list(tags), "topics": list(topics), "summary": overall_summary}
-
-    # chunks for the given chapter to be added
     def add_docs(self, docs: list[str]):
-        self._doc_collection.upsert(
-            documents=docs,
-            metadatas=[
-                {"file_name": f"{self.chapter_name}/{self.page_number}.txt"}
-                for _ in range(len(docs))
-            ],
-            ids=[str(uuid.uuid1()) for _ in range(len(docs))],
-            embeddings=self._generate_embeddings(docs),
+        # Generate embeddings for the documents
+        dense_embeddings = self._generate_dense_embeddings(docs)
+        sparse_embeddings = self._generate_sparse_embeddings(docs)
+
+        # Generate unique UUIDs for each document
+        doc_ids = [str(uuid.uuid1()) for _ in range(len(docs))]
+
+        # Prepare data for batch insertion
+        dense_data = [
+            (doc_id, self.chapter_num, self.page_number, content, embedding)
+            for doc_id, content, embedding in zip(doc_ids, docs, dense_embeddings)
+        ]
+
+        sparse_data = [
+            (
+                doc_id,
+                self.chapter_num,
+                self.page_number,
+                content,
+                sparse_embedding.toarray().tolist()[0],
+            )
+            for doc_id, content, sparse_embedding in zip(
+                doc_ids, docs, sparse_embeddings
+            )
+        ]
+
+        # SQL query for insertion
+        dense_sql = f"""
+            INSERT INTO embeddings_dense (id, chapter_num, page_num, content, embedding)
+            VALUES %s
+        """
+
+        sparse_sql = """
+            INSERT INTO embeddings_sparse (id, chapter_num, page_num, content, sparse_embedding)
+            VALUES %s
+        """
+
+        # Execute batch insertion
+        execute_values(self.cursor, dense_sql, dense_data)
+        execute_values(self.cursor, sparse_sql, sparse_data)
+
+    def _query_docs_dense(self, query: str, n_results: int = 20):
+        # Generate the embedding for the query
+        query_embedding = self._generate_dense_embeddings([query])
+
+        # SQL query to find the most similar documents
+        sql = """
+            SELECT content
+            FROM embeddings_dense
+            ORDER BY embedding <=> %s::vector
+            LIMIT %s;
+        """
+
+        # Execute the query
+        self.cursor.execute(sql, (query_embedding[0], n_results))
+
+        # Fetch the results
+        results = self.cursor.fetchall()
+
+        # Process and return the results as needed
+        return results
+
+    def _query_docs_sparse(self, query: str, n_results: int = 20):
+        # Generate the sparse embedding for the query
+        query_embedding = (
+            self._generate_sparse_embeddings([query])[0].toarray().tolist()[0]
         )
 
-    def add_meta_data(self, tags: list[str], topics: list[str], summary: str):
-        doc = "<TAGS> tags:" + " - ".join(tags) + "</TAGS>\n"
-        doc = "<TOPICS> topics:" + " - ".join(topics) + "</TOPICS>\n"
-        doc += summary
+        # SQL query to find the most similar documents
+        sql = """
+            SELECT content
+            FROM embeddings_sparse
+            ORDER BY sparse_embedding <=> %s::sparsevec
+            LIMIT %s;
+        """
 
-        self._chapter_meta_collection.upsert(
-            documents=[doc],
-            metadatas=[
-                {
-                    "file_name": self.chapter_name,
-                    "chapter_num": self.chapter_num,
-                    "tags": str(tags),
-                    "topics": str(topics),
-                }
-            ],
-            ids=[self.chapter_name],
-            embeddings=self._generate_embeddings(doc),
+        # Execute the query
+        self.cursor.execute(sql, (query_embedding, n_results))
+
+        # Fetch the results
+        results = self.cursor.fetchall()
+
+        # Process and return the results as needed
+        return results
+
+    def query_docs(self, query: str, top_n: int = 20):
+        dense_results = self._query_docs_dense(query)
+        sparse_results = self._query_docs_sparse(query)
+
+        data = list(result[0] for result in dense_results) + list(
+            result[0] for result in sparse_results
         )
 
-    def query_docs(self, query: str, n_results: int = 2) -> QueryResult:
-        res = self._doc_collection.query(
-            query_embeddings=self._generate_embeddings(query),
-            query_texts=[query],
-            n_results=n_results,
+        embeddings = rerank_tokenizer(
+            data,
+            return_tensors="pt",  # Ensure tensors are returned
+            padding=True,  # Optional: pad sequences to the same length
+            truncation=True,  # Optional: truncate sequences to a maximum length
         )
-        return res
 
-    def query_metadata(self, query: str) -> QueryResult:
-        res = self._chapter_meta_collection.query(
-            query_embeddings=self._generate_embeddings(query), query_texts=[query]
-        )
-        return res
+        rerank_model.eval()
+        with torch.no_grad():
+            scores = rerank_model(**embeddings).logits
+            scores_list = scores.tolist()
 
-    def get_summary(self) -> str:
-        res = self._chapter_meta_collection.query(
-            query_texts=[""],
-            where={"file_name": self.chapter_name},
-            query_embeddings=self._generate_embeddings(""),
-            n_results=1,
-        )
-        return res["documents"][0][0]
+            scored_data = list(zip(scores_list, data))
 
-    def get_chapter_metadata(self) -> dict:
-        res = self._chapter_meta_collection.query(
-            query_texts=[""],
-            where={"file_name": self.chapter_name},
-            query_embeddings=self._generate_embeddings(""),
-            n_results=1,
-        )
-        return res["metadatas"][0][0]
+            # Sort the combined list by scores in descending order
+            scored_data.sort(key=lambda x: x[0], reverse=True)
 
-    def get_all_metadata(self) -> list:
-        res = self._chapter_meta_collection.query(
-            query_texts=[""],
-            query_embeddings=self._generate_embeddings(""),
-        )
-        metadata = []
-        for meta in res["metadatas"][0]:
-            toolkit = RAGtoolkit(int(meta["chapter_num"]))
-            summary_dict = {"summary": toolkit.get_summary(), **meta}
-            metadata.append(summary_dict)
+            # Extract the sorted data entries
+            top_reranked_data = [item[1] for item in scored_data[:top_n]]
 
-        return metadata
+            return top_reranked_data
 
 
 # cause metadata won't accept list data, it has to be str

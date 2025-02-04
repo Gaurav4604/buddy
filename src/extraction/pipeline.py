@@ -1,7 +1,7 @@
 from structure_extraction.top_down import top_down_pipeline
 from structure_extraction.research import research_structure_pipeline
 
-from utils import DetectionInfo, build_content, classify_top_down_or_reseach_flow
+from utils import DetectionInfo, build_content
 import os
 import shutil
 from pdf2image import convert_from_path
@@ -173,17 +173,13 @@ def page_count_save(subject: str, chapter_num: int = 0, page_count: int = 0):
 
 
 async def main():
-    # cpt_1 = await async_extraction_pipeline_from_pdf(
-    #     "files/automata_cpt_1.pdf", chapter_num=0
-    # )
-    # cpt_2 = await async_extraction_pipeline_from_pdf(
-    #     "files/automata_cpt_2.pdf", chapter_num=1
-    # )
     start_time = time.time()
-    cpt_3 = await async_extraction_pipeline_from_pdf(
-        "files/research_column.pdf",
-        chapter_num=0,
-        document_structure="research",
+
+    cpt_1 = await async_extraction_pipeline_from_pdf(
+        "files/automata_cpt_1.pdf", subject="automata", chapter_num=0
+    )
+    cpt_2 = await async_extraction_pipeline_from_pdf(
+        "files/automata_cpt_2.pdf", subject="automata", chapter_num=1
     )
     end_time = time.time()
     print(f"time taken for total extraction --- {end_time - start_time} s---")
