@@ -1,0 +1,138 @@
+[
+    {
+        "questions": [
+            "What does Δ̂(P, s_1 s_2 s_3 ⋯ s_n) represent in the context of NFA processing?",
+            "How can we use the Δ function to process a string step by step?"
+        ],
+        "tag": "bot_response"
+    },
+    {
+        "questions": [
+            "What is the transition function in an NFA?",
+            "How does the extended transition function Δ work in an NFA?"
+        ],
+        "tag": "nfa-transition-function"
+    },
+    {
+        "questions": [
+            "What is a Deterministic Finite Automaton (DFA)?",
+            "How can we convert an NFA to a DFA while preserving its language?"
+        ],
+        "tag": "aiqa"
+    },
+    {
+        "questions": [
+            "What is a finite automaton?",
+            "How does an NFA differ from a DFA?"
+        ],
+        "tag": "bot"
+    },
+    {
+        "questions": [
+            "What is the conversion process between an NFA and a DFA?",
+            "How does the conversion from NFA to DFA simplify the implementation of automata?"
+        ],
+        "tag": "aiqa-1008"
+    },
+    {
+        "questions": [
+            "What is a state diagram and how does it represent finite state machines?",
+            "Can you explain the transitions between states in an FSM with examples from the provided references?",
+            "How are initial and current states depicted in a state diagram?",
+            "Describe the role of events (like 'tap') in transitioning between states within an FSM.",
+            "What distinguishes accepting or final states from other states in a state diagram?"
+        ],
+        "tag": "automata"
+    },
+    {
+        "questions": [
+            "What is the definition of a language in the context of automata theory?",
+            "How does an NFA determine if a string belongs to its accepted language?"
+        ],
+        "tag": "automata-theory"
+    },
+    {
+        "questions": [
+            "What is an NFA and how does it differ from a DFA?",
+            "How can an NFA be used to model real-world systems with uncertainty?"
+        ],
+        "tag": "aiqa"
+    },
+    {
+        "questions": [
+            "What is a Deterministic Finite Automaton (DFA)?",
+            "How does the transition function of a DFA work? What distinguishes it from an NFA?"
+        ],
+        "tag": "automata-theory"
+    },
+    {
+        "questions": [
+            "What is subset construction in the context of converting an NFA to a DFA?",
+            "How does subset construction help in reducing the complexity of automata?"
+        ],
+        "tag": "aiqa"
+    },
+    {
+        "questions": [
+            "What does the transition function in an NFA represent?",
+            "How can we determine the state transitions for a given input symbol in an NFA?"
+        ],
+        "tag": "bot"
+    },
+    {
+        "questions": [
+            "What is a non-deterministic finite automaton (NFA)?",
+            "How does an NFA differ from a deterministic finite automaton (DFA) in terms of state transitions?"
+        ],
+        "tag": "automata"
+    },
+    {
+        "questions": [
+            "What are start states in a finite automaton?",
+            "How many start states can a finite automaton have?"
+        ],
+        "tag": " Retrieval Augmented Question Generation"
+    },
+    {
+        "questions": [
+            "What is the extended transition function in an NFA?",
+            "How does the extended transition function handle multiple input symbols and state sets?"
+        ],
+        "tag": "automata-theory"
+    },
+    {
+        "questions": [
+            "What is the process of converting an NFA to a DFA?",
+            "How can we ensure that every NFA has an equivalent DFA?"
+        ],
+        "tag": "bot_response"
+    },
+    {
+        "questions": [
+            "What is an NFA and how does it differ from a DFA?",
+            "How can we convert an NFA into a DFA while preserving its language acceptance?"
+        ],
+        "tag": "bot"
+    },
+    {
+        "questions": [
+            "What is a transition table in the context of an NFA? Explain with an example.",
+            "How can we use a transition table to determine all possible transitions from multiple states simultaneously?"
+        ],
+        "tag": "nfa-transition-table"
+    },
+    {
+        "questions": [
+            "What is an NFA and how does it differ from a DFA?",
+            "How do NFAs handle multiple possible transitions during processing?"
+        ],
+        "tag": "nfa"
+    },
+    {
+        "questions": [
+            "What is a non-deterministic finite automaton (NFA)?",
+            "How can an NFA be converted into a deterministic finite automaton (DFA) while preserving its language?"
+        ],
+        "tag": " Retrieval Augmented Question Generation "
+    }
+]

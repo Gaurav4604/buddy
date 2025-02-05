@@ -1,94 +1,183 @@
-from transformers import AutoTokenizer
+import os
+import re
+import uuid
+import warnings
+import torch
+import numpy as np
+from scipy.sparse import csr_matrix
+
+from dotenv import load_dotenv
+from transformers import (
+    AutoTokenizer,
+    AutoModelForMaskedLM,
+    AutoModelForSequenceClassification,
+)
 from adapters import AutoAdapterModel
 from semantic_text_splitter import TextSplitter
-import os
-from os import listdir
-from os.path import isfile, join
-
-
-ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
-
-# for docker image setup to use the right sqlite
-if ollama_url != "http://localhost:11434":
-    __import__("pysqlite3")
-    import sys
-
-    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
-
-
-import chromadb
-from chromadb.config import Settings
-from chromadb.api.types import QueryResult
 from transformers.utils import logging
-import warnings
+
 
 import ollama
-import uuid
 from pydantic import BaseModel
-import re
-import os
 
+import psycopg2
+from psycopg2.extras import execute_values
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from pgvector.psycopg2 import register_vector
 
+# Set logging and warnings
 logging.set_verbosity(40)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-
-meta_generation_prompt = """
-You are a summary, tags and topics generator,
-your role is to look at the document provided,
-and generate category tags associated to it
-along with all topics present in it and a 5 line summary,
-you should limit the number of tags and topics to 3.
-"""
-
-summary_merge_prompt = """
-You are a summary merge manager,
-your role is to look at multi-page summaries,
-and merge them into a single summary, and associate
-5 tags with the same.
-"""
-
+# Ensure cache directory exists
 os.makedirs("cache", exist_ok=True)
 
+# Load environment variables
+load_dotenv()
 
-class TagsTopicsAndSummaryModel(BaseModel):
-    tags: list[str]
-    topics: list[str]
+# Connection parameters from environment variables
+DB_USER = os.getenv("postgres")
+DB_PASSWORD = os.getenv("password")
+DB_HOST = os.getenv("host")
+DB_PORT = os.getenv("port")
+
+ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
+
+client = ollama.Client(host=ollama_url)
+
+
+splitter = TextSplitter(overlap=True, capacity=500, trim=True)
+
+dense_tokenizer = AutoTokenizer.from_pretrained(
+    "allenai/specter2_base", cache_dir="cache"
+)
+dense_model = AutoAdapterModel.from_pretrained(
+    "allenai/specter2_base", cache_dir="cache"
+)
+dense_model.load_adapter(
+    "allenai/specter2", source="hf", load_as="proximity", set_active=True
+)
+
+sparse_tokenizer = AutoTokenizer.from_pretrained(
+    "naver/splade-cocondenser-ensembledistil", cache_dir="cache"
+)
+sparse_model = AutoModelForMaskedLM.from_pretrained(
+    "naver/splade-cocondenser-ensembledistil", cache_dir="cache"
+)
+
+rerank_tokenizer = AutoTokenizer.from_pretrained(
+    "cross-encoder/msmarco-MiniLM-L12-en-de-v1", cache_dir="cache"
+)
+rerank_model = AutoModelForSequenceClassification.from_pretrained(
+    "cross-encoder/msmarco-MiniLM-L12-en-de-v1", cache_dir="cache"
+)
+
+summary_generation_prompt = """
+Using the following page info, present inside the page tags,
+generate a 3 line summary and 3 tags for the page's content
+
+<page>
+{}
+</page>
+"""
+
+
+class SummaryAndTags(BaseModel):
     summary: str
+    tags: list[str]
 
 
 class RAGtoolkit:
-    def __init__(self, chapter_num: int = 0, page_num: int = 1):
-        settings = Settings(is_persistent=True)
-        self.splitter = TextSplitter(overlap=True, capacity=500, trim=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            "allenai/specter2_base", cache_dir="cache"
+    def __init__(self, chapter_num: int = 0, page_num: int = 1, topic: str = "general"):
+        self.db_name = topic  # Target database name
+
+        # Connect to default postgres DB first
+        conn = psycopg2.connect(
+            database="postgres",
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT,
+            connect_timeout=1,
         )
-        self.model = AutoAdapterModel.from_pretrained(
-            "allenai/specter2_base", cache_dir="cache"
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = conn.cursor()
+
+        # Check if the target database exists
+        cursor.execute(
+            "SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s;", (self.db_name,)
         )
-        self.model.load_adapter(
-            "allenai/specter2", source="hf", load_as="proximity", set_active=True
+        exists = cursor.fetchone()
+
+        if not exists:
+            cursor.execute(f'CREATE DATABASE "{self.db_name}"')
+
+        cursor.close()
+        conn.close()
+
+        # Now connect to the target database
+        self.conn = psycopg2.connect(
+            database=self.db_name,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT,
+            connect_timeout=1,
         )
-        self.client = chromadb.Client(settings=settings)
-        # each chapter should get its own collection
-        self._doc_collection = self.client.get_or_create_collection(
-            name=f"chapter_{chapter_num}"
+        self.conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        self.cursor = self.conn.cursor()
+
+        # Ensure the vector extension exists
+        self.cursor.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+
+        # Create embeddings table for dense vectors
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS embeddings_dense (
+                id UUID PRIMARY KEY,
+                chapter_num INT,
+                page_num INT,
+                content TEXT,
+                embedding VECTOR(768)
+            );
+            """
         )
 
-        # this collection will be general to each chapter
-        self._chapter_meta_collection = self.client.get_or_create_collection(
-            name="chapters_meta"
+        # Create embeddings table for sparse vectors
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS embeddings_sparse (
+                id UUID PRIMARY KEY,
+                chapter_num INT,
+                page_num INT,
+                content TEXT,
+                sparse_embedding sparsevec(30522)
+            );
+            """
         )
-        self.ollama_client = ollama.Client(host=ollama_url)
 
-        # tagging the object
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS topic_meta_data (
+                id UUID PRIMARY KEY,
+                chapter_num INT,
+                page_num INT,
+                summary TEXT,
+                tags TEXT
+            );
+            """
+        )
+
+        # Register vector type with psycopg2
+        register_vector(self.conn, arrays=True)
+
+        # Object tagging attributes
         self.chapter_name = f"chapter_{chapter_num}"
         self.chapter_num = chapter_num
-        self.page_number = f"page_{page_num}"
+        self.page_number = page_num
 
-    def _generate_embeddings(self, inputs: list[str]):
-        inputs = self.tokenizer(
+    def _generate_dense_embeddings(self, inputs: list[str]):
+        inputs = dense_tokenizer(
             inputs,
             padding=True,
             truncation=True,
@@ -96,10 +185,30 @@ class RAGtoolkit:
             return_token_type_ids=False,
             max_length=512,
         )
-        output = self.model(**inputs)
+        output = dense_model(**inputs)
         # take the first token in the batch as the embedding
         embeddings = output.last_hidden_state[:, 0, :].tolist()
         return embeddings
+
+    def _generate_sparse_embeddings(self, docs):
+        inputs = sparse_tokenizer(
+            docs, padding=True, truncation=True, return_tensors="pt", max_length=512
+        )
+        with torch.no_grad():
+            outputs = sparse_model(**inputs)
+            logits = outputs.logits
+            # Apply activation function (e.g., ReLU) to obtain sparse representations
+            activations = torch.relu(logits)
+            # Convert to sparse format
+            sparse_embeddings = []
+            for activation in activations:
+                indices = activation.nonzero(as_tuple=True)[1].cpu().numpy()
+                values = activation[activation != 0].cpu().numpy()
+                sparse_vector = csr_matrix(
+                    (values, (np.zeros_like(indices), indices)), shape=(1, 30522)
+                )
+                sparse_embeddings.append(sparse_vector)
+        return sparse_embeddings
 
     def generate_chunks(self, doc: str) -> list[str]:
         """
@@ -122,128 +231,228 @@ class RAGtoolkit:
             else:
                 # Otherwise, chunk the text via the default splitter
                 # (assuming self.splitter.chunks(...) returns list[str])
-                sub_chunks = self.splitter.chunks(segment)
+                sub_chunks = splitter.chunks(segment)
                 final_chunks.extend(sub_chunks)
 
         return final_chunks
 
-    def generate_meta(self, docs_dir: str) -> dict:
-        tags = set()
-        topics = set()
-        files = [
-            join(docs_dir, f) for f in listdir(docs_dir) if isfile(join(docs_dir, f))
-        ]
-        summarys = []
-        for file in files:
-            with open(file, "r", encoding="utf-8") as f:
-                res = self.ollama_client.chat(
-                    model="deepseek-r1",
-                    messages=[
-                        {"role": "system", "content": meta_generation_prompt},
-                        {"role": "user", "content": f.read()},
-                    ],
-                    format=TagsTopicsAndSummaryModel.model_json_schema(),
-                    options={"num_ctx": 8192},
-                )
-                page_level_meta = TagsTopicsAndSummaryModel.model_validate_json(
-                    res["message"]["content"]
-                )
-                for tag in page_level_meta.tags:
-                    tags.add(tag)
-                for topic in page_level_meta.topics:
-                    topics.add(topic)
-                summarys.append(page_level_meta.summary)
-
-        res = self.ollama_client.chat(
+    def generate_summary(self, page_content: str) -> SummaryAndTags:
+        res = client.chat(
             model="deepseek-r1",
             messages=[
-                {"role": "system", "content": summary_merge_prompt},
-                {"role": "user", "content": summarys[0] + ", ".join(summarys[1:])},
-            ],
-            format=TagsTopicsAndSummaryModel.model_json_schema(),
-            options={"num_ctx": 8192},
-        )
-        overall_summary = TagsTopicsAndSummaryModel.model_validate_json(
-            res["message"]["content"]
-        ).summary
-
-        return {"tags": list(tags), "topics": list(topics), "summary": overall_summary}
-
-    # chunks for the given chapter to be added
-    def add_docs(self, docs: list[str]):
-        self._doc_collection.upsert(
-            documents=docs,
-            metadatas=[
-                {"file_name": f"{self.chapter_name}/{self.page_number}.txt"}
-                for _ in range(len(docs))
-            ],
-            ids=[str(uuid.uuid1()) for _ in range(len(docs))],
-            embeddings=self._generate_embeddings(docs),
-        )
-
-    def add_meta_data(self, tags: list[str], topics: list[str], summary: str):
-        doc = "<TAGS> tags:" + " - ".join(tags) + "</TAGS>\n"
-        doc = "<TOPICS> topics:" + " - ".join(topics) + "</TOPICS>\n"
-        doc += summary
-
-        self._chapter_meta_collection.upsert(
-            documents=[doc],
-            metadatas=[
                 {
-                    "file_name": self.chapter_name,
-                    "chapter_num": self.chapter_num,
-                    "tags": str(tags),
-                    "topics": str(topics),
+                    "role": "user",
+                    "content": summary_generation_prompt.format(page_content),
                 }
             ],
-            ids=[self.chapter_name],
-            embeddings=self._generate_embeddings(doc),
+            format=SummaryAndTags.model_json_schema(),
+            options={"num_ctx": 16384, "temperature": 0.2},
+            keep_alive=0,
+        )
+        return SummaryAndTags.model_validate_json(res.message.content)
+
+    def add_meta(self, summary: str, tags: str, chapter_num: int, page_num: int):
+        query = """
+            INSERT INTO topic_meta_data (id, chapter_num, page_num, summary, tags)
+            VALUES (%s, %s, %s, %s, %s);
+        """
+
+        data = (str(uuid.uuid1()), chapter_num, page_num, summary, tags)
+        self.cursor.execute(query, data)
+
+    def add_docs(self, docs: list[str]):
+        # Generate embeddings for the documents
+        dense_embeddings = self._generate_dense_embeddings(docs)
+        sparse_embeddings = self._generate_sparse_embeddings(docs)
+
+        # Generate unique UUIDs for each document
+        doc_ids = [str(uuid.uuid1()) for _ in range(len(docs))]
+
+        # Prepare data for batch insertion
+        dense_data = [
+            (doc_id, self.chapter_num, self.page_number, content, embedding)
+            for doc_id, content, embedding in zip(doc_ids, docs, dense_embeddings)
+        ]
+
+        sparse_data = [
+            (
+                doc_id,
+                self.chapter_num,
+                self.page_number,
+                content,
+                sparse_embedding.toarray().tolist()[0],
+            )
+            for doc_id, content, sparse_embedding in zip(
+                doc_ids, docs, sparse_embeddings
+            )
+        ]
+
+        # SQL query for insertion
+        dense_sql = f"""
+            INSERT INTO embeddings_dense (id, chapter_num, page_num, content, embedding)
+            VALUES %s
+        """
+
+        sparse_sql = """
+            INSERT INTO embeddings_sparse (id, chapter_num, page_num, content, sparse_embedding)
+            VALUES %s
+        """
+
+        # Execute batch insertion
+        execute_values(self.cursor, dense_sql, dense_data)
+        execute_values(self.cursor, sparse_sql, sparse_data)
+
+    def _query_docs_dense(self, query: str, n_results: int = 20):
+        # Generate the embedding for the query
+        query_embedding = self._generate_dense_embeddings([query])
+
+        # SQL query to find the most similar documents
+        sql = """
+            SELECT content
+            FROM embeddings_dense
+            ORDER BY embedding <=> %s::vector
+            LIMIT %s;
+        """
+
+        # Execute the query
+        self.cursor.execute(sql, (query_embedding[0], n_results))
+
+        # Fetch the results
+        results = self.cursor.fetchall()
+
+        # Process and return the results as needed
+        return results
+
+    def _query_docs_sparse(self, query: str, n_results: int = 20):
+        # Generate the sparse embedding for the query
+        query_embedding = (
+            self._generate_sparse_embeddings([query])[0].toarray().tolist()[0]
         )
 
-    def query_docs(self, query: str, n_results: int = 2) -> QueryResult:
-        res = self._doc_collection.query(
-            query_embeddings=self._generate_embeddings(query),
-            query_texts=[query],
-            n_results=n_results,
-        )
-        return res
+        # SQL query to find the most similar documents
+        sql = """
+            SELECT content
+            FROM embeddings_sparse
+            ORDER BY sparse_embedding <=> %s::sparsevec
+            LIMIT %s;
+        """
 
-    def query_metadata(self, query: str) -> QueryResult:
-        res = self._chapter_meta_collection.query(
-            query_embeddings=self._generate_embeddings(query), query_texts=[query]
-        )
-        return res
+        # Execute the query
+        self.cursor.execute(sql, (query_embedding, n_results))
 
-    def get_summary(self) -> str:
-        res = self._chapter_meta_collection.query(
-            query_texts=[""],
-            where={"file_name": self.chapter_name},
-            query_embeddings=self._generate_embeddings(""),
-            n_results=1,
-        )
-        return res["documents"][0][0]
+        # Fetch the results
+        results = self.cursor.fetchall()
 
-    def get_chapter_metadata(self) -> dict:
-        res = self._chapter_meta_collection.query(
-            query_texts=[""],
-            where={"file_name": self.chapter_name},
-            query_embeddings=self._generate_embeddings(""),
-            n_results=1,
-        )
-        return res["metadatas"][0][0]
+        # Process and return the results as needed
+        return results
 
-    def get_all_metadata(self) -> list:
-        res = self._chapter_meta_collection.query(
-            query_texts=[""],
-            query_embeddings=self._generate_embeddings(""),
-        )
-        metadata = []
-        for meta in res["metadatas"][0]:
-            toolkit = RAGtoolkit(int(meta["chapter_num"]))
-            summary_dict = {"summary": toolkit.get_summary(), **meta}
-            metadata.append(summary_dict)
+    def query_docs(self, query: str, top_n: int = 20):
+        dense_results = self._query_docs_dense(query)
+        sparse_results = self._query_docs_sparse(query)
 
-        return metadata
+        data = list(result[0] for result in dense_results) + list(
+            result[0] for result in sparse_results
+        )
+
+        combined_inputs = [f"{query} [SEP] {doc}" for doc in data]
+
+        embeddings = rerank_tokenizer(
+            combined_inputs,
+            return_tensors="pt",  # Ensure tensors are returned
+            padding=True,  # Optional: pad sequences to the same length
+            truncation=True,  # Optional: truncate sequences to a maximum length
+        )
+
+        rerank_model.eval()
+        with torch.no_grad():
+            scores = rerank_model(**embeddings).logits
+            scores_list = scores.tolist()
+
+            scored_data = list(zip(scores_list, data))
+
+            # Sort the combined list by scores in descending order
+            scored_data.sort(key=lambda x: x[0], reverse=True)
+
+            # Extract the sorted data entries
+            top_reranked_data = [item[1] for item in scored_data[:top_n]]
+            return top_reranked_data
+
+    def get_chapter_tags(self, chapter_num: int) -> list[str]:
+
+        query = """
+            SELECT tags FROM topic_meta_data WHERE chapter_num = %s;
+        """
+        self.cursor.execute(query, (chapter_num,))
+        results = self.cursor.fetchall()
+
+        unique_tags = set()
+
+        for row in results:
+            tags_str = row[0]  # The stored tags string
+            tags_list = convert_string_to_list(tags_str)  # Convert string to list
+            unique_tags.update(
+                tag.lower() for tag in tags_list
+            )  # Convert to lowercase before adding to set
+
+        return list(unique_tags)
+
+    def get_chapter_summary(self, chapter_num: int) -> str:
+        query = """
+            SELECT summary FROM topic_meta_data
+            WHERE chapter_num = %s
+            ORDER BY page_num ASC;
+        """
+        self.cursor.execute(query, (chapter_num,))
+        results = self.cursor.fetchall()
+
+        # Concatenate all summaries
+        concatenated_summary = " ".join(row[0] for row in results if row[0])
+
+        return concatenated_summary.strip()
+
+
+import torch.nn.functional as F
+
+
+def grade_statement_similarity(user_statement: str, actual_statement: str) -> float:
+    """
+    Evaluates the similarity between a user's answer and the actual answer
+    using the cross-encoder reranker model. The function returns a similarity
+    score (as a percentage from 0% to 100%).
+
+    Args:
+        user_statement (str): The statement provided by the user.
+        actual_statement (str): The reference or actual statement.
+
+    Returns:
+        float: Similarity score as a percentage.
+    """
+    # Format the input as a query-document pair (using [SEP] as a separator)
+    input_text = f"{user_statement} [SEP] {actual_statement}"
+
+    # Tokenize the input; the model expects a single sequence containing both answers
+    inputs = rerank_tokenizer(
+        input_text, return_tensors="pt", truncation=True, padding=True
+    )
+
+    # Ensure the model is in evaluation mode
+    rerank_model.eval()
+
+    # Compute logits without gradient computation
+    with torch.no_grad():
+        logits = rerank_model(**inputs).logits  # Expected shape: [1, num_labels]
+
+    # If the model returns only one logit (i.e. num_labels==1), use sigmoid;
+    # otherwise, use softmax to extract the probability for the positive class.
+    if logits.size(1) == 1:
+        # Use sigmoid for single-output scenario
+        prob = torch.sigmoid(logits)[0][0].item()
+    else:
+        # Use softmax for standard binary classification (positive class at index 1)
+        prob = F.softmax(logits, dim=-1)[0][1].item()
+
+    # Convert the probability (0 to 1) into a percentage (0% to 100%)
+    return prob * 100
 
 
 # cause metadata won't accept list data, it has to be str

@@ -1,0 +1,69 @@
+
+            <text>
+            zeroOne
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['δ_D', '0', '1']
+</headers>
+<rows>
+        <row>['→ {q_0}', '{q_0, q_1}', '{q_0}']</row>
+	<row>['{q_1}', '∅', '{q_2}']</row>
+	<row>['{* {q_2}}', '∅', '∅']</row>
+	<row>['{q_0, q_1}', '{q_0, q_1}', '{q_0, q_2}']</row>
+	<row>['{* {q_0, q_2}}', '{q_0, q_1}', '{q_0, q_1}']</row>
+	<row>['{* {q_1, q_2}}', '∅', '{q_2}']</row>
+	<row>['{* {q_0, q_1, q_2}}', '{q_0, q_1}', '{q_0, q_2}']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            To show how this table was derived, let us generate the entries for the d-state {q_0,q_2}. Consider first the case when the next input symbol is a 0. Within the d-state {q_0,q_2} there are two states to consider, when we evaluate the Δ_N transition function:
+            </text>
+            
+
+            <formula>
+            Δ_N({q_0, q_2}, 0) = δ_N(q_0, 0) ∪δ_N(q_2, 0) = {q_0, q_1}∪∅ = {q_0, q_1}
+            </formula>
+            
+
+            <text>
+            We thus see that dp({q0, q2},0) = {go, a1}, So {q0, 1} goes into the 0 column. Now consider the case when the input symbol is a 1. Once again, within the d-state there are two states:
+            </text>
+            
+
+            <formula>
+            Δ_N({q_0, q_2}, 1) = δ_N(q_0, 1) ∪δ_N(q_2, 1) = {q_0}∪∅ = {q_0}
+            </formula>
+            
+
+            <text>
+            We thus see that δ_D({q_0,q_2},1)={q_0}. Which now goes into the 1 column.
+
+The remaining entries in the table are computed in a similar way.
+
+If we examine the table carefully, starting at the initial d-states {q_0}, find we can reach only the d-states {q_0,q_1}, {q_0}, and {q_0,q_2}. All the other d-states are unreachable, and can safely be ignored. Notice that the DFA now has only three states, exactly the same as the original NFA This is much better than the (potential) worst case of 7 states.
+
+If we draw the DFA transition diagram that corresponds to this table, we get this diagram:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_1/page_6_7.jpg
+        </path>
+        <description>
+        A state diagram with three states: {q0, q1}, {q0, q2} and a transition between them. The initial state is {q0}. There are two transitions from {q0}: one to {q0, q1} labeled 'l' (which could be interpreted as the length of time or another variable), and one to {q0, q2} also labeled 'l'. From {q0, q1}, there is a transition back to itself with label 0. There are two transitions from {q0, q1}: one to {q0, q2} with label 0, and another to the initial state {q0}. The final state is {q0, q2}.
+        </description>
+        </image>
+        
+
+            <text>
+            With the exception of the labels on the states, which are unimportant, because they are just names, this diagram is _identical_ to the DFA we derived in chapter 1. This is, of course, exactly what we expected!
+            </text>
+            

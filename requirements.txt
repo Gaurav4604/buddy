@@ -13,3 +13,5 @@ transformers
 adapters
 Pillow
 semantic-text-splitter
+psycopg2-binary
+pgvector

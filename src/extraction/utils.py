@@ -115,7 +115,7 @@ async def classify_table_formula(image: str) -> str:
     """
     Classifies whether the image is a table or a formula
     Args:
-        image (str): the image url of table to be extracted
+        image (str): the image url
     Returns:
         str: classification
     """

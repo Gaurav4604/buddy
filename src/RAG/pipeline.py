@@ -1,350 +1,180 @@
 import ollama
 import asyncio
-from utils import RAGtoolkit, convert_string_to_list
-from pydantic import BaseModel
+from utils import RAGtoolkit, grade_statement_similarity
 import os
+import json
+
+from llm_utils import (
+    decompose_question,
+    QuestionAnswer,
+    QuestionsFromTag,
+    answer_atomic_question,
+    answer_composite_question,
+    generate_questions,
+)
+
 
 ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
 client = ollama.AsyncClient(host=ollama_url)
 
 
-class SelectedDocument(BaseModel):
-    file_name: str
-    chapter_num: int
-    target_questions: list[str]
-
-
-class SelectedDocumentList(BaseModel):
-    documents: list[SelectedDocument]
-
-
-class QuestionAnswer(BaseModel):
-    question: str
-    answer: str
-
-
-document_selection_instruction_template = """
-You're supposed to read the following context, which will be summaries of multiple documents,
-
-<document-metadatas>
-{}
-</document-metadatas>
-
-then look at the question and select documents from the list,
-
-<question>
-{}
-</question>
-
-reference, what part of the question, the selected document helps to answer,
-and give me the result.
-
-NOTE: decompose the initial question into sub-questions if needed
+"""
+Pipelines
+1. Question Generation from Topics ✅
+2. Answer Question Pipeline ✅
+3. Evaluate user answers Pipeline
 """
 
 
-question_answering_for_chunks_template = """
-I will provide you chunks of documents, which will serve as context,
-that you shall use, to answer my question
-
-<document-chunks>
-{}
-</document-chunks>
-
-use these chunks to answer the following question
-
-<question>
-{}
-</question>
-"""
-
-
-question_answering_merge_template = """
-I will provide you sub-questions,
-for which the following answers have been derived
-
-<questions-answers>
-{}
-</questions-answers>
-
-using the following context, answer this question
-
-<question>
-{}
-</question>
-"""
-
-
-async def _documentQnA(question: str) -> QuestionAnswer:
-    # step 1 get all metadata, use it in tandem with question, to decide which documents to use
-    generic_kit = RAGtoolkit()
-    metadatas = generic_kit.get_all_metadata()
-    res = await client.chat(
-        model="deepseek-r1",
-        messages=[
-            {
-                "role": "user",
-                "content": document_selection_instruction_template.format(
-                    metadatas, question
-                ),
-            },
-        ],
-        format=SelectedDocumentList.model_json_schema(),
-        options={"num_ctx": 8192, "temperature": 0.5},
-        keep_alive=0,
-    )
-
-    docs = SelectedDocumentList.model_validate_json(res.message.content).documents
-
-    print(docs)
-
-    qna_list: list[QuestionAnswer] = []
-
-    # step 2 using these documents, answer the sub-questions, that the initial question was broken into
-    for doc in docs:
-        questions = doc.target_questions
-        chapter = doc.chapter_num
-
-        chapter_toolkit = RAGtoolkit(chapter_num=chapter)
-
-        for question in questions:
-            chapter_chunks = chapter_toolkit.query_docs(question, 10)["documents"][0]
-
-            res = await client.chat(
-                model="deepseek-r1",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": question_answering_for_chunks_template.format(
-                            "\n--chunk--\n".join(chapter_chunks), question
-                        ),
-                    }
-                ],
-                format=QuestionAnswer.model_json_schema(),
-                options={"num_ctx": 16384, "temperature": 0.2},
-                keep_alive=0,
-            )
-
-            question_answer = QuestionAnswer.model_validate_json(res.message.content)
-            qna_list.append(question_answer)
-
-    # step 3 merge result from these answers, and answer the initial question
-    res = await client.chat(
-        model="deepseek-r1",
-        messages=[
-            {
-                "role": "user",
-                "content": question_answering_merge_template.format(
-                    "\n---chunk---\n".join(
-                        [
-                            f"<question>{qna.question}</question>\n<answer>{qna.answer}</answer>"
-                            for qna in qna_list
-                        ]
-                    ),
-                    question,
-                ),
-            }
-        ],
-        format=QuestionAnswer.model_json_schema(),
-        options={"num_ctx": 16384, "temperature": 0},
-        keep_alive=0,
-    )
-    return QuestionAnswer.model_validate_json(res.message.content)
-
-
-class Topics(BaseModel):
-    file_name: str
-    chapter_num: int
-    topics: list[str]
-
-
-class TopicList(BaseModel):
-    topic_list: list[Topics]
-
-
-class QuestionForTopic(BaseModel):
-    topic: str
-    questions: list[str]
-
-
-topics_filteration_prompt = """
-<context>
-{}
-</context>
-
-You are supposed to use the given context,
-to filter the topics I give to you, based on the context
-into chapters that they're associated with
-
-<topics>
-{}
-</topics>
-
-the following are the topics you need sort,
-into their required chapters
-
-NOTE: be extremely strict with your sorting
-"""
-
-question_generation_prompt = """
-<context>
-{}
-</context>
-
-using the following context
-
-<topic>
-{}
-</topic>
-
-for the above topic
-
-generate long answer questions, that can be asked for the topic
-
-NOTE: limit the number of questions to "3"
-"""
-
-
-async def _get_questions(chunks: list[str], topic: str) -> QuestionForTopic:
-    res = await client.chat(
-        model="deepseek-r1",
-        messages=[
-            {
-                "role": "user",
-                "content": question_generation_prompt.format(chunks, topic),
-            }
-        ],
-        format=QuestionForTopic.model_json_schema(),
-        options={"temperature": 0.3, "num_ctx": 8192},
-        keep_alive=0,
-    )
-    output = QuestionForTopic.model_validate_json(res.message.content)
-    return output
-
-
-async def generate_questions(
-    topics: list[str] = [], chapter_num: int = 0
-) -> list[QuestionForTopic]:
+async def question_answer_pipeline(question: str, topic: str) -> QuestionAnswer:
     """
-    ----
+    Generates a composite answer for a question and saves the QnA pair in a JSON file
+    at generated/{topic}/QnA.json. Before running the heavy asynchronous processing,
+    it checks if a similar question already exists (using grade_statement_similarity > 90%).
+
     Args:
-        `topics: list[str]`
-        `chapter_num: int`
+        question (str): The input question.
+        topic (str): The topic name used for file storage.
+
     Returns:
-        `list[QuestionForTopic]`
-
-    generates questions for each of the provided topic or for all topics of a chapter,
-    if topics are provided, chapter num is ignored
-
+        QuestionAnswer: The QnA pair, either retrieved from storage or newly generated.
     """
+    # Define the output file path for QnA.
+    output_folder = os.path.join("generated", topic)
+    os.makedirs(output_folder, exist_ok=True)
+    output_filepath = os.path.join(output_folder, "QnA.json")
 
-    topic_list: list[Topics] = []
+    # Load existing QnA entries if the file exists.
+    existing_entries = []
+    if os.path.exists(output_filepath):
+        with open(output_filepath, "r", encoding="utf-8") as f:
+            existing_entries = json.load(f)
+        # Check for a duplicate by comparing the input question with each stored question.
+        for entry in existing_entries:
+            similarity = grade_statement_similarity(question, entry["question"])
+            if similarity > 90:
+                # If a duplicate is found, return the existing QnA pair.
+                return QuestionAnswer(**entry)
 
-    if len(topics) > 0:
-        generic_kit = RAGtoolkit()
-        metadatas = generic_kit.get_all_metadata()
-        res = await client.chat(
-            model="deepseek-r1",
-            messages=[
-                {
-                    "role": "user",
-                    "content": topics_filteration_prompt.format(metadatas, topics),
-                }
-            ],
-            format=TopicList.model_json_schema(),
-            options={"num_ctx": 8192, "temperature": 0},
-            keep_alive=0,
-        )
+    # No duplicate found: proceed with generating the answer.
+    decomposed_question = await decompose_question(question=question)
+    payloads = [(question, topic) for question in decomposed_question.sub_questions]
+    print(decomposed_question)
+    atomic_answers = await asyncio.gather(
+        *[answer_atomic_question(*payload) for payload in payloads]
+    )
 
-        topic_list.extend(TopicList.model_validate_json(res.message.content).topic_list)
+    # Generate the composite answer.
+    answer = await answer_composite_question(question, atomic_answers)
 
+    # Convert the new answer (a QuestionAnswer Pydantic model) to a dict.
+    new_entry = answer.model_dump()
+
+    # Append the new QnA entry to the list.
+    existing_entries.append(new_entry)
+
+    # Save the updated QnA list back to the file.
+    with open(output_filepath, "w", encoding="utf-8") as f:
+        json.dump(existing_entries, f, indent=4, ensure_ascii=False)
+
+    return answer
+
+
+async def questions_generation_pipeline(
+    topic: str, tags: list[str], chapter_num: int = 0
+) -> list[QuestionsFromTag]:
+    # Determine output filename based on tags presence
+    if len(tags) == 0:
+        kit = RAGtoolkit(topic=topic)
+        tags = kit.get_chapter_tags(chapter_num)
+        filename = f"chapter_{chapter_num}.json"
     else:
-        chapter_specific_kit = RAGtoolkit(chapter_num)
-        raw_topics = chapter_specific_kit.get_chapter_metadata()["topics"]
-        topics = convert_string_to_list(raw_topics)
+        filename = "user-defined.json"
 
-        topic_list.append(
-            Topics(
-                file_name=chapter_specific_kit.chapter_name,
-                chapter_num=chapter_num,
-                topics=topics,
-            )
-        )
+    payloads = [(tag, topic) for tag in tags]
 
-    questions = []
-    for consolidated_topics in topic_list:
-        topics = consolidated_topics.topics
-        chapter_num = consolidated_topics.chapter_num
-        chapter_toolkit = RAGtoolkit(chapter_num=chapter_num)
+    # Generate questions concurrently for each tag
+    questions = await asyncio.gather(
+        *[generate_questions(*payload) for payload in payloads]
+    )
 
-        max_retries = 3
-        execution_timeout = 60
-        for topic in topics:
-            chunks = chapter_toolkit.query_docs(topic, n_results=10)["documents"][0]
-            if len(chunks) > 0:
-                for attempt in range(1, max_retries + 1):
-                    task = asyncio.create_task(_get_questions(chunks, topic))
-                    try:
-                        output = await asyncio.wait_for(task, timeout=execution_timeout)
-                        questions.append(output)
+    # Create the output directory if it doesn't exist
+    output_folder = os.path.join("generated", topic, "questions")
+    os.makedirs(output_folder, exist_ok=True)
+    output_filepath = os.path.join(output_folder, filename)
+
+    # Convert each QuestionsFromTag (a pydantic BaseModel) to a dict
+    new_data = [q.model_dump() for q in questions]
+
+    # Load existing data if file exists; otherwise, start with an empty list
+    if os.path.exists(output_filepath):
+        with open(output_filepath, "r", encoding="utf-8") as f:
+            existing_data = json.load(f)
+    else:
+        existing_data = []
+
+    # Build a mapping from tag to its existing data for easy lookup
+    existing_map = {item["tag"]: item for item in existing_data}
+
+    # Merge new questions into existing data
+    for new_item in new_data:
+        tag = new_item["tag"]
+        new_questions = new_item["questions"]
+        if tag in existing_map:
+            # For each new question, check if a similar one (>=90% similarity) exists
+            for new_q in new_questions:
+                duplicate_found = False
+                for existing_q in existing_map[tag]["questions"]:
+                    if grade_statement_similarity(new_q, existing_q) >= 90:
+                        duplicate_found = True
                         break
-                    except asyncio.TimeoutError:
-                        task.cancel()
-                        if attempt < max_retries:
-                            execution_timeout += 15
-                            print(f"Attempt {attempt} timed out. Retrying...")
-                        else:
-                            print(
-                                f"Attempt {attempt} timed out. Maximum retries reached; giving up."
-                            )
-                            exit()
-            else:
-                continue
+                if not duplicate_found:
+                    existing_map[tag]["questions"].append(new_q)
+        else:
+            # No existing data for this tag: add it directly
+            existing_map[tag] = new_item
+
+    # Convert the merged mapping back to a list
+    merged_data = list(existing_map.values())
+
+    # Write the merged data back to the file (using ensure_ascii=False to preserve special characters)
+    with open(output_filepath, "w", encoding="utf-8") as f:
+        json.dump(merged_data, f, indent=4, ensure_ascii=False)
 
     return questions
 
 
-async def answer_questions(questions: list[str] = []) -> list[QuestionAnswer]:
+async def evaluate_question_answer(topic: str, question: str, user_answer: str) -> dict:
     """
-    ----
-    Args:
-        `questions: list[str]`
-    Returns:
-        `list[QuestionAnswer]`
+    Evaluates a user's answer by generating a reference answer using the question_answer_pipeline
+    and then comparing it with the user's answer using grade_statement_similarity.
 
-    answers all questions asked, using the documents present
+    Args:
+        topic (str): The topic to which the question belongs.
+        question (str): The question to be answered.
+        user_answer (str): The answer provided by the user.
+
+    Returns:
+        dict: A dictionary containing the similarity score (percentage) and the generated reference answer.
     """
-    answers: list[QuestionAnswer] = []
-    for question in questions:
-        answer = await _documentQnA(question)
-        print(f"Question {answer.question}")
-        print(f"Answer {answer.answer}")
-        answers.append(answer)
-    return answers
+    # Generate the reference answer using your existing composite question-answer pipeline.
+    reference_qa = await question_answer_pipeline(question, topic)
+
+    # Use grade_statement_similarity to compute the similarity score between the user's answer
+    # and the generated reference answer. This score is on a 0-100% scale.
+    similarity_score = grade_statement_similarity(user_answer, reference_qa.answer)
+
+    return {"score": similarity_score, "reference_answer": reference_qa.answer}
 
 
 async def main():
-    ans = await answer_questions(["What is a transition function?"])
-    print(ans)
-    """
-    output:
-    question='What is a transition function?'
-    answer="The transition function describes how an automaton changes its state based on input.
-    It's denoted by δ(q, a) = p, where q and p are states and a is an input symbol."
-    """
-    # topics = ["FSA", "NFA"]
-    # questions = await generate_questions(topics)
-    # for question in questions:
-    #     # print(f"Questions {question.questions}")
-    #     print(question.topic)
-    #     await answer_questions(question.questions)
+    answer = await question_answer_pipeline(
+        "What does Δ̂(P, s_1 s_2 s_3 ⋯ s_n) represent in the terms of NFA processing?",
+        "automata",
+    )
+    print(answer)
+    # await questions_generation_pipeline("automata", [], 1)
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
-
-
-"""
-3. Answers generation pipeline -> used to generate answers for each of the question
-"""
+# asyncio.run(questions_generation_pipeline("automata", tags=[], chapter_num=0))
