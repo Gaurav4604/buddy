@@ -1,7 +1,7 @@
-from structure_extraction.top_down import top_down_pipeline
-from structure_extraction.research import research_structure_pipeline
+from .structure_extraction.top_down import top_down_pipeline
+from .structure_extraction.research import research_structure_pipeline
 
-from utils import DetectionInfo, build_content
+from .utils import DetectionInfo, build_content
 import os
 import shutil
 from pdf2image import convert_from_path

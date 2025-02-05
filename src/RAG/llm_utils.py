@@ -1,6 +1,6 @@
 import ollama
 from pydantic import BaseModel
-from utils import RAGtoolkit
+from .utils import RAGtoolkit
 import os
 import asyncio
 

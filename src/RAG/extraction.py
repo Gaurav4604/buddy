@@ -1,7 +1,6 @@
-from utils import RAGtoolkit
+from .utils import RAGtoolkit
 from os.path import isfile
 import json
-import time
 
 
 def dump_extraction_to_db(topic: str = "general"):
@@ -39,10 +38,3 @@ def dump_extraction_to_db(topic: str = "general"):
 
                     print(f"--- page {page} - chunks added ---")
             print(f"--- chapter {chapter} - chunks added ---")
-
-
-# if __name__ == "__main__":
-#     # dump_extraction_to_db(topic="automata")
-#     kit = RAGtoolkit(topic="automata")
-#     tags = kit.get_chapter_tags(0)
-#     for tag in tags:

@@ -1,5 +1,5 @@
 import numpy as np
-from utils import model, save_detections, DO_NOT_MERGE
+from ..utils import model, save_detections, DO_NOT_MERGE
 from PIL import Image
 
 

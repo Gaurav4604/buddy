@@ -1,10 +1,10 @@
 import ollama
 import asyncio
-from utils import RAGtoolkit, grade_statement_similarity
+from .utils import RAGtoolkit, grade_statement_similarity
 import os
 import json
 
-from llm_utils import (
+from .llm_utils import (
     decompose_question,
     QuestionAnswer,
     QuestionsFromTag,
@@ -23,7 +23,7 @@ client = ollama.AsyncClient(host=ollama_url)
 Pipelines
 1. Question Generation from Topics ✅
 2. Answer Question Pipeline ✅
-3. Evaluate user answers Pipeline
+3. Evaluate user answers Pipeline ✅
 """
 
 
@@ -53,7 +53,7 @@ async def question_answer_pipeline(question: str, topic: str) -> QuestionAnswer:
         # Check for a duplicate by comparing the input question with each stored question.
         for entry in existing_entries:
             similarity = grade_statement_similarity(question, entry["question"])
-            if similarity > 90:
+            if similarity > 95:
                 # If a duplicate is found, return the existing QnA pair.
                 return QuestionAnswer(**entry)
 
