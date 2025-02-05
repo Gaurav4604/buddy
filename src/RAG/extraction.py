@@ -11,7 +11,7 @@ def dump_extraction_to_db(topic: str = "general"):
         for chapter in chapter_tree.keys():
             for page in chapter_tree[chapter]:
 
-                chapter_kit = RAGtoolkit(int(chapter), page)
+                chapter_kit = RAGtoolkit(int(chapter), page, topic=topic)
                 print(chapter_kit.chapter_name, chapter_kit.page_number)
 
                 print(
@@ -29,13 +29,22 @@ def dump_extraction_to_db(topic: str = "general"):
 
                     chapter_kit.add_docs(chunks)
 
+                    summary = chapter_kit.generate_summary(data)
+                    chapter_kit.add_meta(
+                        summary.summary,
+                        "[" + ",".join(summary.tags) + "]",
+                        chapter_kit.chapter_num,
+                        chapter_kit.page_number,
+                    )
+
                     print(f"--- page {page} - chunks added ---")
             print(f"--- chapter {chapter} - chunks added ---")
 
 
 if __name__ == "__main__":
     # dump_extraction_to_db(topic="automata")
-    kit = RAGtoolkit()
-    reranked_docs = kit.query_docs(query="What is are applications of automata?")
-    for doc in reranked_docs:
-        print(doc)
+    kit = RAGtoolkit(topic="automata")
+    print(kit.get_chapter_summary(0))
+    # reranked_docs = kit.query_docs(query="What is are applications of automata?")
+    # for doc in reranked_docs:
+    #     print(doc)

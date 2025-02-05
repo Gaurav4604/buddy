@@ -1,3 +1,12 @@
+import os
+import re
+import uuid
+import warnings
+import torch
+import numpy as np
+from scipy.sparse import csr_matrix
+
+from dotenv import load_dotenv
 from transformers import (
     AutoTokenizer,
     AutoModelForMaskedLM,
@@ -5,41 +14,37 @@ from transformers import (
 )
 from adapters import AutoAdapterModel
 from semantic_text_splitter import TextSplitter
-import os
-import torch
-from scipy.sparse import csr_matrix
-import numpy as np
-
 from transformers.utils import logging
-import warnings
 
 
-import uuid
-import re
+import ollama
+from pydantic import BaseModel
 
+import psycopg2
+from psycopg2.extras import execute_values
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from pgvector.psycopg2 import register_vector
 
+# Set logging and warnings
 logging.set_verbosity(40)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+# Ensure cache directory exists
 os.makedirs("cache", exist_ok=True)
 
-import psycopg2
-from dotenv import load_dotenv
-from pgvector.psycopg2 import register_vector
-from psycopg2.extras import execute_values
-
+# Load environment variables
 load_dotenv()
 
-conn = psycopg2.connect(
-    database=os.getenv("database"),
-    user=os.getenv("postgres"),
-    password=os.getenv("password"),
-    host=os.getenv("host"),
-    port=os.getenv("port"),
-    connect_timeout=1,
-)
+# Connection parameters from environment variables
+DB_USER = os.getenv("postgres")
+DB_PASSWORD = os.getenv("password")
+DB_HOST = os.getenv("host")
+DB_PORT = os.getenv("port")
 
-conn.autocommit = True
+ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
+
+client = ollama.Client(host=ollama_url)
+
 
 splitter = TextSplitter(overlap=True, capacity=500, trim=True)
 
@@ -63,50 +68,120 @@ sparse_model = AutoModelForMaskedLM.from_pretrained(
 rerank_tokenizer = AutoTokenizer.from_pretrained(
     "cross-encoder/msmarco-MiniLM-L12-en-de-v1", cache_dir="cache"
 )
-
 rerank_model = AutoModelForSequenceClassification.from_pretrained(
     "cross-encoder/msmarco-MiniLM-L12-en-de-v1", cache_dir="cache"
 )
 
+summary_generation_prompt = """
+Using the following page info, present inside the page tags,
+generate a 3 line summary and 3 tags for the page's content
+
+<page>
+{}
+</page>
+"""
+
+
+class SummaryAndTags(BaseModel):
+    summary: str
+    tags: list[str]
+
 
 class RAGtoolkit:
-    def __init__(self, chapter_num: int = 0, page_num: int = 1):
+    def __init__(self, chapter_num: int = 0, page_num: int = 1, topic: str = "general"):
+        self.db_name = topic  # Target database name
 
-        self.cursor = conn.cursor()
+        # Connect to default postgres DB first
+        conn = psycopg2.connect(
+            database="postgres",
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT,
+            connect_timeout=1,
+        )
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = conn.cursor()
 
+        # Check if the target database exists
+        cursor.execute(
+            "SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s;", (self.db_name,)
+        )
+        exists = cursor.fetchone()
+
+        if not exists:
+            cursor.execute(f'CREATE DATABASE "{self.db_name}"')
+            print(f"Database '{self.db_name}' created successfully.")
+        else:
+            print(f"Database '{self.db_name}' already exists.")
+
+        cursor.close()
+        conn.close()
+
+        # Now connect to the target database
+        self.conn = psycopg2.connect(
+            database=self.db_name,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT,
+            connect_timeout=1,
+        )
+        self.conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        self.cursor = self.conn.cursor()
+
+        # Ensure the vector extension exists
         self.cursor.execute("CREATE EXTENSION IF NOT EXISTS vector;")
 
-        # each chapter should get its own table
+        # Create embeddings table for dense vectors
         self.cursor.execute(
             """
-        CREATE TABLE IF NOT EXISTS embeddings_dense (
-            id UUID PRIMARY KEY,
-            chapter_num INT,
-            page_num INT,
-            content TEXT,
-            embedding VECTOR(768)
-        );
-        """
+            CREATE TABLE IF NOT EXISTS embeddings_dense (
+                id UUID PRIMARY KEY,
+                chapter_num INT,
+                page_num INT,
+                content TEXT,
+                embedding VECTOR(768)
+            );
+            """
+        )
+
+        # Create embeddings table for sparse vectors
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS embeddings_sparse (
+                id UUID PRIMARY KEY,
+                chapter_num INT,
+                page_num INT,
+                content TEXT,
+                sparse_embedding sparsevec(30522)
+            );
+            """
         )
 
         self.cursor.execute(
             """
-        CREATE TABLE IF NOT EXISTS embeddings_sparse (
-            id UUID PRIMARY KEY,
-            chapter_num INT,
-            page_num INT,
-            content TEXT,
-            sparse_embedding sparsevec(30522)
-        );
-        """
+            CREATE TABLE IF NOT EXISTS topic_meta_data (
+                id UUID PRIMARY KEY,
+                chapter_num INT,
+                page_num INT,
+                summary TEXT,
+                tags TEXT
+            );
+            """
         )
 
-        register_vector(conn, arrays=True)
+        # Register vector type with psycopg2
+        register_vector(self.conn, arrays=True)
 
-        # tagging the object
+        # Object tagging attributes
         self.chapter_name = f"chapter_{chapter_num}"
         self.chapter_num = chapter_num
         self.page_number = page_num
+
+        print(
+            f"Connected to database '{self.db_name}' and ensured necessary tables exist."
+        )
 
     def _generate_dense_embeddings(self, inputs: list[str]):
         inputs = dense_tokenizer(
@@ -167,6 +242,30 @@ class RAGtoolkit:
                 final_chunks.extend(sub_chunks)
 
         return final_chunks
+
+    def generate_summary(self, page_content: str) -> SummaryAndTags:
+        res = client.chat(
+            model="deepseek-r1",
+            messages=[
+                {
+                    "role": "user",
+                    "content": summary_generation_prompt.format(page_content),
+                }
+            ],
+            format=SummaryAndTags.model_json_schema(),
+            options={"num_ctx": 16384, "temperature": 0.2},
+            keep_alive=0,
+        )
+        return SummaryAndTags.model_validate_json(res.message.content)
+
+    def add_meta(self, summary: str, tags: str, chapter_num: int, page_num: int):
+        query = """
+            INSERT INTO topic_meta_data (id, chapter_num, page_num, summary, tags)
+            VALUES (%s, %s, %s, %s, %s);
+        """
+
+        data = (str(uuid.uuid1()), chapter_num, page_num, summary, tags)
+        self.cursor.execute(query, data)
 
     def add_docs(self, docs: list[str]):
         # Generate embeddings for the documents
@@ -283,6 +382,39 @@ class RAGtoolkit:
             top_reranked_data = [item[1] for item in scored_data[:top_n]]
 
             return top_reranked_data
+
+    def get_chapter_tags(self, chapter_num: int) -> list[str]:
+
+        query = """
+            SELECT tags FROM topic_meta_data WHERE chapter_num = %s;
+        """
+        self.cursor.execute(query, (chapter_num,))
+        results = self.cursor.fetchall()
+
+        unique_tags = set()
+
+        for row in results:
+            tags_str = row[0]  # The stored tags string
+            tags_list = convert_string_to_list(tags_str)  # Convert string to list
+            unique_tags.update(
+                tag.lower() for tag in tags_list
+            )  # Convert to lowercase before adding to set
+
+        return list(unique_tags)
+
+    def get_chapter_summary(self, chapter_num: int) -> str:
+        query = """
+            SELECT summary FROM topic_meta_data
+            WHERE chapter_num = %s
+            ORDER BY page_num ASC;
+        """
+        self.cursor.execute(query, (chapter_num,))
+        results = self.cursor.fetchall()
+
+        # Concatenate all summaries
+        concatenated_summary = " ".join(row[0] for row in results if row[0])
+
+        return concatenated_summary.strip()
 
 
 # cause metadata won't accept list data, it has to be str

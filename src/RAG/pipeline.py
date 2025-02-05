@@ -3,90 +3,41 @@ import asyncio
 from utils import RAGtoolkit, convert_string_to_list
 from pydantic import BaseModel
 import os
+from llm_utils import (
+    decompose_question,
+    QuestionAnswer,
+    answer_atomic_question,
+    answer_composite_question,
+)
+
 
 ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
 client = ollama.AsyncClient(host=ollama_url)
 
 
-class QuestionAnswer(BaseModel):
-    question: str
-    answer: str
+"""
+Pipelines
+1. Question Generation from Topics
+2. Answer Question Pipeline ✅
+3. Evaluate user answers Pipeline
+"""
 
 
-class QuestionMetaData(BaseModel):
-    question_type: str
-    example: str
+async def question_answer_pipeline(question: str, topic: str) -> QuestionAnswer:
+    decomposed_question = await decompose_question(question=question)
+
+    payloads = [(question, topic) for question in decomposed_question.sub_questions]
+
+    atomic_answers = await asyncio.gather(
+        *[answer_atomic_question(*payload) for payload in payloads]
+    )
+
+    answer = await answer_composite_question(question, atomic_answers)
+    return answer
 
 
-class ArrayOfQuestions(BaseModel):
-    questions: list[QuestionMetaData]
-
-
-res = ollama.chat(
-    model="deepseek-r1",
-    messages=[
-        {
-            "role": "user",
-            "content": """generate types of questions that can be asked academically:
-            examples:
-            1. **Comparison**: Just like the example, comparing two things.
-            2. **Contrast**: Not just similar points but differences in kind.
-            3. **Synthesis**: Combining elements into something new.
-            4. **Analysis**: Breaking down existing structures or ideas.
-            5. **Evaluation**: Assessing value or effectiveness.
-            6. **Application**: Applying theories or concepts to real-world scenarios.
-            """,
-        }
-    ],
-    format=ArrayOfQuestions.model_json_schema(),
-)
-
-
-print(ArrayOfQuestions.model_validate_json(res.message.content))
-
-# question_decomposition_template = """
-# Your role is to decompose the given question,
-# into simpler sub-questions if needed,
-# this needs to be done to generate context using these simpler sub-questions
-
-# for example:
-#  - question: differentiate between "A" and "B" -> answer: what is "A", what is "B"
-#  -
-# """
-
-
-# question_answering_for_chunks_template = """
-# I will provide you chunks of documents, which will serve as context,
-# that you shall use, to answer my question
-
-# <document-chunks>
-# {}
-# </document-chunks>
-
-# use these chunks to answer the following question
-
-# <question>
-# {}
-# </question>
-# """
-
-
-# question_answering_merge_template = """
-# I will provide you sub-questions,
-# for which the following answers have been derived
-
-# <questions-answers>
-# {}
-# </questions-answers>
-
-# using the following context, answer this question
-
-# <question>
-# {}
-# </question>
-# """
-
+asyncio.run(question_answer_pipeline("differentiate between NFA and DFA", "automata"))
 
 # async def _documentQnA(question: str) -> QuestionAnswer:
 #     # step 1 get all metadata, use it in tandem with question, to decide which documents to use
