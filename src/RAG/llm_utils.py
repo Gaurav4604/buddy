@@ -246,3 +246,56 @@ async def answer_composite_question(
     )
 
     return QuestionAnswer.model_validate_json(res.message.content)
+
+
+class QuestionsFromTag(BaseModel):
+    questions: list[str]
+    tag: str
+
+
+question_generation_system = """
+You're a Retrieval Augmented Question Generation Bot,
+
+Your role is look at the provided topic, 
+along with the reference text associated with it,
+and generate 2 questions from it:
+ - 1st Question should be simple
+ - 2nd Question should be complex and comprehensive
+"""
+
+
+question_generation_prompt = """
+the following, enclosed in tags is the reference text
+
+<reference>
+{}
+</reference>
+
+generate questions for the following topic, using the above reference
+<topic>
+{}
+</topic>
+"""
+
+
+async def generate_questions(tag: str, topic: str = "general") -> QuestionsFromTag:
+    kit = RAGtoolkit(topic=topic)
+    docs = kit.query_docs(query=tag)
+
+    res = await client.chat(
+        model="deepseek-r1",
+        messages=[
+            {"role": "system", "content": question_generation_system},
+            {
+                "role": "user",
+                "content": question_generation_prompt.format(
+                    "\n----reference----\n".join(docs), tag
+                ),
+            },
+        ],
+        format=QuestionsFromTag.model_json_schema(),
+        options={"num_ctx": 32768, "temperature": 0.2},
+        keep_alive=0,
+    )
+
+    return QuestionsFromTag.model_validate_json(res.message.content)

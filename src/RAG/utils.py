@@ -111,9 +111,6 @@ class RAGtoolkit:
 
         if not exists:
             cursor.execute(f'CREATE DATABASE "{self.db_name}"')
-            print(f"Database '{self.db_name}' created successfully.")
-        else:
-            print(f"Database '{self.db_name}' already exists.")
 
         cursor.close()
         conn.close()
@@ -178,10 +175,6 @@ class RAGtoolkit:
         self.chapter_name = f"chapter_{chapter_num}"
         self.chapter_num = chapter_num
         self.page_number = page_num
-
-        print(
-            f"Connected to database '{self.db_name}' and ensured necessary tables exist."
-        )
 
     def _generate_dense_embeddings(self, inputs: list[str]):
         inputs = dense_tokenizer(
@@ -361,8 +354,10 @@ class RAGtoolkit:
             result[0] for result in sparse_results
         )
 
+        combined_inputs = [f"{query} [SEP] {doc}" for doc in data]
+
         embeddings = rerank_tokenizer(
-            data,
+            combined_inputs,
             return_tensors="pt",  # Ensure tensors are returned
             padding=True,  # Optional: pad sequences to the same length
             truncation=True,  # Optional: truncate sequences to a maximum length
@@ -380,7 +375,6 @@ class RAGtoolkit:
 
             # Extract the sorted data entries
             top_reranked_data = [item[1] for item in scored_data[:top_n]]
-
             return top_reranked_data
 
     def get_chapter_tags(self, chapter_num: int) -> list[str]:
@@ -415,6 +409,50 @@ class RAGtoolkit:
         concatenated_summary = " ".join(row[0] for row in results if row[0])
 
         return concatenated_summary.strip()
+
+
+import torch.nn.functional as F
+
+
+def grade_statement_similarity(user_statement: str, actual_statement: str) -> float:
+    """
+    Evaluates the similarity between a user's answer and the actual answer
+    using the cross-encoder reranker model. The function returns a similarity
+    score (as a percentage from 0% to 100%).
+
+    Args:
+        user_statement (str): The statement provided by the user.
+        actual_statement (str): The reference or actual statement.
+
+    Returns:
+        float: Similarity score as a percentage.
+    """
+    # Format the input as a query-document pair (using [SEP] as a separator)
+    input_text = f"{user_statement} [SEP] {actual_statement}"
+
+    # Tokenize the input; the model expects a single sequence containing both answers
+    inputs = rerank_tokenizer(
+        input_text, return_tensors="pt", truncation=True, padding=True
+    )
+
+    # Ensure the model is in evaluation mode
+    rerank_model.eval()
+
+    # Compute logits without gradient computation
+    with torch.no_grad():
+        logits = rerank_model(**inputs).logits  # Expected shape: [1, num_labels]
+
+    # If the model returns only one logit (i.e. num_labels==1), use sigmoid;
+    # otherwise, use softmax to extract the probability for the positive class.
+    if logits.size(1) == 1:
+        # Use sigmoid for single-output scenario
+        prob = torch.sigmoid(logits)[0][0].item()
+    else:
+        # Use softmax for standard binary classification (positive class at index 1)
+        prob = F.softmax(logits, dim=-1)[0][1].item()
+
+    # Convert the probability (0 to 1) into a percentage (0% to 100%)
+    return prob * 100
 
 
 # cause metadata won't accept list data, it has to be str

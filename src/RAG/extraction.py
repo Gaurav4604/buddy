@@ -41,10 +41,8 @@ def dump_extraction_to_db(topic: str = "general"):
             print(f"--- chapter {chapter} - chunks added ---")
 
 
-if __name__ == "__main__":
-    # dump_extraction_to_db(topic="automata")
-    kit = RAGtoolkit(topic="automata")
-    print(kit.get_chapter_summary(0))
-    # reranked_docs = kit.query_docs(query="What is are applications of automata?")
-    # for doc in reranked_docs:
-    #     print(doc)
+# if __name__ == "__main__":
+#     # dump_extraction_to_db(topic="automata")
+#     kit = RAGtoolkit(topic="automata")
+#     tags = kit.get_chapter_tags(0)
+#     for tag in tags:
