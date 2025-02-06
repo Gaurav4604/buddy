@@ -1,0 +1,82 @@
+
+            <text>
+            Generalists. Figure 5A and Tables B&C compare TOTEM to GPT2 (the best two models in the specialist in-domain regime) in the generalist setting, when both models are trained on the aggregate of the W.E., m1, m2, h1, and h2 datasets. We evaluate them on both the in-domain and zero-shot test sets. TOTEM outperforms GPT2 in-domain, 58.3% vs. 43.8%, and by a much larger margin zero-shot, 80% vs. 20%. TOTEM’s performance across all experiments demonstrate that tokens are a performant representation for imputation. We visualize codebook examples in Figure 13| and imputation examples in Figure
+            </text>
+            
+
+            <title>
+            
+    5.2  Anomaly Detection
+
+            </title>
+            
+
+            <text>
+            In anomaly detection, models intake a corrupted time series 𝐱_𝐜𝐨𝐫𝐫∈ℝ^S× T_in and predict which times correspond to anomalies via a binary mask ŷ∈{0,1}^T_in, where the amount of corruption is considered known, at A
+
+
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_9_3.jpg
+        </path>
+        <description>
+        Anomaly Detection Performance Summary
+        </description>
+        </image>
+        
+
+            <text>
+            
+
+**Specialists.** Figure [5] and Table [10] test TOTEM against specialist baselines. TOTEM has the highest AvgWins at 33.3
+
+
+            </text>
+            
+
+            <caption>
+            Generalists. Figure 5 and Table compare generalist-trained TOTEM and GPT2. On the in-domain and zero-shot regimes, TOTEM outperforms GPT2 80% to 20% and 73.3% to 26.7% respectively.
+TOTEM’s AvgWins across the specialist and gener-alist settings demonstrate that tokens are a performant representation for anomaly detection.
+Figure 5: Anomaly Detection Results. In all cases, TOTEM has SOTA AvgWins. Vs. specialists, TOTEM has 33.3%; vs. generalists in-domain, TOTEM has 80.0%; vs. generalists zero-shot, TOTEM has 73.3%.
+            </caption>
+            
+
+            <title>
+            5.3 Forecasting
+            </title>
+            
+
+            <text>
+            In forecasting, models include a time series 𝐱∈ℝ^S× T_in and predict future readings 𝐲∈ℝ^S× T_out, where S is the sensor dimension and T_in,T_out simplify the durations of the preceding and succeeding time series, respectively. All models have a lookback window of T_in=96, with prediction lengths T_out={96,192,336,720}. Results for baselines are from [11, 12]. We run GPT2 with T_in=96 as follows:[10] and [2023] originally use inconsistent dataset-specific lookback lengths. See Figure[1] for a summary.
+
+
+            </text>
+            
+
+            <text>
+            
+Specialists. Figure [fig](a) and Table [l] show that TOTEM achieves the highest `Avgdins` at 28.6
+            </text>
+            
+
+            <text>
+            
+Generalsts. FigureFind TableLScompare the generalist-trained TOTEM and GPT2 models: TOTEM outperforms GPT2 in both the in-domain (e7.9
+
+            </text>
+            
+
+            <title>
+            
+    0.4 Ablations
+
+            </title>
+            
+
+            <text>
+            We present 4 ablation studies: (i) testing tokens vs. patches for a 3ged TOTEM architecture, (ii) testing tokens vs. patches using both transformer and MLP processes, (iii) a codebook size study, and (iv) a study of TOTEM's zero-shot performance when trained on datasets of different sizes. 
+            </text>
+            

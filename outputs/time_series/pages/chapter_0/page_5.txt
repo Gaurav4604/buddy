@@ -1,0 +1,87 @@
+
+            <text>
+            No Domain-specific Data Engineering. Many prior works (especially in time series forecasting) leverage domain-specific knowledge to landmark features that encode critical information. For instance, works that study calendar-based time series of data auxiliary features that denote landmarks like the first day of a month or holidays (Given et al. [2023]) **Samsin = 21** [2020]**. Other works properly-engineered architectures that convert time series into frequency space representations. For example, TimeNet operates around the time series of frequency space and frequency-space imaging by computing the Fourier transform on several subsets of the time series (Wiu et al. [2022]). Similarly, ForEorder represents a time series with a random subset of its Fourier components and modulation (ReIN) (Kint et al. [2024]) to represent temporal waveforms in a normalized space (see Figure [20]), which requires no assumptions on the form of the data. This allows TOTEM to generalize across domains and outperform the prior handled methods on many distinct tasks using simple, generic architectures.
+
+
+            </text>
+            
+
+            <title>
+            3.3. Tokenizer Implementation
+            </title>
+            
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_4_2.jpg
+        </path>
+        <description>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mspace width="20px" height="45px" form="stretch" stretch-to="right" stretch-type="increase"></mspace>
+
+   <mo>+</mo>
+
+   <mspace width="16px" height="37px" form="stretch" stretch-to="right" stretch-type="increase"></mspace>
+
+    <mrow>
+      <mi>S</mi>
+      <mn>x</mn>
+      <mi>E</mi>
+     </mrow>
+   
+  </mrow></math>
+        </description>
+        </image>
+        
+
+            <text>
+            Though TOTEM is a VQVAE, the design of the encoder and decoder differ substantially from the original model and similar works like WaveNet, which use dilated convolutions (I. Dord et al., 2017). The dilations in these architectures skip many time steps, allowing the convolutional filters to operate on a larger input area at a coarser scale, improving model efficiency. However, this design decision is a normalized space.
+
+Motivated by the high sampling rates of digital audio waveforms,
+which is not a universal trait across time series domains (see Table 6). In contrast, TOTEM uses a stack of strided 1D convolutions with a dilation of 1 such that it can account for every time step. Using a long input (e.g., 96 time steps for standard forecasting tasks) allows TOTEM to maintain a large receptive field. Lastly,
+the use of RevIN allows TOTEM to remain effective by only learning a small set of normalized waveforms, and if the unnormalized reconstruction is required for a downstream task, the normalization parameters can also be passed to the decoder (see Figure 4).
+
+Formally, TOTEM accepts a batch of univariate time series {x; R^T} obtained by flattening the sensor channel of the multivariate data. An encoder E consisting of a stack of strided 1D convolutions then temporally compresses the data by a total factor of F to recover a latent variable z = E(x) in R^{FxD}, where D is the latent feature dimension. The latent variable z is then quantized into an element β of the codebook C = {c}*, consisting of k D-dimensional codewords c; R^D following the relation β = ce, where α = arg min; ||z - c||_3. The decoder D mirrors the encoder’s architecture, mapping the quantized embedding β to a reconstructed time series X = D(z) in R^{FxD}.
+            </text>
+            
+
+            <text>
+            As in [Van Den Oord et al.] (2017), we train ℰ, 𝒟, and 𝒞 by optimizing the objective . 
+            </text>
+            
+
+            <formula>
+            
+    ℒ=1/E· S∑_i||𝐱_i-𝐱̂_i||_2^2_ℒ_rec+||𝐬 𝐠[𝐳]-𝐳̂||_2^2_ℒ_vq+β||𝐳-𝐬 𝐠[𝐳̂]||_2^2_ℒ_cmt
+
+            </formula>
+            
+
+            <text>
+            
+    (𝐥)
+
+            </text>
+            
+
+            <text>
+            where 𝐬𝐠[·] is the stop-gradient operator and β is the commitment loss weight. For additional details, see Appendices [11] and [12]. In all experiments, we use a compression factor of F=4, (see Table [22]).
+
+
+            </text>
+            
+
+            <title>
+            
+
+## 3.4 Forecasting Model Implementation
+            </title>
+            
+
+            <text>
+            In contrast with prior works, **TOTEM** is capable of solving the imputation and anomaly detection tasks **with the tokenizer alone (see Figures [1] and [2]).** Therefore, the only downstream model we must design is the forecasting model. First, each sensor's observations 𝐱_i∈ℝ^7n are converted into a sequence of 𝕋_n/F discrete tokens 𝐱̂_i. The forecasted process adds temporal positional embeddings to these tokens, passing them through a transformer encoder consisting of a series of multi-head attention layers that attend along the time dimension to predict normalized measurements 𝐲̂_i∈ℝ^7_test for i=1,...,S.
+
+
+            </text>
+            

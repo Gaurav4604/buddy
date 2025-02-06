@@ -1,0 +1,75 @@
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_10_0.jpg
+        </path>
+        <description>
+        Forecasting Performance Summary
+        </description>
+        </image>
+        
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_10_1.jpg
+        </path>
+        <description>
+        Discrete Tokens (TOTEM) vs. Patches (PatchTOTEM)
+        </description>
+        </image>
+        
+
+            <caption>
+            Figure 6: Forecasting Summary. In all categories TOTEM has SOTA Average Wins . In the specialist TOTEM has 28.6%; in generalist in domain TOTEM has 67.9%; in generalist zero shot TOTEM has 90.0%.
+            </caption>
+            
+
+            <caption>
+            
+# Figure 7: Discrete Token Ablation. In all categories, the discrete token representation (TOTEM) has SOTA AvgWins over the patch representation (PatchTOTEM).
+
+
+            </caption>
+            
+
+            <text>
+            Tokens vs. Patches. The experiments in Section 5 show that the combination of discrete tokenization and TOTEM’s generalist architecture achieve SOTA performance. We now fix the architecture while varying only the representation (TOTEM vs. PatchTOTEM) on a forecasting task to test what proportion of the performance is attributable to tokenization. We find that in all testing regimes used in the main results, TOTEM greatly outperforms PatchTOTEM, with 67.9% vs. 39.3% AvgWins in the specialist in-domain regime, 78.6% vs. 23.2% AvgWins in the generalist in-domain regime, and 67.5% vs. 35.0% AvgWins in the generalist zero-shot regime (see Figure 7 and Table 21).
+            </text>
+            
+
+            <caption>
+            Downstream Architecture Study. In Figure [8] & Table [21] we explore the effect of discrete tokens vs. patches for each of two common downstream forecasting models: the transformer encoder introduced in Section 3.3 and an MLP (Ekambaram et al., 2023). The MLP has 3-layers ReLU activations, uses dropout with p =0.1 after the second layer, and concludes with a layernorm; this architecture is modeled after similar architectures in the literature like (2023a). The patch-based MLP takes in an uncompressed time series. We find that for both the MLP and transformer architectures, the discrete token representation outperforms the patch representation (in the transformer 67.9% to 39.3% AvgWins and MLP 66.1% to 37.5% AvgWins). This shows that TOTEM’s strength in forecasting is not due to the strength of the transformer forecaster, but because of the choice to use discrete tokens.
+
+Codebook Size. In Figure [9] we explore the effect of the codebook size K on the VQVAE’s reconstruction performance.
+
+As expected, we find that as K increases from 32 to 256 to 512, the reconstruction performance improves. However, for Discrete Token Ablation While Varying Downstream Model 
+
+Transformer Specialist MLP Specialist
+70 67.9 70 66.1
+Avg. Wins (%)
+Ww c= u a
+S$ Ss ty Ss
+N
+is)
+BR°
+T 0) T
+TOTEM = PatchTOTEM TOTEM = PatchTOTEM
+Figure 8: Discrete Token vs. Patches with MLP. For both the transformer (left) and MLP (right) the discrete token representation (TOTEM) outperforms the patch representation (PatchTOTEM).
+
+downstream tasks like forecasting, it is more parsimonious to model interactions between fewer codewords.
+Thus, we elect to use K = 256 codewords, as the reconstruction performance is similar to that of K = 512.
+We note that the average generalist codebook error (see Table [21]), is substantially lower than the corresponding downstream forecasting error, demonstrating that a larger proportion of error is attributable to the difficulty of the forecasting task rather than poor reconstruction. This provides evidence that time series data can be effectively compressed using a smaller number of codewords.
+
+This provides strong evidence that TOTEM’s strength in forecasting is not due to the transformer forecaster, but because of the choice to use discrete tokens.
+            </caption>
+            
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_10_6.jpg
+        </path>
+        <description>
+        Discrete Token Ablation While Varying Downstream Mode Discrete Tokens (TOTEM) vs. Patches (PatchTOTEM)
+        </description>
+        </image>
+        

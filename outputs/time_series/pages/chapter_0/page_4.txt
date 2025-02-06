@@ -1,0 +1,63 @@
+
+            <title>
+            
+    3.  Method
+
+            </title>
+            
+
+            <title>
+            
+    3.1  Task Definitions
+
+            </title>
+            
+
+            <text>
+            This work considers three tasks: imputation, anomaly detection, and forecasting. In *imputation*, models intake a masked time series 𝐱_𝐦∈ℝ^S×Γ_m and input the missing values to recover the reconstruction Φ∈ℝ^S×Γ_m. In *anomaly detection*, models intake a time series corrupted at a known level 𝐱_𝐜𝐨𝐫𝐞∈ℝ^S×Γ_m and predict which times an anomalous, 𝐲∈{0,1}^γ_m. Lastly, in *forecasting*, models intake a time series 𝐱∈ℝ^S×Γ_m and predict future values 𝐲∈ℝ^S×Γ_m, where Γ_m and Γ_m satisfy the durations of the previous and surrounding time tests, respectively. A core design goal for TOEIA is to learn a representation aside for work of these three tasks using the same architecture and without leveraging any task- or donan-specific knowledge.
+
+
+            </text>
+            
+
+            <title>
+            
+    3.2  Design Decisions
+
+            </title>
+            
+
+            <text>
+            This section discusses TOTEM's key design features: a self-supervised training stage, exclusively-temporal tokenization, and no domain-specific data engineering.
+
+
+            </text>
+            
+
+            <text>
+            
+**Self-supervised Tokenizer Training.** As described in Section B TOTEM learns a fixed codebook of tokens over a multi-domain corpus of time series data independently from the training of any downstream model. This disentangles the choice of data representation from the choice of task-specific architecture and permits the learning of representations from a large, diverse set of data, which aids in zero-shot generalization. 
+            </text>
+            
+
+            <text>
+            First, we elect to use a discrete, deterministic encoder to produce time series tokens. This decision is largely motivated by large language models (and in particular, tokenization methods in NLP like byte pair encoding (BPE) (2018), in which a downstream model learns on a finite number of distinct tokens. Moreover, in methods like BPE, the tokenization operation is lossless and reversible because it is deterministic (though non-unique). This suggests that vector quantization-based models could be effective for tokenizing time series data. Two popular vector quantization methods are VQVAEs (Van Den Oord et al. 2017) and VQGANs (Esser et al. 2021). In this work, we choose to use a VQVAE, as VQGANSs are more commonly used for encoding images. Moreover, the use of VQVAEs has been studied in neural audio models (Oord et al. ||2016)/Van Den Oord et al. ||2017), including followup works with audio-specific models (Baevski! et al. ||2020), which suggests that they may be effective for modeling general time series.
+            </text>
+            
+
+            <text>
+            
+
+**Exclusive-Termopal Tokenization.** A time series dataset consists of E examples, S sensor channels, and T time steps, and can be formally expressed as {𝐱_j}_j=1^E⊂ℝ^S× T. Prove work and can be found from the above mentioned function (full action) (line dimension) only to the data (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) (line dimension) 
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_3_8.jpg
+        </path>
+        <description>
+        A diagram showing two stacks, one with blue waves and another purple. The stack on the left is labeled S T E while the right has a label that says... . A picture in the top-left shows houses and trees, while three pictures are shown at the top-right depicting different vehicles.
+        </description>
+        </image>
+        

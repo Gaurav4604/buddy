@@ -1,0 +1,139 @@
+
+            <text>
+            Finite-state machines
+            </text>
+            
+
+            <text>
+            And finally for $q_{4}$ with $a$:
+            </text>
+            
+
+            <text>
+            On (qa, @)
+Apn(eclose(qa, a)
+Axr({u}, a)
+OE (q4, a)
+= 9
+            </text>
+            
+
+            <formula>
+            
+    δ_N(q_4,a) = Δ_E(e close(q_4,a)) = Δ_E({q_4},a) = δ_E(q_4,a) = ∅
+
+            </formula>
+            
+
+            <text>
+            And with b:
+            </text>
+            
+
+            <text>
+            dn (q4, b)
+Ap(eclose(q4, b))
+Ar({q4}, b)
+d= (q4, b)
+0
+            </text>
+            
+
+            <formula>
+            
+    δ_N(q_4, b) = Δ_E(e c l o s e(q_4, b)) = Δ_E({q_4}, b) = δ_E(q_4, b) = ∅
+
+            </formula>
+            
+
+            <text>
+            So the last row of the table is:\n\n1 2 3
+4 5 6\n7 8 9
+            </text>
+            
+
+            <text>
+            
+    q_4∥∅|∅
+
+            </text>
+            
+
+            <title>
+            # 3.8.4  Compute the final-state set
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            # We now determine if any of the states, q, are final-states, by evaluating the predicate: eclose(q)∩ F_E≠∅
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['eclose(q0) ∩ {q4} ≠ ∅ ➔', 'eclose(q1) ∩ {q4} ≠ ∅ ➔', 'eclose(q2) ∩ {q4} ≠ ∅ ➔', 'eclose(q3) ∩ {q4} ≠ ∅ ➔', 'eclose(q4) ∩ {q4} ≠ ∅ ➔']
+</headers>
+<rows>
+        <row>['false', 'true', 'true', 'true', 'true']</row>
+</rows>
+        
+                </table>
+                
+
+            <title>
+            # 3.8.5 The complete transition table
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            Here is the complete table and corresponding diagram:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_12_14.jpg
+        </path>
+        <description>
+        A state diagram with four states labeled q0, q1, q2, and q3. The transitions between these states are represented by arrows marked with different symbols (a or b). There is also a transition from q4 to q2.
+        </description>
+        </image>
+        
+
+            <text>
+            example2(N FA)
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['δ_N', 'a', 'b']
+</headers>
+<rows>
+        <row>['→ q0', '{q1}', '∅']</row>
+	<row>['*q1', '{q1}', '{q3}']</row>
+	<row>['→ q2', '{q1}', '{q3}']</row>
+	<row>['*q3', '{q1}', '{q3}']</row>
+	<row>['*q4', '{q1}', '∅']</row>
+</rows>
+        
+                </table>
+                

@@ -1,0 +1,115 @@
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_4_0.jpg
+        </path>
+        <description>
+        A simple state diagram with a single initial and final state. The transition is labeled 'e'.
+        </description>
+        </image>
+        
+
+            <text>
+            # Here is the limiting case of the previous problem:
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <text>
+            # Once again, there is no problem: eclose(q_0)={q_0}.
+
+            </text>
+            
+
+            <text>
+            Thus we see that loops of ϵ-transitions among one or several states cause no problem with the definition of eclose. 
+            </text>
+            
+
+            <title>
+            # 3.3.4 The extended epsilon-closure
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            The epsilon closure we have defined, _eclose_ takes as parameter a _single_ state, and returns a _set of states_.
+
+We will find it convenient to define another function, _ECLOOSE_ (note the capital letters!), that takes as parameter a _set of states_ and returns a _set of states_. The _ECLOOSE_ of a set of states is simply the union of the _eclose_ of each of the individual states, thus the definition is:
+            </text>
+            
+
+            <formula>
+            
+    E C L O S E(Q)=⋃_q∈ Qe c l o s e(q)
+
+            </formula>
+            
+
+            <title>
+            # 3.4 The string transition function of an ϵ-NFA.
+
+            </title>
+            
+
+            <text>
+            We are interested in knowing what state-set an ϵ-NFA will reach, starting at state-set Q_0, if it is presented with a _string_ of symbols w=s_1s_2s_3⋯ s_n.
+
+The _string transition function_Δ, shows how an ϵ-NFA that starts in any _state-set_P, and receives a sequence of symbols, w, ends up in state-set R.
+
+We can specify the Δ function like this:
+            </text>
+            
+
+            <formula>
+            Δ: {0}×Σ^*→{0}
+            </formula>
+            
+
+            <text>
+            (Remember that {Q} is the set of all subsets that can be created by selecting states from Q.)
+
+We can define the behaviour of Δ recursively like this:
+            </text>
+            
+
+            <text>
+            
+| **Base case** | Δ̂(P,ϵ)=P which says that if there is no input, the ϵ-NFA remains in the current state-set P. 
+            </text>
+            
+
+            <text>
+            
+
+**Recurrence case**] We proceed by imagining that we have chopped one symbol, s_1, from the input string, w, and then taking one step forward in the c-NFR machine with that symbol. Finally, starting at the state-set thus reached, we use the extended transition function to process the remainder of the input string, s_2s_3… s_n. More formally:
+            </text>
+            
+
+            <text>
+            1. let V=ECLOSE(P) here V is the set of all states from which the ϵ-NFA could possibly make a transition. It includes the current state-set (P), plus all the states that the machine could reach by taking one or more ϵ-transitions.
+
+
+            </text>
+            
+
+            <text>
+            2. let T=Δ(V,s_1)   T is the set of all states that will be reached by taking one transition with the symbols_1, starting from the state-set V. (It includes all states _directly_ reachable from the current state-set, P, by a transition s_1, _and_ all the states _indirectly_ reachable by a sequence of epsilon transitions, followed by a transition s_1.) Thus, T is the next state-set.
+
+
+            </text>
+            

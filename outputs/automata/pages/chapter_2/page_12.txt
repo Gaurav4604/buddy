@@ -1,0 +1,66 @@
+
+            <text>
+            
+    Processing q_2 with a, we find
+
+            </text>
+            
+
+            <formula>
+            [             δ_N(q_2,a)                      =    Δ_E(e close(q_2,a));                                             =       Δ_E({q_2,q_4},a);                                             = δ_E(q_2,a) ∪δ_E(q_4,a);                                             =               {q_0} ∪∅;                                             =                  {q_0} ]
+            </formula>
+            
+
+            <text>
+            and with b:
+            </text>
+            
+
+            <formula>
+            [             δ_N(q_2,b)                      =    Δ_E(e close(q_2,b));                                             =       Δ_E({q_2,q_4},b);                                             = δ_E(q_2,b) ∪δ_E(q_4,b);                                             =               {q_3} ∪∅;                                             =                  {q_3} ]
+            </formula>
+            
+
+            <text>
+            
+    q_2∥{q_0}|{q_3}
+
+            </text>
+            
+
+            <text>
+            For q3 with a we get:
+            </text>
+            
+
+            <formula>
+            [                 δ_N(q_3,a)                          =       Δ_E(e close(q_3, a));                                  = Δ_E({q_3, q_4}, a);                            = δ_E(q_3, a) ∪δ_e(q_4, a);                                                 = ∅∪∅;                                                   = ∅ ]
+            </formula>
+            
+
+            <text>
+            And with b:
+            </text>
+            
+
+            <formula>
+            
+    δ_N(q_3, b) = Δ_E(close(q_3, b)) = Δ_E({q_3, q_4}, b) = δ_E(q_3, b) ∪δ_e(q_4, b) = {q_3}∪∅ = {q_3}
+
+            </formula>
+            
+
+            <text>
+            So the fourth row of the table is: \rowcolor{gray!20} 1 &amp; 2 &amp; 3 &amp; 4 \
+\rowcolor{gray!20} 5 &amp; 6 &amp; 7 &amp; 8 \
+\rowcolor{gray!20} 9 &amp; 10 &amp; 11 &amp; 12 \
+\rowcolor{gray!20} 13 &amp; 14 &amp; 15 &amp; 16 \
+            </text>
+            
+
+            <text>
+            
+    q_3∥θ∥{q_3}
+
+            </text>
+            

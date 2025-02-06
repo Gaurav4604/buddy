@@ -1,0 +1,118 @@
+
+            <text>
+            3. We can process the remainder of the input string, (i.e. s_2,s_3,…,s_n) by recursively invoking the extended transition function, starting from state-set T: Δ(T,s_2s_3… s_n).
+
+
+            </text>
+            
+
+            <text>
+            # By combining the above three steps, we see:
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <formula>
+            Δ̂(P, s_1s_2s_3… s_n) = Δ̂(Δ(E C L O S E(P), s_1), s_2s_3… s_n)
+            </formula>
+            
+
+            <text>
+            A recursive evaluation according to these rules _must_ terminate in a finite number of steps. Each invocation of Δ̂ occurs with a shorter string of symbols, so we must (eventually) reach the base case: Δ̂(P,e), and the recursion will stop.
+
+
+            </text>
+            
+
+            <title>
+            # 3.5   The language of an ϵ-NFA
+            </title>
+            
+
+            <text>
+            let E=(Q,Σ,δ,Q_0,F) be an ϵ-NFA. We can define L(E), the language of E in a very similar way to that for an NFA. The language is the set of all input strings that take E from its initial state-set Q_0 to a state-set in which _at least one_ of the states is an accepting state.
+
+We can find this in three steps:
+            </text>
+            
+
+            <text>
+            1. The string transition function, Δ̂ allows us to find the set of states T that E will occupy after processing an input string w:
+            </text>
+            
+
+            <formula>
+            
+    T = Δ̂(Q_0, w)
+
+            </formula>
+            
+
+            <text>
+            2. However, there may still be some ϵ-transitionsfrom those states to one (or more) final states. We take account of this by computing, R, the states that are reachable from T by taking only ϵ-transitions:
+            </text>
+            
+
+            <formula>
+            
+    R = ECLOSE(T)
+
+            </formula>
+            
+
+            <text>
+            3. The string w is accepted by E if at least one of the states in R is in F.
+
+
+            </text>
+            
+
+            <text>
+            We can compress these three steps into one compact formal statement, like this:
+            </text>
+            
+
+            <formula>
+            
+    L(E) = {w ∈Σ^*| E C L O S E(Δ̂(Q_0, w)) ∩ F ≠∅}
+
+            </formula>
+            
+
+            <title>
+            3.6 Eliminating υ-transitions
+            </title>
+            
+
+            <text>
+            Given any ϵ-NFA, E, we can find a non-deterministic finite-state automaton (NFA), N, that accepts the same language as E. We do this by eliminating the ϵ-transitions.
+
+Let E=(Q_E,Σ,δ_E,Q_HF,F_E) be an ϵ-NFA. We will create an equivalent NFA, N=(Q_N,Σ,δ_N,Φ_UN,F_N), defined like this:
+            </text>
+            
+
+            <text>
+            1. N has the same states as E, thus Q_N=Q_E. We will see later that sometimes this results in N having unreachable states (states that can never be reached from the initial states). Unreachable states can safely be deleted, thus the number of states in N maybe fewer than in E.
+
+
+            </text>
+            
+
+            <text>
+            2. E starts in the state-set Q_0E, so N will start in the same set of states. Thus:
+            </text>
+            
+
+            <formula>
+            
+    Q_0N = Q_0E
+
+            </formula>
+            

@@ -1,0 +1,112 @@
+
+            <text>
+            3. The set of final state for E is F_E. It is possible that there are are one or more ϵ-transitions _leading_ to from states in Q_E to states in F_E. If so, the states from which those ϵ-transitions come must be regarded as being in the set F_N. Formally:
+            </text>
+            
+
+            <formula>
+            
+    F_p={q ∈ Q_z| eclose(q) ∈ F_z}
+
+            </formula>
+            
+
+            <text>
+            4. To compute the transition function, δ_N, we note that for each state q in Q_E, the corresponding transition in N will be expanded to take account of any ϵ-transitionsthat exist from state p. Formally, for any state q in Q_E, we can write:
+            </text>
+            
+
+            <formula>
+            ∀ s ∈ X: d_n(q, s) = A_p(eclose(q), s)
+            </formula>
+            
+
+            <text>
+            This procedure must be applied to *all* the states, q, in Q_E to generate the complete *delta*_N-transition function. 
+            </text>
+            
+
+            <title>
+            
+# 3.7   Example1: Convert integer-recogniser ϵ-NFA to NFA.
+
+            </title>
+            
+
+            <text>
+            Earlier we showed an ε-NFA that recognised integers. Here is the transition function for that automaton (shown as a table): intRecognition
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['δ', 'ε', '+,−,', '0,1,...,9']
+</headers>
+<rows>
+        <row>['→ q₀', '{q₁}', '{q₁}', '']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            We now convert this ϵ-NFA to a NFA using the method just described. 
+            </text>
+            
+
+            <title>
+            3.7.1 Compute ε-closure
+            </title>
+            
+
+                <table>
+                
+<headers>
+    ['state', 'ε-closure']
+</headers>
+<rows>
+        <row>['q0', '{q0, q1}']</row>
+	<row>['q1', '{q1}']</row>
+	<row>['q2', '{q2, q3}']</row>
+	<row>['q3', '{q3}']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            # We begin by computing the ϵ-closure, eclose, of each state, since we will need this information several times:
+            </text>
+            
+
+            <title>
+            # 3.7.2   Compute the starting state-set.
+
+
+            </title>
+            
+
+            <text>
+            # The starting state-set of the NFA will be the same as the starting state-set of the ϵ-NFA:
+            </text>
+            
+
+            <formula>
+            Q_0N = Q_0E = {q_0}
+            </formula>
+            
+
+            <title>
+            # 3.7.3   Compute the transition function.
+
+
+            </title>
+            
+
+            <text>
+            We now derive the transition function for _each_ state and _each_ input symbol.
+
+
+            </text>
+            

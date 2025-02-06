@@ -1,0 +1,103 @@
+
+            <text>
+            A separate prediction head predicts the mean μ_i and standard deviation σ_i associated with each univariate time series 𝐱_i such that the final forecasted prediction is 𝐲_i=σ_i·𝐲_i+μ_i for i=1,…,S. The forecaster is trained in a supervised fashion by minimizing three smooth L1 losses between predictions {𝐲̅_i,μ_i,σ_i}_i=1^S and their ground truth values respectively. Crucially, this architecture is used for _all_ domains in our forecasting experiments, demonstrating that TOTEM can competitively perform forecasting in a domain-agnostic manner.
+
+
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_5_1.jpg
+        </path>
+        <description>
+        A diagram showing a neural network architecture with various components labeled. The main parts include 'forecast', 'linear layer', and 'transformer encoder'. There are also references to adding positional embedding, tokenizing data using pre-trained codebook, linear layers predicting future mean & std.
+        </description>
+        </image>
+        
+
+            <title>
+            4 Experimental Setup Figure 4: The Forecaster Model. The forecaster takes in a tokenized version of normalized time series observations (obtained using TOTEM’s encoder) and predicts a normalized time series over some specified horizon along with parameters that allow the model to unnormalize the prediction.
+
+This section explains the experimental setup for each task, including the baselines and datasets used for evaluation. The results and analyses are presented in Section [5] We compare to two families of approaches:
+methods designed for multiple tasks (multi-task), like TOTEM, and methods designed for a specific task (single-task). Many single-task methods have frequently been adapted by others to tasks besides the ones for which they were originally designed, and in those cases, we compare against the best reported results for the adapted model. For all tasks, we trained a GPT2 generalist baseline from scratch, and for forecasting, we additionally trained a GPT2 specialist.
+            </title>
+            
+
+            <title>
+            4.1 Imputation
+            </title>
+            
+
+            <text>
+            
+
+**Basalines.** In the main text, we compare TOTEM against 12 baselines with varying model architectures. We further compare against 5 additional baselines with different architectures for completeness in the Appendix [X:2]_In total, we evaluate against 17 baselines._ See Table[X] for a summary.
+
+
+            </text>
+            
+
+            <text>
+            Datasets. For the in-domain testing regime, we test on 6 datasets, and for the zero-shot testing regime,we evaluate on an additional 5 datasets. We also perform additional evaluations in the appendix on the PhysioNet Challenge 2012 dataset. In total, we evaluate on 12 distinct datasets. See Table 2B for a summary.
+            </text>
+            
+
+            <text>
+            
+**Metrics.** We report the mean squared error (`MSE`) and mean absolute error (`MSE`) of the imputed versus the ground truth signals. 
+            </text>
+            
+
+            <text>
+            
+    𝐀.   Imputation Baselines
+
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Type', 'Model', 'Abbr.', 'Arch. | Citation']
+</headers>
+<rows>
+        <row>['Multi-task', 'GPT2 - Generalist', 'TF', 'Trained by us']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            B. Imputation Methods
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Regime', 'Dataset', 'Abbr. Citation']
+</headers>
+<rows>
+        <row>['In-Domain', 'ETTm1', 'm1', 'Zhou et al., 2023']</row>
+	<row>['ETTm1', 'ETTm2', 'm2', 'Zhou et al., 2023']</row>
+	<row>['ETTm2', '', 'z', 'Zhou et al., 2023']</row>
+	<row>['ETTh1', 'h1', 'h1', 'Zhou et al., 2023']</row>
+	<row>['ETTh2', '', 'z', 'Zhou et al., 2023']</row>
+	<row>['Neuro2', 'N2', 'P Peterson et al.', '2022']</row>
+	<row>['Neuro5', 'N5', 'R Peterson et al.', '2022']</row>
+	<row>['Zero-Shot', 'Saugeen River Flow R', '', 'Godahawa et al., 2021']</row>
+	<row>['U.S. Births B', '', 'B Godahawa et al.', '2021']</row>
+	<row>['Physpot S', '', 'S Godahawa et al.', '2021']</row>
+	<row>['Appendix PhysioNet', '', 'Silva et al.', '2012']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            
+    Table 2: Imputation baselines and datasets..
+
+            </text>
+            

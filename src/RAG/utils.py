@@ -36,14 +36,18 @@ os.makedirs("cache", exist_ok=True)
 load_dotenv()
 
 # Connection parameters from environment variables
-DB_USER = os.getenv("postgres")
+DB_USER = os.getenv("user")
 DB_PASSWORD = os.getenv("password")
 DB_HOST = os.getenv("host")
-DB_PORT = os.getenv("port")
+DB_PORT = os.getenv("DB_PORT", "5432")
 
 ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
 client = ollama.Client(host=ollama_url)
+
+
+def get_conn_str(database: str) -> str:
+    return f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{database}"
 
 
 splitter = TextSplitter(overlap=True, capacity=500, trim=True)
@@ -92,16 +96,9 @@ class RAGtoolkit:
         self.db_name = topic  # Target database name
 
         # Connect to default postgres DB first
-        conn = psycopg2.connect(
-            database="postgres",
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=DB_HOST,
-            port=DB_PORT,
-            connect_timeout=1,
-        )
-        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-        cursor = conn.cursor()
+        default_conn = psycopg2.connect(get_conn_str("postgres"), connect_timeout=1)
+        default_conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor = default_conn.cursor()
 
         # Check if the target database exists
         cursor.execute(
@@ -113,17 +110,10 @@ class RAGtoolkit:
             cursor.execute(f'CREATE DATABASE "{self.db_name}"')
 
         cursor.close()
-        conn.close()
+        default_conn.close()
 
         # Now connect to the target database
-        self.conn = psycopg2.connect(
-            database=self.db_name,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=DB_HOST,
-            port=DB_PORT,
-            connect_timeout=1,
-        )
+        self.conn = psycopg2.connect(get_conn_str(self.db_name), connect_timeout=1)
         self.conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         self.cursor = self.conn.cursor()
 

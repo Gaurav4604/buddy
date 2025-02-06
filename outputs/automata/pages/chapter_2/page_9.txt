@@ -1,0 +1,114 @@
+
+            <text>
+            # Working through this for q_0, we find:
+
+Therefore q_0 is not a final state.
+
+
+            </text>
+            
+
+            <formula>
+            [ eclose(q_0) ∩{q_3} ≠∅;  {q_0, q_1} ∩{q_3} ≠∅;                   ∅≠∅;                 false ]
+            </formula>
+            
+
+            <text>
+            
+    Similar reasoning applies to q_1.
+
+            </text>
+            
+
+            <text>
+            
+
+**For state q_2 we find:**
+            </text>
+            
+
+            <formula>
+            [ eclose(q_2) ∩{q_3} ≠∅;  {q_2, q_3} ∩{q_3} ≠∅;              {q_3} ≠∅;                  true ]
+            </formula>
+            
+
+            <text>
+            Therefore q_2 is a final state.
+
+
+            </text>
+            
+
+            <text>
+            Similar reasoning tells us that q_3 is also a final state. The final-state set is therefore: {q_2,q_3}.
+
+
+            </text>
+            
+
+            <title>
+            # 3.7.5   The complete NFA table
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+                <table>
+                
+<headers>
+    ['intRecog(NFA)', 'δ_N', '| +, -, 0|1,... ,9', '→q_0', '{q_1}', '{q_2}', 'q_1', '∅', '{q_2}', '*q_2', '∅', '{q_2}', '*q_3', '∅', '']
+</headers>
+<rows>
+        <row>[]</row>
+	<row>['δ_N', '+, -,', '0|1,... ,9']</row>
+	<row>['→q_0', '{q_1}', '{q_2}', 'q_1', '∅', '{q_2}', '*q_2', '∅', '{q_2}', '*q_3', '∅', '']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            Thus the transition-table for the completed NFA is:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_8_10.jpg
+        </path>
+        <description>
+        A state diagram with three states labeled q0, q1 and q2. The initial state is q0. There are two transitions from q0 to q1 and q2 respectively, both marked as +. From q1 there is a transition to q2 with probability 0..9, while the other way around has no defined probability (indicated by -). Finally, there's an edge labeled o...9 going from q2 to q3.
+        </description>
+        </image>
+        
+
+            <text>
+            # This table corresponds to this NFA diagram:
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <text>
+            As you can see, it is only slightly more complex than the original c-NFA. After a moment's examination you can also see that:
+            </text>
+            
+
+            <text>
+            * It is obviously a correct implementation of the original ϵ-NFA;
+* State q_3 is unreachable from any state, and could be deleted; and
+* Although we aimed to produce an NFA, this diagram is in fact a _DFA_. (This doesn't always happen – we just got lucky this time.)
+            </text>
+            

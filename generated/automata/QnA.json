@@ -10,5 +10,13 @@
     {
         "question": "What is an NFA?",
         "answer": "A Nondeterministic Finite Automaton (NFA) is a type of finite automaton that allows multiple possible states at any given time, enabling it to model complex behaviors more easily than Deterministic Finite Automata (DFAs)."
+    },
+    {
+        "question": "What is the language of automata?",
+        "answer": "The language accepted by an automaton is defined as the set of all strings that can be processed by the automaton and lead to an accepting state. In other words, it is the set of input strings for which the automaton accepts the string as a valid member of the language."
+    },
+    {
+        "question": "How does an epsilon-NFA differ from a DFA? What are the advantages of epsilon-NFA?",
+        "answer": "An epsilon-NFA differs from a DFA in its transition mechanism, allowing for non-determinism and spontaneous state transitions. In contrast, DFAs have deterministic transitions with no ambiguity. The key feature of an epsilon-NFA is its ability to perform spontaneous state transitions, enhancing its flexibility in processing various languages. Additionally, when converting an epsilon-NFA into a standard NFA or DFA, these epsilon transitions are typically eliminated by computing the epsilon-closure of each state. This process ensures that the resulting automaton can simulate the behavior of the original epsilon-NFA without relying on epsilon moves, thereby simplifying its structure while preserving its language recognition capabilities. The advantages of using epsilon-NFAs over DFAs include easier construction compared to DFAs, the ability to model non-determinism which can simplify certain language descriptions, and the fact that every NFA can be converted into an equivalent DFA ensuring implementability."
     }
 ]

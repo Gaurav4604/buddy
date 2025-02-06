@@ -1,0 +1,83 @@
+
+            <text>
+            And for 0...9:
+            </text>
+            
+
+            <formula>
+            6n(m,0) = ECLOSE(S_z(m,9)) = ECLOSE{q@} = eclose(q_2) = {92,43}
+            </formula>
+            
+
+            <text>
+            Finally, we process q_3, yielding this row:
+            </text>
+            
+
+            <title>
+            # 3.10.4  Compute the final-state set
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            With greedy evaluation, the final state-set of the NFA is exactly the same as that of the ϵ-NFA. Thus, f_N=f_E={g_3}.
+
+
+            </text>
+            
+
+            <title>
+            # 3.10.5   The complete NFA table
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            Combining the pieces, the transition-table for the intRecog NFR, and the corresponding diagram is:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_15_8.jpg
+        </path>
+        <description>
+        A diagram showing a transition system with states q0, q1, q2 and q3. There are arrows indicating transitions between these states, labeled with probabilities 0.9 or - (no probability). The initial state is marked as +q0.
+        </description>
+        </image>
+        
+
+                <table>
+                
+<headers>
+    ['intRecog(NF A)greedy', 'δN | +, -', '0 , 1 , . . . , 9']
+</headers>
+<rows>
+        <row>['→ q0', '| {q1} |', '| ∅ |']</row>
+	<row>['→ q1', '| {q2}, {q3} |', '| ∅ |']</row>
+	<row>['→ q2', '| {q4}, {q5} |', '| ∅ |']</row>
+	<row>['*q3', '| ∅ |', '| ∅ |']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            We leave the task of converting the example2 ε-NFA to an NFA by greedy evaluation as an exercise.
+            </text>
+            

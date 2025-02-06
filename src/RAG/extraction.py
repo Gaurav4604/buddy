@@ -1,5 +1,6 @@
 from .utils import RAGtoolkit
 from os.path import isfile
+from os import remove
 import json
 
 
@@ -38,3 +39,4 @@ def dump_extraction_to_db(topic: str = "general"):
 
                     print(f"--- page {page} - chunks added ---")
             print(f"--- chapter {chapter} - chunks added ---")
+    remove(file_name)

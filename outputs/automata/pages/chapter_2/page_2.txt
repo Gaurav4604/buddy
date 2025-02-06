@@ -1,0 +1,147 @@
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_0.jpg
+        </path>
+        <description>
+        <p>The image displays a series of four diagrams, each representing different states and transitions in an automaton. The top diagram shows state q0 with two outgoing edges labeled + and - leading to states q1 and q2 respectively.</p><p>Below that is another similar setup but the edge from q0 leads directly to q3 without any intermediate steps or labels.</p><p>The third diagram illustrates a more complex transition where there are multiple paths: one direct path (q0 -> q1), an epsilon transition leading back to q2, and then finally reaching q3. The last diagram is similar but with the addition of another loop from q2 back to itself before transitioning again.</p><p>All diagrams have arrows indicating transitions between states, some labeled 'W' which could represent a weight or probability in this context.</p>
+        </description>
+        </image>
+        
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_1.jpg
+        </path>
+        <description>
+        A diagram showing a finite state machine with three states: q0, q1, and q2. The transitions between these states are represented by arrows labeled 'e' or 'ε', indicating different conditions for transition.
+        </description>
+        </image>
+        
+
+            <text>
+            # After initialisation (by the "lightmin strike"), the machine enters the state-set {q_0}. We can represent this with a dot on the diagram, like this:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_3.jpg
+        </path>
+        <description>
+        A diagram showing a finite state machine with states q0, q1, q2, and q3. The transitions between these states are represented by arrows labeled with different symbols such as +, -, ε (epsilon), 0..9, and q1. There is also an arrow pointing from the initial state q0 to itself.
+        </description>
+        </image>
+        
+
+            <text>
+            After processing the symbol +, the machine changes to the state-set {q1}, and the diagram looks like this:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_5.jpg
+        </path>
+        <description>
+        A diagram showing a finite state machine with three states: q0, q1, and q3. The transitions between these states are represented by arrows labeled 'e' or '+'/'-'. There is also an arrow from q2 to q3 that has the label 0..9.
+        </description>
+        </image>
+        
+
+            <text>
+            After processing the symbol 1, the machine changes to state-set {q2}, and the diagram changes to this:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_7.jpg
+        </path>
+        <description>
+        A diagram showing a finite state machine with states q0, q1, q2, and q3. The transitions between these states are represented by arrows labeled with probabilities or ε (epsilon). There is also an arrow from q0 to itself labeled + representing the initial transition.
+        </description>
+        </image>
+        
+
+            <text>
+            After processing the symbol 4, the machine remains in state-set {q2}, and the machine looks like this:
+            </text>
+            
+
+            <text>
+            If we ask “was this string recognised?”, it seems that the answer is “no”, because state q2 is not an accepting state. However, there is a -transition from q2 to q3, so the machine could just transition to state q3. Therefore we see that the machine has (correctly) recognised +14 as a valid string.
+            </text>
+            
+
+            <text>
+            Now consider how it processes the string "65".
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_11.jpg
+        </path>
+        <description>
+        A diagram showing a finite state machine with four states: q0, q1, q2, and q3. The transitions between these states are represented by arrows labeled with probabilities or symbols such as epsilon (ε) for an empty transition.
+        </description>
+        </image>
+        
+
+            <text>
+            # Once again, after initialisation, the machine begins in the state-set {q_0}, like this:
+            </text>
+            
+
+            <text>
+            The machine now receives the symbol 6. Since there is no transition to handle this symbol from state q_0, a normal NFA would "die" at this point.
+
+
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_14.jpg
+        </path>
+        <description>
+        A diagram showing two different states and transitions between them in a finite automaton. The top part shows state q0 transitioning to q1 with an epsilon transition, then from q1 to q2 with probability 0.9, finally reaching q3 with another epsilon transition. The bottom part is similar but the transitions are labeled differently: q0 to q1 has an epsilon transition, and both transitions from q1 to q2 have a label of 'e'. There's also a separate state q2 leading directly to q3.
+        </description>
+        </image>
+        
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_15.jpg
+        </path>
+        <description>
+        A diagram showing a finite state machine with states q0, q1, q2, and q3. The transitions between these states are represented by arrows labeled with different symbols such as epsilon (ε), plus (+) or minus (-). There is also an arrow from the initial state q0 to itself marked with 'W' indicating some kind of action or event.
+        </description>
+        </image>
+        
+
+            <text>
+            However, we have an epsilon-transition that we can take from state $q_0$ to $q_1$. After doing so, we arrive in state $q_1$.
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_1_17.jpg
+        </path>
+        <description>
+        A diagram showing a finite state machine with three states: q0, q1, and q3. The transitions between these states are represented by arrows labeled 'ε' or '+'. There is also an arrow from q2 to q3 that has the label 0..9.
+        </description>
+        </image>
+        
+
+            <text>
+            Now we are able to process the symbol 6, which takes us to state $q_{2}$, like this:
+            </text>
+            
+
+            <text>
+            ter taking an $\epsilon$-transition, the rules require that the machine must process the symbol
+            </text>
+            

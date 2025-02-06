@@ -247,16 +247,18 @@ async def extract_formula(image: str) -> str:
     output_ocr = pytesseract.image_to_string(img)
     output_1 = batch_inference([img], latex_model, latex_processor)
 
+    formula_output = LatexNodes2Text().latex_to_text(output_1[0])
+
     res = await client.chat(
         model="marco-o1",
         messages=[
             {
                 "role": "user",
-                "content": template_formula.format(output_ocr, output_1),
+                "content": template_formula.format(output_ocr, formula_output),
             }
         ],
         format=Formula.model_json_schema(),
-        options={"temperature": 0, "num_ctx": 4096},
+        options={"temperature": 0, "num_ctx": 8192},
         keep_alive=0,
     )
 
@@ -329,13 +331,9 @@ async def extract_text(image: str) -> str:
         res["message"]["content"]
     ).invalid_latex
 
-    print(latex_extract.strip())
-    print(invalid_latex)
-
     if invalid_latex:
         tesseract_text = pytesseract.image_to_string(image)
         ctx_size = (8192 * 2) if len(tesseract_text) > 800 else 8192
-        print(tesseract_text)
         messages.append(res.message)
         messages.append(
             {"role": "user", "content": template_ocr.format(tesseract_text)}
@@ -399,7 +397,9 @@ class DetectionInfo:
         return cx + w / 2.0
 
 
-async def build_content(idx, det, chapter_num, page_num, subject, content="") -> str:
+async def build_content(
+    idx, det, chapter_num, page_num, subject, content="", manual_terminate: str = ""
+) -> str:
 
     if det.class_id == 3:  # image data
         description = await extract_image(det.file_location)
@@ -459,6 +459,12 @@ async def build_content(idx, det, chapter_num, page_num, subject, content="") ->
     elif det.class_id == 0:
         # title text
         extracted_text = await extract_text(det.file_location)
+        # if manual termination text found in doc
+        if (
+            len(manual_terminate) > 0
+            and manual_terminate.lower() in extracted_text.lower()
+        ):
+            return [content, True]
         content += (
             f"""
             <title>
@@ -478,4 +484,4 @@ async def build_content(idx, det, chapter_num, page_num, subject, content="") ->
             """
             + "\n"
         )
-    return content
+    return [content, False]

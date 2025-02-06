@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   buddy:
     build:
@@ -10,18 +12,13 @@ services:
       - ./generated:/app/generated
     depends_on:
       - ollama
+      - postgres
     environment:
       - OLLAMA_URL=http://ollama:11434
       - TOKENIZERS_PARALLELISM=false
     networks:
       - buddy_ollama_network
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+      - postgres_network
 
   ollama:
     build:
@@ -31,14 +28,26 @@ services:
       - "11434:11434"
     networks:
       - buddy_ollama_network
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: ${user}
+      POSTGRES_PASSWORD: ${password}
+      POSTGRES_DB: ${database}
+    ports:
+      - "${port}:${port}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - postgres_network
 
 networks:
   buddy_ollama_network:
     driver: bridge
+  postgres_network:
+    driver: bridge
+
+volumes:
+  pgdata:

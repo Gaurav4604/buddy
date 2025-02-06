@@ -1,0 +1,107 @@
+
+            <text>
+            6 by taking a normal transition. (If there had been a chain of epsilon transitions, the machine could take as many of them as it wanted. However, at the end it must process the 6.)
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_2_1.jpg
+        </path>
+        <description>
+        A diagram showing a state transition in an automaton with states q0, q1, q2 and q3. The arrows represent transitions between these states, where epsilon (ε) represents self-loops or empty input symbols leading to different states.
+        </description>
+        </image>
+        
+
+            <text>
+            After processing the symbol 5, the machine remains in state-set {q2}, and the machine looks like this:
+            </text>
+            
+
+            <text>
+            Once again, because there is an epsilon-transition from q2 to q3, the machine has correctly recognised 65 as a valid string.
+            </text>
+            
+
+            <title>
+            # 3.2   Formal definitions of an ϵ-NFA
+            </title>
+            
+
+            <title>
+            # 3.2.1  5-tuple definition of an ϵ-NFA.
+
+            </title>
+            
+
+            <text>
+            # An ϵ-NFA, E, can be defined by the tuple:
+
+. 
+            </text>
+            
+
+            <formula>
+            
+    E=(Q,Σ,δ,Q_0,F)
+
+            </formula>
+            
+
+            <text>
+            The meanings of Q, Σ, Q_0, and F are the same as for an NFA, but the definition of δ, is altered slightly: it accepts a state in Q, and _either_ an input symbol s (s∈Σ) _or_ϵ, and returns a set of states. We can express this formally:
+            </text>
+            
+
+            <formula>
+            δ: Q ×(∑{ϵ}) →{Q}
+            </formula>
+            
+
+            <text>
+            where {Q} is a set of sets of states, i.e. the _set of all subsets_ of Q. For example, for the intRecog ϵ-NFA described earlier, we have:
+            </text>
+            
+
+            <formula>
+            
+    Q = {q_0, q_1, q_2, q_3} y = {+, -, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9} Q_0 = {a} F = {q_s}
+
+            </formula>
+            
+
+            <title>
+            # 3.2.2 Transition-table definition of an ϵ-NFA.
+
+            </title>
+            
+
+            <text>
+            The transition table for an ε-NFA is almost identical to that for an NFA, except there is an extra column to specify the effect of the ε-transitions.
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['δ', '|', 'ε', '+,-,', '0,1,...,9']
+</headers>
+<rows>
+        <row>['→ q₀', '|', '{q₁}', '|', '|', '|', '']</row>
+</rows>
+        
+                </table>
+                
+
+            <title>
+            3.3 The epsilon-closure
+            </title>
+            
+
+            <text>
+            To define the language of an ϵ-NFA, we need to understand a new concept, called the _epsilon-closure_, that is a property of each state. The epsilon-closure of a state q is a set of states. The set includes the state q itself, and all states that can be reached from q, by following _only_ϵ-transitions.
+
+
+            </text>
+            

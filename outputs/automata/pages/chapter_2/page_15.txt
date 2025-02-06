@@ -1,0 +1,84 @@
+
+            <text>
+            Let us consider state q_0 first, with the input symbol +. With greedy evaluation, we the order of evaluation is the reverse of lazy evaluation: δ_N(q,s)=_ECLOSE(δ_E(q,s)) so:_
+            </text>
+            
+
+            <formula>
+            δ_N(q_0,+) = ECLOSE(δ_E(q_0,+)) = ECLOSE({q_1}) = eclose(q_1) = {q_1}
+            </formula>
+            
+
+            <text>
+            δ_N(q_0,+)={q_1}. It is easy to see that the case for - is the same: δ_N(q_0,-)={q_1}.
+
+
+            </text>
+            
+
+            <text>
+            Now consider the digits (0...9) case, we find: \text{0	ext{ to }\text{9}}
+            </text>
+            
+
+            <formula>
+            δ_N(q_0,0) = ECLOSE(δ_E(q_0,0)) 
+ ECLOSE(∅) = ∅
+            </formula>
+            
+
+            <text>
+            # Similar reasoning applies to the other digits. We see δ_N(q_0,0…9)={q_2}.
+
+
+            </text>
+            
+
+            <text>
+            # Thus the first row of the NFA transition table looks like this:
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <formula>
+            ∫_Recog^δ_N+,-/0,1,…,9/q_0{q_1}
+            </formula>
+            
+
+            <text>
+            # We now repeat this process for state q_1, with +/- symbols:
+            </text>
+            
+
+            <formula>
+            δ_N(q_1+) = ECLOSE(δ_E(q_1+));   δ_N(q_1+) = ECLOSE(∅);   δ_N(q_1+) = ∅
+            </formula>
+            
+
+            <text>
+            And for 0...9:
+            </text>
+            
+
+            <formula>
+            6n(u,0) = ECLOSE(S_z(u,φ)) = ECLOSE(4q) = eclose(q^2) = {92, 93}
+            </formula>
+            
+
+            <text>
+            Repeating this for state $q_2$, with $+/-$ symbols:
+            </text>
+            
+
+            <formula>
+            δ_N(q_2,+) = ECLOSE(δ_E(q_2,+)) 
+ ECLOSE(∅) = ∅
+            </formula>
+            

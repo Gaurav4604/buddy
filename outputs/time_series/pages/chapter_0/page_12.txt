@@ -1,0 +1,73 @@
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_11_0.jpg
+        </path>
+        <description>
+        Dataset Size Study
+        </description>
+        </image>
+        
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_11_1.jpg
+        </path>
+        <description>
+        Dataset Ablation Across Codebook Size K
+        </description>
+        </image>
+        
+
+            <caption>
+            
+# Figure 9: Codebook Size Ablation. As the codebook size K increases, the reconstruction loss of the VQVAE decreases on a variety of datasets.
+
+            </caption>
+            
+
+            <caption>
+            
+
+**Figure 10: Dataset Size Study.** As expected, the generalist has the highest zero-shot performance at 85.0
+
+
+            </caption>
+            
+
+            <text>
+            series can have a single unified representation across multiple domains, akin to BPE in language modeling. We note that this same trend holds for the specialist models as well.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Dataset Size Study.** One natural question is whether TOTEM's strong generalization performance is driven by the size of the dataset or the diversity of the training samples. We study this in a minimal setting by comparing the TOTEM generalist model against two TOTEM specialists trained on the two largest non-specific datasets: traffic (10-2M examples) and electricity (5.8M examples). As expected, the results for fitting below, the TOTEM potential significantly outperforms the two specialists in the zero-shot training. However, the TOTEM algorithm can be used to compute the TOTEM algorithm with the same probability or more data is was about half the size. This provides some preliminary evidence that simply training on _more_ data is insufficient for achieving generalization - the types of data are also crucial. For related exploratory studies on generalist models, see Appendix [2, 7].
+
+
+            </text>
+            
+
+            <title>
+            
+    7 Conclusion
+
+            </title>
+            
+
+            <text>
+            We present TOTEM: a simple, performant tokenizer that is designed to learn domain-agnostic discrete representations for time series data, using the way for time series formulation models: TOTEM demonstrates strong in-domain and zero-shot capabilities versus a large array of both general and special baselines across dozens of domains and datasets over hundreds of seeded experiments. Overall, TOTEM unless domain generalization while performing at or above existing SOTA levels, demonstrating the potential of adopting training and modeling techniques from language and vision modeling for time series modeling.
+
+
+            </text>
+            
+
+            <text>
+            There are many exciting directions for future work. First, our proposed architectureld design decisions were very simple, which suggests that there are many possible performant extensions. Further, while we have collected millions of existing time series, TOTEM's promising initial results suggest that scaling up the generalist running dataset size by an order of magnitude or more could unlock true domain- and task-agnostic generalizableity. Such followup works could allow a more systematic study of the relationships between generalist data representations, token length, data size, and domain diversity.
+
+
+            </text>
+            

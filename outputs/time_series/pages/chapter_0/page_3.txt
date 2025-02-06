@@ -1,0 +1,76 @@
+
+            <title>
+            
+    2. Related Work
+
+            </title>
+            
+
+            <text>
+            We categorize related works in three ways: whether they (i) study specialists or generalists, (ii) use patched or discrete data representations, and (iii) train and evaluate models for multiple distinct time series tasks. Unlike TOTEM, no prior works study the use of discrete data representations for training generalists across multiple tasks (see Table[i]for a comparison).
+
+
+            </text>
+            
+
+            <text>
+            
+Specialist vs.Generalist Training.
+Historically, the specialist (i.e., single-domain) training paradigm is most common amongst time series models (Zhou et al | 02023 | Wu et al | 02022 | Kive et al | 02022 | Zhanz     Yan | 02022). These special models are primarily evaluated via in-domain testing, where the test set is a held-out set from the same training domain. Some recurrent and subsequent works have been exploring constraints from the corresponding technique for the model. In addition to the measurement model (Ground et al | 02024), we compare to the coherent MOMENT model (Ground et al | 02024) in limited cumulants (see Table [3]and[20] as it also studies multiple tasks, and find that TOTEM generally outperforms it.
+
+            </text>
+            
+
+            <text>
+            Patched vs. Discrete Data Representations. In order to pass time series data to a downstream model, it is necessary to choose some latent data representation. As in “os 05) hong et al. ot , the prevailing strategy is to patch time series data, either temporally (Liu et al. Zhang & Yan	ext{2} 1. (2022)
+
+or spatially [Li et al.	ext{ | } (2019); [Zhou et al., (2021); {Wu et al. Wu et al.) (2021), yea + linearly project ma patches to some 
+latent embedding on which a model like a transformer or MLP can operate. We emphasize that patched representations are dynamic in the sense that the embedding associated with the patch is determined entirely
+by the layers in the downstream model which project the patches to the embedding space. Therefore, patched representations are trained end to end.
+            </text>
+            
+
+            <text>
+            Patching is fundamentally at odds with tokenization, wherein a fixed “vocabulary” of embeddings is determined before training the downstream model, which then operates on the fixed, tokenized representations.
+
+Modeling (Coad aia or A Sa 7] BOIS oe Van Den Oond at al for Tet alt BOTT? 5017 [Eso otal in fields aS sanenage and vision
+2021} |Rombach et al.
+
+2022). oe (Case prior eat in time series Se has explored cee or Esser ot a using eon (Rabanser|
+.| (2020b]al 2007) or quantization (Baevski et al.| {2020} [Van Den Oord et al.| 2017}
+) in domain- or task-specific ways. Inspired by the success of vector quantized variational autoencoders
+2016 -
+(VQVAEs) in both audio and vision (Van Den Oord et al.||2017} 2021; |Rombach et al.}|2022), we
+build on these works by showing that the VQVAE is also effective for learning discrete representations for
+general time series modeling.
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Prior', 'Generalist Training|Discrete Tokenization|Multiple Tasks']
+</headers>
+<rows>
+        <row>['GPT2', 'Zhou et al. [2023] x | Wu et al. 2022 ] X | Baevski et al ., 2020 ) X | Lin et al., 2007) X', 'Generalist Training|Discrete Tokenization|Multiple Tasks']</row>
+	<row>['TiNet', 'Wu et al. [2022] x | W2V2.0 (Baevski et al ., 2020 ) X | Lin et al., 2007) X', 'Generalist Training|Discrete Tokenization|Multiple Tasks']</row>
+	<row>['S/X', 'Wu et al. [2022] x | Baevski et al ., 2020 ) √ | Lin et al., 2007) X', 'Generalist Training|Discrete Tokenization|Multiple Tasks']</row>
+	<row>['TimesFM', 'Das et al. (2023b) √ | Ansari et al ., 2024 ] x', 'Generalist Training|Discrete Tokenization|Multiple Tasks']</row>
+	<row>['Chronos', 'Ansari et al ., 2024 ) X | MOMENT Goswami et al., 2024 ) X', 'Generalist Training|Discrete Tokenization|Multiple Tasks']</row>
+	<row>['MOMENT', 'Goswami et al. [2024) √ | TOTEM (Ours) ] x', 'Generalist Training|Discrete Tokenization|Multiple Tasks']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            Table 1: **Related Work Overview.** TOTEM is designed for generalist training using discrete tokenization for any task. No prior and concurrent/subsequent (C/S) works study all three at once.
+
+
+            </text>
+            
+
+            <text>
+            Time Series Tasks. Prior works on time series modeling study a variety of tasks, like forecasting, anomaly detection, imputation, and classification. Many prior and concurrent works focus on a single task Ds a] BIE), with few Elon multiple specialist trained models on many tasks (Zhou et al., 2022). TOTEM is most closely related to concurrent works like MOMENT (Goswami et al., |2024), which are focused on generalist models which are effective on any one of the above tasks. For detail on each task, see Sections [3] and [4]
+            </text>
+            

@@ -1,0 +1,47 @@
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_1_0.jpg
+        </path>
+        <description>
+        Figure 1: TOTEM Overview, Training Paradigms, Inference Paradigms & Tasks. (a) TOTEM's VQVAE enables generalist training, i.e., on many different tasks in a single model with few labeled data samples and zero-shot inference for unseen classes or domains. The figure illustrates the key components of TOTEM: 1D CNNs as generic feature extractors, specialized networks to learn domain-specific features, quantization-aware codebooks (QCCBs) that capture both intra-class variability and inter-class differences in a single embedding space, and a tokenized decoder network for efficient inference. The figure also shows the different training paradigms supported by TOTEM: generalist learning on multiple tasks with few labeled data samples, specialized learning to adapt to new domains or classes, zero-shot inference using QCCBs as codebooks, and in-domain domain adaptation (IDA) where a model is fine-tuned for a specific task within the same domain. The figure highlights the flexibility of TOTEM in handling different types of tasks and scenarios.
+        </description>
+        </image>
+        
+
+            <text>
+            Figure 1: TOTEM Overview, (b) Inference Paradigms
+Training Paradigms, Inference] 7 Y
+aE cua
+Paradigms & Tasks. (a) ap
+TOTEM's VQVAE enables generalist training, i.e. on many data domains jointly, and specialist training, i.e. on one data domain at a time. The TOTEM VQVAE architecture consists of a 1D strided CNN encoder E, quantizer, latent codebook, and 1D strided transpose CNN decoder D (b) TOTEM's discrete, self-supervised codebook is frozen then leveraged for both in domain and zero shot testing across many tasks.
+—-> impute
+—+» detect anomaly
+Zero Shot In Domain ny (a
+            </text>
+            
+
+            <text>
+            same dataset (Liu et al.||2023). However, we emphasize that both of the preceding examples are specialists, as they were trained on only one (or a subset of one) dataset. In contrast, our goal in this paper is instead the design of generalist models, which we evaluate in both the in-domain and zero-shot testing regimes.
+            </text>
+            
+
+            <text>
+            Not only are most modern time series models specialists, they typically operate over patches. Wa et al. (2022) [Ciu et al. (2023)] [Zhang & Yan (2022)] [Nie et al. (2019)] Zhou et al. Wu et al. (2021) and are trained for only a single task (Das et al.) Our core hypothesis is that many of the design decisions in prior works hinder the development of generalist models, and that by adopting practices more commonly used in language (Gagel (1994)) and vision modeling Rombach et al. (2022) we can boost the generalization performance of resulting time series models. While there exist works that train in an unsupervised manner Rabanser et al., few works have explored the combination of generalist models and discrete representations over many tasks in a systematic manner (i.e., in both the in-domain and zero-shot testing regimes). Thus, the contributions of our work are twofold. Zhou et al.
+            </text>
+            
+
+            <text>
+            
+**TOTEM.** We develop **Tokenized Time Series Embedding** (TOTEM), a simple *tokenization method* for time series data that employs a self-supervised pretraining stage to learn a fixed number of discrete tokens over a multi-domain corpus (SectionB.2). Surprisingly, we demonstrate that TOTEM is effective for solving a variety of downstream tasks in a domain-agnostic manner even though the tokens only encode the shape of univariate waveforms. This allows TOTEM to generically tokenize multivariate data of differing size by simply stacking collections of multivariate tokens. 
+            </text>
+            
+
+            <text>
+            
+
+**Comprehensive Experiments.** We test our hypothesis extensively on three distinct tasks, each with their own datasets and baselines, information (11 batches and 12 datasets), anomaly detection (19 batches and 25 datasets), and forecasting (14 batches and 12 datasets). We find that in the special setting, TOTEM matches or outperforms the performance of most state-of-the-art (SOTAI) task-specific models, despite minimal or no task-specific design. Similarly, TOTEM also matches or outperforms SOTAR general models. We conduct thorough ablations showing that discrete tokens outperform patches and that generalising improves model performance independent of TOTEM's modeling choice. Our experiments are some of the most extensive in the literature, comprising hundreds of seeded runs (see Sections [3] and [4]).
+
+
+            </text>
+            

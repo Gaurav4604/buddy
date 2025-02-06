@@ -16,6 +16,7 @@ async def extraction_pipeline(
     page_num: int,
     document_structure: str,
     subject: str,
+    manual_terminate: str,
 ):
     if document_structure == "research":
         [original_img, final_boxes] = research_structure_pipeline(input_img=input_img)
@@ -62,35 +63,60 @@ async def extraction_pipeline(
         )
     # # 6) Build textual content for this page
     content = ""
+    terminate_loop = False
     for idx, det in enumerate(all_detections):
-        # {0: 'title', 1: 'plain text', 2: 'abandon', 3: 'figure', 4: 'figure_caption', 5: 'table', 6: 'table_caption', 7: 'table_footnote', 8: 'isolate_formula', 9: 'formula_caption'}
-        max_retries = 3
-        execution_timeout = 60 if not (det.class_id == 8 or det.class_id == 5) else 150
-        for attempt in range(1, max_retries + 1):
-            # Recreate the task each time we retry
-            task = asyncio.create_task(
-                build_content(idx, det, chapter_num, page_num, subject, content)
+        if not terminate_loop:
+            # {0: 'title', 1: 'plain text', 2: 'abandon', 3: 'figure', 4: 'figure_caption', 5: 'table', 6: 'table_caption', 7: 'table_footnote', 8: 'isolate_formula', 9: 'formula_caption'}
+            max_retries = 3
+            execution_timeout = (
+                60 if not (det.class_id == 8 or det.class_id == 5) else 150
             )
-
-            try:
-                content = await asyncio.wait_for(task, timeout=execution_timeout)
-                # If we get here, it succeeded within 45s — break out of the loop
-                break
-
-            except asyncio.TimeoutError:
-                # Cancel the timed-out task
-                task.cancel()
-
-                if attempt < max_retries:
-                    execution_timeout += 15
-                    print(f"Attempt {attempt} timed out. Retrying...")
-                else:
-                    print(
-                        f"Attempt {attempt} timed out. Maximum retries reached; giving up."
+            for attempt in range(1, max_retries + 1):
+                # Recreate the task each time we retry
+                task = asyncio.create_task(
+                    build_content(
+                        idx,
+                        det,
+                        chapter_num,
+                        page_num,
+                        subject,
+                        content,
+                        manual_terminate,
                     )
-                    # No more retries; you can handle it (e.g. return, raise, etc.)
-                    # break or raise an exception, depending on your needs
-                    exit()
+                )
+
+                try:
+                    if attempt > 1 and (det.class_id == 8 or det.class_id == 5):
+                        det.class_id = 3  # force detection to fall back as image, for easier detection
+                        task = asyncio.create_task(
+                            build_content(
+                                idx,
+                                det,
+                                chapter_num,
+                                page_num,
+                                subject,
+                                content,
+                                manual_terminate,
+                            )
+                        )
+                    [content, manually_terminated] = await asyncio.wait_for(
+                        task, timeout=execution_timeout
+                    )
+                    terminate_loop = manually_terminated
+                    break
+
+                except asyncio.TimeoutError:
+                    # Cancel the timed-out task
+                    task.cancel()
+
+                    if attempt < max_retries:
+                        execution_timeout += 15
+                        print(f"Attempt {attempt} timed out. Retrying...")
+                    else:
+                        print(
+                            f"Attempt {attempt} timed out. Maximum retries reached; giving up."
+                        )
+                        break
 
     # 7) Write the page's content to disk
     with open(
@@ -102,7 +128,7 @@ async def extraction_pipeline(
 
     # # Clean up /temp
     shutil.rmtree("temp")
-    return content
+    return [content, terminate_loop]
 
 
 async def async_extraction_pipeline_from_pdf(
@@ -111,6 +137,7 @@ async def async_extraction_pipeline_from_pdf(
     chapter_num: int = 0,
     document_structure: str = "top_down",
     start_page: int = 0,
+    manual_terminate: str = "",
 ) -> str:
     """
     Async version of 'extraction_pipeline_from_pdf' that converts pages to images,
@@ -119,6 +146,8 @@ async def async_extraction_pipeline_from_pdf(
     """
     # Convert only the pages from start_page onward
     pages = convert_from_path(pdf_path, dpi=300, first_page=(start_page + 1))
+
+    pages_consumed = 0
 
     os.makedirs("pages", exist_ok=True)
     all_pages_content = []
@@ -132,20 +161,28 @@ async def async_extraction_pipeline_from_pdf(
         page_filename = f"pages/page_{real_page_index}.png"
         page.save(page_filename, "PNG")
 
-        page_content = await extraction_pipeline(
+        [page_content, manually_terminated] = await extraction_pipeline(
             page_filename,
             chapter_num,
             subject=subject,
             page_num=real_page_index,
             document_structure=document_structure,
+            manual_terminate=manual_terminate,
         )
         # Accumulate your results if needed
         all_pages_content.append(f"--- Page {real_page_index + 1} ---\n{page_content}")
 
         end_time = time.time()
         print(f"time taken for extraction --- {end_time - start_time} s---")
+        pages_consumed += 1
+        if manually_terminated:
+            break
 
-    page_count_save(subject, chapter_num, len(pages))
+    if len(manual_terminate) > 0:
+        page_count_save(subject, chapter_num, pages_consumed)
+    else:
+        page_count_save(subject, chapter_num, len(pages))
+
     shutil.rmtree("pages")
     return "\n".join(all_pages_content)
 
@@ -170,20 +207,3 @@ def page_count_save(subject: str, chapter_num: int = 0, page_count: int = 0):
         json.dump(data, file, indent=4)
 
     print(f"Saved chapter {chapter_num} with page count {page_count} to {file_name}.")
-
-
-async def main():
-    start_time = time.time()
-
-    cpt_1 = await async_extraction_pipeline_from_pdf(
-        "files/automata_cpt_1.pdf", subject="automata", chapter_num=0
-    )
-    cpt_2 = await async_extraction_pipeline_from_pdf(
-        "files/automata_cpt_2.pdf", subject="automata", chapter_num=1
-    )
-    end_time = time.time()
-    print(f"time taken for total extraction --- {end_time - start_time} s---")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

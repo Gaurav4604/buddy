@@ -13,7 +13,11 @@ from RAG.pipeline import (
 
 
 async def read_pipeline(
-    topic: str, file_path: str, chapter_num: int, doc_structure: str
+    topic: str,
+    file_path: str,
+    chapter_num: int,
+    doc_structure: str,
+    manual_terminate: str,
 ):
     from extraction.pipeline import async_extraction_pipeline_from_pdf
 
@@ -26,6 +30,7 @@ async def read_pipeline(
         subject=topic,
         chapter_num=chapter_num,
         document_structure=doc_structure,
+        manual_terminate=manual_terminate,
     )
     end_time = time.time()
     print(f"time taken for document extraction --- {end_time - start_time} s---")
@@ -94,11 +99,19 @@ def main():
     read_parser.add_argument(
         "--chapter_num", type=int, required=True, help="Chapter number"
     )
-    generate_parser.add_argument(
+    read_parser.add_argument(
         "--structure",
         dest="doc_structure",
         required=False,
         help="Document Structure `research/default`",
+    )
+
+    read_parser.add_argument(
+        "--manual_terminate",
+        dest="manual_terminate",
+        required=False,
+        default="",
+        help="A title, on which the document extraction should close gracefully",
     )
 
     # "generate" subcommand
@@ -154,7 +167,11 @@ def main():
     if args.command == "read":
         asyncio.run(
             read_pipeline(
-                args.topic, args.file_path, args.chapter_num, args.doc_structure
+                args.topic,
+                args.file_path,
+                args.chapter_num,
+                args.doc_structure,
+                args.manual_terminate,
             )
         )
     elif args.command == "generate":

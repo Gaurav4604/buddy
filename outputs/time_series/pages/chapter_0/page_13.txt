@@ -1,0 +1,43 @@
+
+            <title>
+            
+    8  Broader Impact Statement
+
+            </title>
+            
+
+            <text>
+            There are no immediate ethical concerns that arise from our work. However, as with all data driven methods, certain societal consequences are important to be discussed, in this case surrounding time series modeling. A few are reported below:
+            </text>
+            
+
+            <text>
+            
+Privacy Concorem. Time series data, especially when sourced from personal devices or applications, can contain sensitive information about individuals, e.g. for health domains. In this work, no time series were sourced from personal devices. 
+            </text>
+            
+
+            <text>
+            Misuse. Time series forecast models can be misused. For instance, if a model forecasts stock prices or market movements, it could be exploited for insider trading or other illegal financial activities. In this work, we are focused on domains pertinent to scientific disciplines.
+            </text>
+            
+
+            <text>
+            
+**Economic Impacts.** Automated forecasts and decisions based on time series models can significantly impact industries and labor markets both positively and negatively. For instance, if a model can accurately predict weather patterns, it might affect farmers and their crop decisions, or if it can forecast energy consumption, it could impact the energy sector.
+
+
+            </text>
+            
+
+            <title>
+            9 Acknowledgments
+            </title>
+            
+
+            <text>
+            We thank Albert Hao Li for helpful discussions and edits, Addison Hu for insights into statistical modeling, and Angela Gao and Jack Wilding for discussions surrounding applications to earthquake data.
+
+
+            </text>
+            

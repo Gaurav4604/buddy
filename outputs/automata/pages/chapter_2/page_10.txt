@@ -1,0 +1,111 @@
+
+            <title>
+            
+# 3.8   Example2: Convert an ϵ-NFA to an NFA.
+
+            </title>
+            
+
+            <text>
+            Here is the diagram of an ϵ-NFA with a lot more ϵ-transitions. 
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_9_2.jpg
+        </path>
+        <description>
+        A diagram showing a state transition process in an automaton with states q0, q1, q2, q3 and q4. The arrows represent transitions between these states based on input symbols 'a', 'b' or ε (epsilon). State q0 is the initial state, while state q4 represents the final accepting state.
+        </description>
+        </image>
+        
+
+                <table>
+                
+<headers>
+    ['δE', 'a', 'b', 'ε']
+</headers>
+<rows>
+        <row>['→ q0', '{q1}', '∅', '∅']</row>
+	<row>['q1', '{q3}', '∅', '']</row>
+	<row>['→ q2', '{q0}', '{q3}', '']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            # The transition table representation of this ϵ-NFA is:
+
+. 
+            </text>
+            
+
+            <text>
+            # We will now convert this ϵ-NFA to a NFA.
+
+            </text>
+            
+
+            <title>
+            # 3.8.1 Compute ϵ-closures
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+                <table>
+                
+<headers>
+    ['state', 'ε-closure']
+</headers>
+<rows>
+        <row>['q0', '{q0}']</row>
+	<row>['q1', '{q1, q2, q4}']</row>
+	<row>['q2', '{q2, q4}']</row>
+	<row>['q3', '{q3, q4}']</row>
+	<row>['q4', '{q4}']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            # We begin by computing the ϵ-closure, eclose, of each state, since we will need this information several times:
+            </text>
+            
+
+            <title>
+            # 3.8.2   Compute the starting state-set.
+
+
+            </title>
+            
+
+            <text>
+            # The start-states of the NFA will be the epsilon-closure of the start-states of the ϵ-NFA:
+            </text>
+            
+
+            <formula>
+            Q_0N = E C L O S E(Q_0E) 
+ = E C L O S E({q_0, q_2}) 
+ = e c l o s e(q_0) ∪ e c l o s e(q_2) 
+ = {q_0}∪{q_2}
+ = {q_0, q_2}
+            </formula>
+            
+
+            <text>
+            so the NFA will begin in the state-set {q_0,q_2}.
+
+
+            </text>
+            

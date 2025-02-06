@@ -1,0 +1,211 @@
+
+            <title>
+            
+    4.2  Anomaly Detection
+
+            </title>
+            
+
+            <text>
+            
+
+**Baselines.** In the main text, we compare TOTEM against 16 baselines, and in the Appendix A,B and additional 3 for a *total of 19 baselines* (see Table [13]). See Table [24] for a summary.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Datasets.** For the in-domain testing regime, we test on 5 datasets, and for the zero-shot regime, we test on another 5. For additional signal, we also test on 15 distinct anomaly detection datasets from[10]. The  in Appendix [11] (see Table [12]). _In total, we evaluate an 25 datasets._ See Table [13] for a summary.
+
+**Metrics.** We report the precision (P), recall (MSE), and adjusted F1 score.
+
+
+            </text>
+            
+
+            <text>
+            
+    𝐀.  Anomaly Detection Baselines
+
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Type', 'Model', 'Abbr.', 'Arch. | Citation']
+</headers>
+<rows>
+        <row>['Multi-task', 'GPT2 - Generalist', 'TF', 'Trained by us']</row>
+	<row>['Multi-task', 'GPT2 - Specialist', 'TF', 'Zhou et al. [2023]']</row>
+	<row>['Multi-task', 'GPT2 - TF', 'Conv', 'Wu et al. [2022]']</row>
+	<row>['Single-task', 'Anomaly Trans.', 'ATran', 'TF', 'Xu et al. [2021]']</row>
+	<row>['Single-task', 'PatchTST', 'TF', 'Nie et al. [2022]']</row>
+	<row>['Single-task', 'ETSFormer', 'ETS', 'TF', 'Woo et al. [2022]']</row>
+	<row>['Single-task', 'Fedformer', 'FED', 'TF', 'Zhou et al. [2022]']</row>
+	<row>['Single-task', 'Non-stationary Trans.', 'Stat', 'TF', 'Liu et al. [2022b]']</row>
+	<row>['Multi-task', 'Autoformer', 'Auto', 'TF', 'Wu et al. [2021]']</row>
+	<row>['Multi-task', 'Pyraformer', 'Pyra', 'TF', 'Liu et al. [2021]']</row>
+	<row>['Single-task', 'Informer', 'Inf', 'TF', 'Zhou et al. [2021]']</row>
+	<row>['Single-task', 'Reformer', 'Re', 'TF', 'Kitaev et al. [2020]']</row>
+	<row>['Multi-task', 'LogTrans', 'LogTr', 'TF', 'Li et al. [2019]']</row>
+	<row>['Single-task', 'Transformer', 'Trans', 'TF', 'Vaswani et al. [2017]']</row>
+	<row>['Single-task', 'Light TS', 'LiTS', 'Linear', 'Zhang et al. [2022]']</row>
+	<row>['Multi-task', 'Pyraformer', 'Pyra', 'TF', 'Liu et al. [2021]']</row>
+	<row>['Single-task', 'Informer', 'Inf', 'TF', 'Zhou et al. [2021]']</row>
+	<row>['Single-task', 'Reformer', 'Re', 'TF', 'Kitaev et al. [2020]']</row>
+	<row>['Multi-task', 'Transformer', 'Trans', 'TF', 'Vaswani et al. [2017]']</row>
+	<row>['Multi-task', 'Light TS', 'LiTS', 'Linear', 'Zhang et al. [2022]']</row>
+	<row>['Single-task', 'DGLH', '', 'Challu et al. [2022]']</row>
+	<row>['Appendix', 'MOMENT-0', '', 'Goswami et al. [2024]']</row>
+	<row>['Multi-task', 'MOMENT-LP', '', 'Goswami et al. [2024]']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            
+    𝐁. 𝐀anomaly Detection Datasets
+
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Regime', 'Dataset', 'Abbr. Citation']
+</headers>
+<rows>
+        <row>['SMD', '-', 'Zhou et al. [2023]']</row>
+	<row>['MSL', '-', 'Zhou et al. [2023]']</row>
+	<row>['In-Domain', 'SMAP', 'Zhou et al. [2023]']</row>
+	<row>['SWAT', 'SWAT', 'Zhou et al. [2023]']</row>
+	<row>['PSM', 'PSM', 'Zhou et al. [2023]']</row>
+	<row>['Neuro2', 'N2', 'Peterson et al. [2022]']</row>
+	<row>['Neuro5', 'N5', 'Peterson et al. [2022]']</row>
+	<row>['Zero-Shot', 'Saugeen River Flow', 'R', 'Godahewa et al. [2021]']</row>
+	<row>['U.S. Births', 'B', 'Godahewa et al. [2021]']</row>
+	<row>['Sunspot', 'S', 'Godahewa et al. [2021]']</row>
+	<row>['Appendix', '15 Wu et al. Datasets -', 'Wu & Keogh [2021]']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            
+# Table 3: Anomaly detection baselines and datasets.
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <title>
+            4.3. Forecasting
+            </title>
+            
+
+            <text>
+            
+
+**Basallines.** In the main text, we compare against 12 baselines, with an additional 2 in Appendix [A.4](see Table[B]). For the GPT2 specialist that we trained from scratch, we choose a lookback length of 96 for fair comparison with the other models in this paper. _In total, we have 14 baselines._ See Table[B] for a summary.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Datasets.** For the in-domain testing regime, we test on 7 datasets, and for the zero-shot regime, we test on an additional 5. _In total, we evaluate on 12 datasets._ See Table[3] for a summary.
+
+
+            </text>
+            
+
+            <text>
+            
+**Metrics.** We report the mean squared error (`MSE`) and mean absolute error (`MAE`) of the predicted versus the true forecast values.
+
+            </text>
+            
+
+            <text>
+            
+# A. Forecasting Baselines
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Type', 'Model', 'Abbr.', 'Arch. ', 'Citation']
+</headers>
+<rows>
+        <row>['Multi-task', 'GPT2 - Generalist', 'GPT2', 'TF', 'Trained by us']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            
+    𝐁. Forecasting Datasets
+
+            </text>
+            
+
+                <table>
+                
+<headers>
+    ['Regime', 'Dataset', 'Abbr. Citation']
+</headers>
+<rows>
+        <row>['Weather', 'W', 'Liu et al. 2023']</row>
+	<row>['Electricity', 'E', 'Liu et al. 2023']</row>
+	<row>['Traffic', 'T', 'Liu et al. 2023']</row>
+	<row>['In-Domain', 'ETTm1', 'ml1', 'Liu et al. 2023']</row>
+	<row>['ETTm2', '', 'm2', 'Liu et al. 2023']</row>
+	<row>['ETTh1', '', 'h1', 'Liu et al. 2023']</row>
+	<row>['ETTh2', '', 'h2', 'Liu et al. 2023']</row>
+	<row>['Neuro2', 'N2', 'Peterson et al. 2022', 'Peterson et al. 2022']</row>
+	<row>['Neuro5', 'N5', 'Peterson et al. 2022', 'Peterson et al. 2022']</row>
+	<row>['Zero-Shot', 'Saugeen River Flow R', 'R', 'Godahewa et al. 2021']</row>
+	<row>['U.S. Births', 'B', '', 'Godahewa et al. 2021']</row>
+	<row>['Sunspot', 'S', '', 'Godahewa et al. 2021']</row>
+</rows>
+        
+                </table>
+                
+
+            <text>
+            
+# Table 4: Forecasting baselines and datasets.
+
+
+    
+
+
+
+    
+
+            </text>
+            

@@ -1,0 +1,67 @@
+
+        <image>
+        <path>
+        outputs/time_series/images/chapter_0/page_8_0.jpg
+        </path>
+        <description>
+        A large image showing various charts and graphs related to performance metrics for different models. The chart on the left shows a comparison between two methods, Totem and GPT2, with their respective scores in terms of accuracy (Acc) and mean absolute error (MAE). Another section compares generalist zero-shot In-Domain models like TOTEM, GPT2, and an unspecified model labeled 
+        </description>
+        </image>
+        
+
+            <text>
+            
+# B. Generalist In-Domain
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <text>
+            
+# C. Generalist Zero-Shot
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <text>
+            Table 5: Imputation Summary. In all categories TOTEM has SOTA AvgWins . In the specialist TOTEM has 52.1% AvgWins ; in generalist in domain TOTEM has 58.3%; in generalist zero shot TOTEM has 80.0%.
+            </text>
+            
+
+            <text>
+            Since we only use 3 seeds, we run a non-parametric *permutation test* on the generalist models in Appendix A.6 to analyze the performance of TOTEM vs. GPT2 (Table[24]), and TOTEM vs. PatchTOTEM (Table [25]). We find that TOTEM statistically significantly (p≤0.05) outperforms GPT2 in terms of Avg2ins on all tasks for both the in-domain and zero-shot testing programs. Additionally, TOTEM outperforms PatchTOTEM in a statistically significant (p≤0.05) manner for in-domain and zero-shot testing.
+
+            </text>
+            
+
+            <title>
+            
+    5.1  Imp u t a t i o n
+
+            </title>
+            
+
+            <text>
+            In imputation, models intake a masked time series 𝐱_𝐦∈ℝ^S× T_m, and then inpute the signal 𝐱̂∈ℝ^S× T_m (see Figure [1]). We experiment with four canonical masking percentages at 12.5
+            </text>
+            
+
+            <text>
+            
+𝐒𝐩𝐞𝐜𝐢𝐚𝐥𝐢𝐬𝐭𝐬. Figure[fig](a) and Table[fig](b) compare TOTEM to specialist baselines. All models are trained and evaluated on the same dataset (in-domain). TOTEM has the highest Agy∕Hs with 52.1
+            </text>
+            

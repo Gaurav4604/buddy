@@ -1,0 +1,94 @@
+
+            <text>
+            Let us consider state q_0 first, with the input symbol +. From the rules given earlier: δ_N(q,s)=Δ_E(eclose(q),s) so:
+            </text>
+            
+
+            <formula>
+            δ_N(q_0,+) = Δ_E(e close(q_0,+)) = Δ_E({q_0,q_1},+) = δ_E(q_0,+) ∪δ_E(q_1,+) = {q_1}∪∅ = {q_1}
+            </formula>
+            
+
+            <text>
+            δ_N(q_0,+)={q_1}. It is easy to see that the case for - is the same: δ_N(q_0,-)={q_1}.
+
+
+            </text>
+            
+
+            <text>
+            Now consider the digits (0...9) case, we find: \text{0	ext{ to }\text{9}}
+            </text>
+            
+
+            <formula>
+            δ_N(q_0, 0) = Δ_E(e close(q_0, 0)) = Δ_E({q_0, q_1}, 0) = δ_E(q_0, 0) ∪δ_E(q_1, 0) = ∅∪{q_2} = {q_2}
+            </formula>
+            
+
+            <text>
+            # Similar reasoning applies to the other digits. We see δ_N(q_0,0…9)={q_2}.
+
+
+            </text>
+            
+
+            <text>
+            # Thus the first row of the NFA transition table looks like this:
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <formula>
+            
+    [          i n t R e c o g;       δ_N∥+,-   |0,1,…,9; → q_0∥{q_1}        {q_2} ]/[ → q_0∥{q_1}         {q_2} ]
+
+            </formula>
+            
+
+            <text>
+            We now repeat this process for state q. State-set {q} is simple to handle, because } = {q}. If we process a symbol from this state, we die (ie next-state set= {}), and if we process digits, the next-state set is {q2}.
+            </text>
+            
+
+            <text>
+            Similar reasoning applies to state q2, yielding this row:
+            </text>
+            
+
+            <formula>
+            
+    q_3  01
+
+            </formula>
+            
+
+            <text>
+            Finally, we process q_3, yielding this row:
+            </text>
+            
+
+            <title>
+            # 3.7.4   Compute the final-state set
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            To determine which states are final states, we must check to see if the ϵ-closureof any state of the NFA contains a final state of the original ϵ-NFA. For each state q in Q_E we evaluate the predicate: ϵ close(q)∩ F_E≠∅, which will have the value either *false* or *true*. 
+            </text>
+            

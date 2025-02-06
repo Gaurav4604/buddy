@@ -1,0 +1,71 @@
+
+            <title>
+            
+    4.4  Task Selection
+
+            </title>
+            
+
+            <text>
+            In the time series literature, there are five canonically studied tasks: imputation, anomaly detection, short- and long-term forecasting, and classification. In this work, we study imputation, anomaly detection, and long-term forecasting. We exclude short-term forecasting and classification for the following reasons.
+
+
+            </text>
+            
+
+            <text>
+            
+**Non-Standardized Baselines.** The *long-term forecasting* task uses standardized input and output lengths across all datasets (in particular an input length of 96 timesteps and output lengths of 96, 192, 366, and 720 timesteps), as covering by a large body of existing works 
+    Li et al 
+        2020
+    -Wu et al 
+        2022
+    ; Liu et al 
+        2022
+    ; Zhou et al 
+        2022
+     among other epochs
+ This allows us to fairly baseline TOTEM without returning thousands of experiments on dozens of models trained from scratch. 
+            </text>
+            
+
+            <text>
+            In contrast, the short-term forecasting task typically uses non-standard and dataset-specific input and output dimensionalities (see Table 19 for details), which makes systematic, fair comparisons of TOTEM against prior works extremely challenging in the generalist setting?| Thus, we exclude short-term forecasting from our main results.
+            </text>
+            
+
+            <text>
+            Leaky Baselines. In both classification and anomaly detection, the modern SOTA baselines are leaky (2021), where leakage is defined as using the test set as the validation set during training. In particular, the cited works that report SOTA results all use models that were trained with either early stopping or with the best model checkpoint on the validation (i.e., the test) set. We felt strongly that we should not propagate faulty baselines, so we did not compare to these models in our work. Subsequent to the initial release of this paper, followup works have demonstrated on neural classification tasks that TOTEM, when compared to baselines trained in a non-leaky manner, achieves SOTA performance (Chau et al., 2024a).
+            </text>
+            
+
+            <text>
+            For anomaly detection, the benchmark datasets used by Z1 (2023); Wu et al. (2022); Xu et al. (2021) contain numerous flaws besides training leakage flawed (see hj (2021) for a detailed account). However, since Wu & Keogh released a large set of new, unflawed benchmarks, we elected to compare TOTEM to both the flawed and a subset of the unflawed baselines (see the comparisons to in the Appendix). Because we find that TOTEM convincingly achieves SOTA performance in both cases, we report our results to establish an unflawed baseline for future comparison.
+            </text>
+            
+
+            <text>
+            In summary, due to non-standardized and leaky baselines, we only report systematic results on the imputation, anomaly detection, and long-term forecasting tasks.
+
+
+            </text>
+            
+
+            <title>
+            
+    5.  Main Results
+
+            </title>
+            
+
+            <text>
+            The primary goal of our experiments is to systematically evaluate TOTEM on multiple tasks simultaneously against new generalist benchmarks and strong specialist baweling (i.e., models trained on data from many domains were domain). In particular, for each task, we report evaluations against (i) specialists on the i-domain testing regime, (ii) generalises on the i-domain regime, and (iii) generalists on the zero-shot regime. We emphasize that no domain, sampling rate, or sensor dimension is shared between the training sets and zero-shot testing sets (see Table[6] for additional dataset details).
+
+
+            </text>
+            
+
+            <text>
+            Throughout the main text, we report summary results. The full numerical results can be found throughout the Appendix. Moreover, all results are reported as the mean of 3 seeded runs, with standard deviations available in the Appendix. Since evaluation metrics differ across tasks, (less than) will denote a metric where lower is better and (greater than) will denote a metric where higher is better. Given the varied metrics, we calculate the average number of best results, or AvgWins, for each method and highlight the best method. For a summary of training and testing domains, see Table 7} for a comparison of generalist parameter counts and training times, see Section A-11 and [A.12}
+            </text>
+            

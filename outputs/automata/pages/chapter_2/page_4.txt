@@ -1,0 +1,135 @@
+
+            <title>
+            # 3.3.1 Example of epsilon-closure
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            # Consider the ϵ-NFA shown here:
+
+. 
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_3_2.jpg
+        </path>
+        <description>
+        A diagram showing a finite state machine with five states labeled q0, q1, q2, q3, and q5. The transitions between these states are represented by arrows marked with different symbols such as ε (epsilon), b, c, or a.
+        </description>
+        </image>
+        
+
+            <text>
+            By looking at the diagram and working backwards, we immediately see: \bullet
+            </text>
+            
+
+            <text>
+            * cdose(q_5)={q_5}
+* cdose(q_4)={q_4,q_5}, because there is an ϵ-transition from q_4 to q_5
+* cdose(q_3)={q_3}, because there are no ϵ-transitions leading from state q_5
+* cdose(q_2)={q_2,q_4,q_5}, because states q_4 and q_5 are reachable from q_2 by taking ϵ-transitions
+* cdose(q_1)={q_1}, since there are no ϵ-transitions leading from q_1
+* cdose(q_0)={q_0,q_1,q_2,q_4,q_5}, because we can reach all of these states from q_0, by taking one or more ϵ-transitions
+            </text>
+            
+
+            <title>
+            # 3.3.2   Formal specification of epsilon-closure
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            We can formally define the epsilon-closure, e close(q), of a state q like this: . 
+            </text>
+            
+
+            <text>
+            
+| **Base case** | State q is in eclose(q). Formally: q∈ elose(q).
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Recurrence case**) For all states p that are in eclose(q), if state r is reachable from p by an ϵ-transition, then r is in eclose(q). Formally:
+            </text>
+            
+
+            <formula>
+            ∀ p ∈eclose(q), δ(p, ϵ) ≠∅ and δ(p, ϵ) ⊆eclose(q)
+            </formula>
+            
+
+            <title>
+            # 3.3.3   Special cases of epsilon-closure
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            There are a couple of special cases to worry about.
+
+
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_3_12.jpg
+        </path>
+        <description>
+        A diagram showing a transition from state q0 to state q1 with an epsilon arrow indicating no input is required for the transition. The arrows are labeled 'q0' and 'q1', representing different states, and there is also another epsilon arrow connecting these two states.
+        </description>
+        </image>
+        
+
+            <text>
+            # Consider this diagram that has two states connected by ϵ-transitions:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_2/page_3_14.jpg
+        </path>
+        <description>
+        A diagram showing two states q0 and q1 connected by an edge labeled ε in both directions. An upward-pointing arrow is present, indicating a direction or flow from one state to another.
+        </description>
+        </image>
+        
+
+            <text>
+            We see that eclose(q_0)={q_0,q_1}.
+
+
+            </text>
+            

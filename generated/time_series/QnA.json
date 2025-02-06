@@ -1,0 +1,6 @@
+[
+    {
+        "question": "What are the key features of Totem that contribute to its usefulness?",
+        "answer": "Totem's key features include self-supervised pretraining, exclusive-temporal tokenization, and no domain-specific data engineering. These features enable it to generalize across multiple domains effectively."
+    }
+]
