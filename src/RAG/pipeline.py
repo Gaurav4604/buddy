@@ -59,11 +59,27 @@ async def question_answer_pipeline(question: str, topic: str) -> QuestionAnswer:
 
     # No duplicate found: proceed with generating the answer.
     decomposed_question = await decompose_question(question=question)
-    payloads = [(question, topic) for question in decomposed_question.sub_questions]
-    print(decomposed_question)
-    atomic_answers = await asyncio.gather(
-        *[answer_atomic_question(*payload) for payload in payloads]
-    )
+
+    chain_of_questions: list[str] = []
+    atomic_answers: list[QuestionAnswer] = []
+
+    for question in decomposed_question.sub_questions:
+
+        atomic_answer = await answer_atomic_question(
+            question, topic, chain_of_questions
+        )
+
+        chain_addition = f"""
+        Question:
+            {atomic_answer.question}
+        Answer:
+            {atomic_answer.answer}
+        """
+
+        print(chain_addition)
+
+        chain_of_questions.append(chain_addition)
+        atomic_answers.append(atomic_answer)
 
     # Generate the composite answer.
     answer = await answer_composite_question(question, atomic_answers)

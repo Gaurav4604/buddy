@@ -1,0 +1,85 @@
+
+            <title>
+            Chapter 4\n\n$$	ext{differential}	ext{note}	ext{point}	ext{er}	ext{d}$$
+            </title>
+            
+
+            <title>
+            
+    Regular expressions
+
+            </title>
+            
+
+            <text>
+            Up until now we have been examining finite state automata in a variety of forms. Now we will examine a notation, called _Regular expressions_ that can express the same languages as finite state automata, but in a more compact and use-friendly way.
+
+A regular expression describes strings of characters in a compact way. Before we define formally how regular expressions work, let us see some examples:
+            </text>
+            
+
+            <text>
+            sequenceA regular expression ab stands for the character a followed by the character b. This idea can be carried out to arbitrary length, so (for example) abcd is the character a followed by b followed by c followed by d.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**alternation**: The regular expression a| b stands for either the character a or the character b (but not both). The string ab| cd stands for the string of characters ab or the string cd. Notice that sequence takes precedence over alternation. There can be multiple alternation operators, like this: a| b| c, which means a or b or c.
+
+
+            </text>
+            
+
+            <text>
+            _repetition_ The regular expression a^* stands for any one of the strings ϵ_,a,aa, aaa,aaaa,…. The expression ab^* stands for the any of the strings a,ab, abb,abbb…. Notice that repetition takes precedence over sequence.
+
+
+            </text>
+            
+
+            <text>
+            _grouping_ Parentheses can be used to group parts of regular expressions. For example the expression (a| b)(c| d) represents the strings ac, ad, bc, and bd.
+
+
+            </text>
+            
+
+            <title>
+            # 4.1   The operators of regular expressions
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            Regular expressions denote languages. For example, the regular expression: 01^*|10^* denotes the language consisting of all strings that start with a single 0, and are followed by zero-or-more 1s, or start with a single 1, followed by zero-or-more 0s.
+
+Let us now consider these operations more formally.
+
+
+            </text>
+            
+
+            <text>
+            1. The concatenation of two languages L and M, denoted by LM is the set of strings that can be formed by taking any string in L, and concatenating it with any string in M. We usually denote concatenation by just putting the two languages in sequence, as we have previously shown.
+
+
+            </text>
+            
+
+            <text>
+            For example, if L is the language {1,01,10,10,101}, and M is the language {ϵ,0}, then LM is the language {1,01,10,101,010,010,1010}. The first four strings of LM are simply those of L concatenated with ϵ. The remaining three strings come from L concatenated with 0. Note that the string 10 is generated twice by this process, but appears only once in LM (because it is a set, not a list).
+
+
+            </text>
+            

@@ -142,7 +142,7 @@ into simpler sub-questions, and tag it into one of the categories as defined abo
 
 async def decompose_question(question: str) -> QuestionDecomposed:
     res = await client.chat(
-        model="deepseek-r1",
+        model="huihui_ai/deepseek-r1-abliterated",
         messages=[
             {
                 "role": "system",
@@ -177,7 +177,6 @@ in accordance to the user's question,
 and provide a 5-6 line answer to the same
 """
 
-
 question_answer_template = """
 the following, enclosed in tags is the reference text
 
@@ -191,22 +190,55 @@ answer this question, using the above reference
 </question>
 """
 
+question_answer_with_question_chain_template = """
+the following, enclosed in tags is the reference text
+
+<reference>
+{}
+</reference>
+
+the following, is answers to questions related to this subject,
+to be used as reference in answering the current question
+
+<previous-question-answer>
+{}
+</previous-question-answer>
+
+answer this question, using the above references
+and previous questions and answers
+<question>
+{}
+</question>
+"""
+
 
 async def answer_atomic_question(
-    question: str, topic: str = "general"
+    question: str, topic: str = "general", question_chain: list[str] = []
 ) -> QuestionAnswer:
     kit = RAGtoolkit(topic=topic)
     docs = kit.query_docs(query=question)
 
+    prompt = ""
+
+    if len(question_chain) > 0:
+        prompt = question_answer_with_question_chain_template.format(
+            "\n----reference----\n".join(docs),
+            "\n------previous_questions-----\n".join(question_chain),
+            question,
+        )
+    else:
+        prompt = question_answer_template.format(
+            "\n----reference----\n".join(docs),
+            question,
+        )
+
     res = await client.chat(
-        model="deepseek-r1",
+        model="huihui_ai/deepseek-r1-abliterated",
         messages=[
             {"role": "system", "content": question_answer_system},
             {
                 "role": "user",
-                "content": question_answer_template.format(
-                    "\n----reference----\n".join(docs), question
-                ),
+                "content": prompt,
             },
         ],
         format=QuestionAnswer.model_json_schema(),
@@ -232,7 +264,7 @@ async def answer_composite_question(
         """
 
     res = await client.chat(
-        model="llama3.2",
+        model="huihui_ai/deepseek-r1-abliterated",
         messages=[
             {"role": "system", "content": question_answer_system},
             {
@@ -283,7 +315,7 @@ async def generate_questions(tag: str, topic: str = "general") -> QuestionsFromT
     docs = kit.query_docs(query=tag)
 
     res = await client.chat(
-        model="deepseek-r1",
+        model="huihui_ai/deepseek-r1-abliterated",
         messages=[
             {"role": "system", "content": question_generation_system},
             {

@@ -1,0 +1,49 @@
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_3/page_3_0.jpg
+        </path>
+        <description>
+        A simple finite state machine with two states, a and b. The initial state is not labeled but can be assumed to be either 'a' or 'b'. There are three transitions: from 'a' to 'a', from 'b' to 'b', and from both 'a' and 'b' to the final state (denoted by an empty circle). All states have a self-loop transition labeled with ε, indicating that they can remain in their current state without any input. The initial label W indicates some external input or event triggering the start of this FSM.
+        </description>
+        </image>
+        
+
+            <text>
+            Once again, it is immediately clear that this NFA will accept a string consisting of either a or b.
+
+Finally, to handle the regular expression a^*, we simply add a pair of ϵ transitions to the NFA for a. One of the transitions allows us to completely bypass the NFA (thus allowing "zero-times"), and the other transition allows an infinite number of repetitions (thus allowing "or-more times"). The diagram therefore looks like this:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_3/page_3_2.jpg
+        </path>
+        <description>
+        A simple finite state machine with two states, a and b. The transition from state 'a' to state 'b' is labeled as 'a'. There are also transitions between state 'a' and itself (ε) and between state 'b' and itself (ε). A single input symbol ε is shown at the top of the diagram.
+        </description>
+        </image>
+        
+
+            <text>
+            We can now compose these diagrams to handle any regular expression. For example, consider the regular expression 01^*|10. If we insert parentheses, to make the meaning clear, we get ((0(1^*))|(10) which can immediately be converted to this diagram:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_3/page_3_4.jpg
+        </path>
+        <description>
+        A diagram showing a non-deterministic finite automaton (NFA) with states and transitions between them. The NFA has four states, labeled 0, 1, ε, and an initial state marked by 'W'. There are arrows indicating possible transitions from one state to another based on the input symbol.
+        </description>
+        </image>
+        
+
+            <text>
+            It is now a simple matter of using the techniques we already know to reduce this ϵ-NFA to a deterministic finite-state automaton.
+
+
+            </text>
+            

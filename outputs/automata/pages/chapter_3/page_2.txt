@@ -1,0 +1,112 @@
+
+            <text>
+            2. The union of two languages L and M, denoted by L| M, is the set of strings that is in L or M or both. For example if L={01,11,100} and M={1,101}, then L| M={1,01,11,100,101}.
+
+
+            </text>
+            
+
+            <text>
+            3. The closure (also called the _Kleene star_) of a language L, denoted by L^* represents the set of all strings that can be formed by taking any number of strings from L, with repetitions permitted, and concatenating them.
+
+
+            </text>
+            
+
+            <text>
+            sample, if L={0,1}, then L^* is the set of all strings of zero-or-more ones and zero. 
+            </text>
+            
+
+            <text>
+            if L={0,10}, then L^* is the set of all strings of ones and zeros where a one is always followed by a zero. e.g. 0,10,1010,10010, but not 0110. Formally:
+            </text>
+            
+
+            <formula>
+            
+    L^* = ⋃_i ≥ 0 L^i = L^0∪ L^1∪ L^2⋯
+
+            </formula>
+            
+
+            <text>
+            where L^0={ϵ}, L^1={L}, and L^i=LL^i-1 (i copies of L concatenated together).
+
+
+            </text>
+            
+
+            <text>
+            Closure is tricky, so here are two examples to clarify the concept:
+
+
+
+.
+
+            </text>
+            
+
+            <text>
+            
+
+**Example 1**: If L={0,10}, then L^0={ϵ}, since the set of all strings of length zero consists only of the string ϵ). L^1=L={0,10}. L^2=LL={00,010,100,1010}, L^3=LLL={000,0010,0100,01010,1000,1010}, continuing in this fashion, we can compute L^4,L^5⋯ We compute L^r by taking the union of all these sets:
+            </text>
+            
+
+            <formula>
+            
+    L^* = L^0∪ L^1∪ L^2∪ L^3⋯
+
+            </formula>
+            
+
+            <text>
+            L* = ε ∪ {0, 10} ∪ {00, 010, 100, 1010} ∪ {000, 0010, 0100, 01010, 1000, 10010, 10100, 101010} ∪ ...
+            </text>
+            
+
+            <text>
+            
+
+**Example 2**: Now consider a different language L which is the set of all strings of zero-or-more 0s.
+
+Clearly L is an infinite language, unlike the previous example which was finite. Despite this, it is not hard to derive L^*: L^0=ϵ, L^1=L, L^2=L, L^3=L, and so on. So L^*=L.
+
+
+            </text>
+            
+
+            <title>
+            # 4.2  Precedence of operators
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            Like all algebras, the regular expression operators have an assumed order of "precedence", which means that operators are associated with their operands in a particular order. We are familiar with precedence from high-school algebra: The expression ab+c groups the product before the sum, so the expression means (a× b)+c. Similarly, when we encounter two operators that are the same, we group from the left, so a-b-c means (a-b)-c, and not a-(b-c). For regular expressions the order of evaluation is:
+            </text>
+            
+
+            <text>
+            
+
+**repetition**.: The star (*)operator has highest precedence. It applies to the smallest string of symbols to its left, that is a well-formed expression.
+
+
+            </text>
+            
+
+            <text>
+            sequence.The concatenation operator has the next level of precedence. After grouping all the stars to their operands, we group all concatenation operators to their operands. All expressions that are adjacent (without an operator in between) are concatenated. Since concatenations is associative, it does not matter what order we group the operands, though it is conventional to group from the left. Thus _abc_ is grouped as (ab)_c.
+
+
+            </text>
+            

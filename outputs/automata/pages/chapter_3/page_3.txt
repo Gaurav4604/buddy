@@ -1,0 +1,88 @@
+
+            <text>
+            
+
+**alternation.** The alternation operator (|) has the lowest precedence. The remaining operators are grouped with their operands. Alternation is also associative, so the order of grouping does not matter; but again the convention is to group from the left.
+
+
+            </text>
+            
+
+            <text>
+            For example, applying the rules to the expression 01^*|10|1^*0, we group the star first, giving 0(1^*)|10|(1^*)0. Then we group the sequence operators, giving (0(1^*))|(10)|((1^*)0). Finally we group the alternation operators, to get: (((0(1^*)))|(10))|((1^*)0).
+
+
+            </text>
+            
+
+            <title>
+            # 4.3   Converting finite automata to regular expressions
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            Regular expressions and finite automata define the same class of languages, so it is possible to transform a DFA into a regular expression, and a regular expression into a DFA. We will ignore the transformation from DFA to regular expression, since this is not often used.
+
+
+            </text>
+            
+
+            <text>
+            We can transform a regular expression to an ϵ-NFA, in a sequence of trivial steps, as we will now see. First we will need to construct some "building blocks" for constructing the NFA.
+
+
+            </text>
+            
+
+            <text>
+            The simplest regular expression, a, can be converted to a two-state NFA, with a start-state and a final state, by writing the character a on the transition, like this:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_3/page_2_6.jpg
+        </path>
+        <description>
+        A simple diagram showing a force applied to an object, resulting in acceleration. The arrow labeled 'W' represents the external force acting on the object, and the curved line with label 'a' indicates that there is acceleration along its path.
+        </description>
+        </image>
+        
+
+            <text>
+            It is clear that this NFA accepts a string consisting only of the character a. 
+            </text>
+            
+
+            <text>
+            A sequence of simple regular expressions _abc_, can be handled by converting each character in the expression to a two-state NFA, and then joining the NFAs togetherwith ϵ transitions, like this:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_3/page_2_9.jpg
+        </path>
+        <description>
+        A simple finite state machine with three states and transitions between them. The initial state is labeled 'a', followed by a transition to state 'b' on input symbol 'a'. State 'b' has an epsilon transition leading back to state 'a', indicating the possibility of self-loop or loopback in this particular configuration. From state 'b', there's another transition, also with label 'a', moving to state 'c'. Finally, from state 'c', a direct transition is made to the final accepting state labeled as 'ε' (epsilon). The epsilon symbol represents an empty input and indicates that it can be ignored in this context. This finite-state machine appears to accept strings of symbols where each string ends with either 'a' or 'b'. If the end-of-string symbol ε follows a sequence ending in 'c', then the word is accepted, otherwise if ε comes after any other letter (including 'a' and 'b'), it's not accepted. The diagram also includes an arrow pointing from state 'a' to the initial state with a label of W, suggesting that this machine may be part of a larger system or process where input symbols are fed into the starting point.
+        </description>
+        </image>
+        
+
+            <text>
+            It is immediately obvious that this NFA accepts a string consisting only of the sequence of characters abc. 
+            </text>
+            
+
+            <text>
+            A regular expression of the form a| b, can be handled by building two simple NFAs, to handle the a and b, and then running them in parallel. Again, we use c transitions to glue the parts together, like this:
+            </text>
+            

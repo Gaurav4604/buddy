@@ -1,0 +1,42 @@
+
+            <text>
+            _repetition._ There is an additional repetition operator, +, that means "one-or-more-of". The regular expression R+ has the same meaning as RR*. We can now express our previous definition of signed integer as [+-]?[[:digit:]]+.
+
+
+            </text>
+            
+
+            <text>
+            _multiple_ The operator {n} (where n is a positive integer) placed after a regular expression means "n-copies-of". For example the expression (ab){3} has the same meaning as _ababab_.
+
+
+            </text>
+            
+
+            <text>
+            nomagic Clearly, some of the characters we have special meanings (such as x [ ]. We can tell. Unix to treat these characters without their magic interpretation by preceding them with a backslash character ("). For example, the regular expression \x a\? will only match the string of three characters «a?».
+            </text>
+            
+
+            <text>
+            # Here are some example Unix patterns:
+
+
+    
+
+
+
+    
+
+            </text>
+            
+
+            <text>
+            A signed integer can be specified by : [+-][0-9]+, or equivalently [+-]|[0-9]++
+            </text>
+            
+
+            <text>
+            Identifier A typical programming language identifier can be specified by: [a — zA — Z]|a— zA0 — 9_]x, or this: [alpha :]][alnum :]_x.
+            </text>
+            

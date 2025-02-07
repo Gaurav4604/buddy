@@ -1,0 +1,76 @@
+
+            <text>
+            Similarly, the expression (0 \mid 1)1)^* can be converted to this diagram:
+            </text>
+            
+
+        <image>
+        <path>
+        outputs/automata/images/chapter_3/page_4_1.jpg
+        </path>
+        <description>
+        A diagram showing a sequence of events or states in an automaton. The top left shows state '0' with transitions labeled by ε, leading to another state marked as '1'. Below that is a loop starting and ending at '0', also with transitions labeled by ε. To the right are two parallel loops from '0' to '2', again transitioning on ε, then back to '0'. Finally, there's an arc connecting states 1 and 2, leading out of the diagram.
+        </description>
+        </image>
+        
+
+            <title>
+            # 4.3.1   What is the use of this transformation?
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            Regular expressions are a very compact way of _expressing_ a language. DFAs are a very efficient way of _impmentireting_ a language recognizer. The transformation we have just described trivially covers a regular expression into an ϵ-NFA, and we already know how to convert any NFA into a DFA. Thus we now have a highly efficient way of turning any regular expression into an executable program.
+
+There are numerous tools available, that do this job. One example is _Jlex_, which you may have used during a compiler-construction course.
+
+
+            </text>
+            
+
+            <title>
+            # 4.4   Regular expressions in Unix
+            </title>
+            
+
+            <text>
+            The regular expressions described earlier have enough expressive power to describe any regular language. However some expressions can become a bit clumsy, Unix extends the set of operators that are available, to make the task of expressing a language even easier. The additional operators available in Unix are:
+            </text>
+            
+
+            <text>
+            any The character . (dot) means "any character".
+            </text>
+            
+
+            <text>
+            _list_ The sequence of characters |abcde| means a| b| c| d| e. This saves about half the typing, since we don't need to type the |.
+
+
+            </text>
+            
+
+            <text>
+            We can also write [b-e], to represent the consecutive sequence of characters beginning at b and ending at e. For example [a-z] means any lower-case letter. [A-Za-z0-9] means any letter or digit. This is a big saving in trying. If we want to include a - sign in the list, we just put it first or last in the list. We could describe a signed (one-digit) integer with [-+][0-9].
+
+
+            </text>
+            
+
+            <text>
+            There are few predefined patterns:|: digit :] means “any digit”, |: alpha:] means any alphabetic character, and [:alnum:] means “any letter or digit”. To use these patterns, they must appear in a list: |{:digit:]] matches a single digit.
+            </text>
+            
+
+            <text>
+            optional The character ? placed after an expression means “zero-or-one-of”. For example the pattern (+|-)?|digit|digit]*, describes an integer number with an optional preceding sign. We could also express this as: [+—]?digit|digit*.
+            </text>
+            
