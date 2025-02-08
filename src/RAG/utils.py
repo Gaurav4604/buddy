@@ -85,10 +85,21 @@ generate a 3 line summary and 3 tags for the page's content
 </page>
 """
 
+summary_semantic_system = """
+You are a content generation bot,
+your role is to look at strings of text provided to you,
+and chain them, such that the content makes sense semantically,
+and allow content to be atleast 2 paragraphs long
+"""
+
 
 class SummaryAndTags(BaseModel):
     summary: str
     tags: list[str]
+
+
+class CombinedSummary(BaseModel):
+    summary: str
 
 
 class RAGtoolkit:
@@ -228,7 +239,7 @@ class RAGtoolkit:
 
     def generate_summary(self, page_content: str) -> SummaryAndTags:
         res = client.chat(
-            model="deepseek-r1",
+            model="huihui_ai/deepseek-r1-abliterated",
             messages=[
                 {
                     "role": "user",
@@ -396,9 +407,31 @@ class RAGtoolkit:
         results = self.cursor.fetchall()
 
         # Concatenate all summaries
-        concatenated_summary = " ".join(row[0] for row in results if row[0])
+        concatenated_summary = " ".join(
+            f"""
+\n-------Page {index}------\n
+    {row[0]}
+\n-------Page {index}------\n
+            """
+            for (index, row) in enumerate(results)
+            if row[0]
+        )
 
-        return concatenated_summary.strip()
+        res = client.chat(
+            model="huihui_ai/deepseek-r1-abliterated",
+            messages=[
+                {"role": "system", "content": summary_semantic_system},
+                {
+                    "role": "user",
+                    "content": concatenated_summary,
+                },
+            ],
+            options={"temperature": 0.4, "num_ctx": 32768},
+            keep_alive=0,
+            format=CombinedSummary.model_json_schema(),
+        )
+
+        return CombinedSummary.model_validate_json(res.message.content).summary
 
 
 import torch.nn.functional as F
