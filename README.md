@@ -1,33 +1,25 @@
-# Motivation
+# Buddy
 
-Document preprocessing is required for RAG (Retrieval-Augmented Generation) chain processing, and documents should be properly formatted, as improper formatting will result in a garbage-in, garbage-out scenario. Current OCR methods struggle with extracting documents that contain both text and math symbols, often misinterpreting mathematical expressions or losing important text data. The more accurate solutions are cloud-based, expensive, and locked behind paywalls. To address this, I’ve used LLaMA 3.2 (3B) with OCR and math extraction, merging the results for more accurate document processing. This setup:
+A Retrieval Augmented Generation Based toolkit, to help students studying STEM subjects offload tasks such as
 
-1. Converts PDFs to text,
-2. Processes math into LaTeX format and merges the data
-3. Reformats it to display math symbols as plaintext
+1. Question Generation for Subjects
+2. Question Answering and Answer Evalution
+3. Summary Generation for Chapters
 
-all within a self-hosted Docker image, providing an free and robust solution.
-*(I've tested it on a PDF file on thermodynamics, works pretty great!)*
+## Project Description
 
-## Tools and Requirements for Installation
+### What happens and Why?
 
-- Docker:
-    The entire setup relies on Docker containers to run the services. You need Docker installed on your system.
+The application works in 3 very distinct steps
 
-- Docker Compose:
-    To orchestrate multiple containers, you need Docker Compose.
+1.  Document Processing:<br/>
+    1. Document Content Chunk Extraction: The document PDF file is read, and on each page, using a [YOLO model for extracting document layout](https://github.com/opendatalab/DocLayout-YOLO), each page is divided into chunks. Based on the content flow specified by the command line args (research/default) the chunks are re-ordered to make sense semantically. Next, depending on the data type _(image, text, formula, tables)_
 
-## How to Use
+## Motivation
 
-- place your file, name it **files/thermodynamics.pdf** in the root directory and run the following command: `docker-compose up --build`
+It started out with building an LLM based Document Parser, since the only alternative which was available
+to consume highly dense and multi-format rich documents, was [Llama-Parse](https://docs.llamaindex.ai/en/stable/llama_cloud/llama_parse/) which was paid, and also required me to send my data over the internet _(making it not so private 😅)_
 
-## Outputs
+Later on, during my exams, I also suffered from a lack of Question Banks, that targeted my known weak topics for each of the subjects, all of which prompted me to build my own Toolkit, to find solutions to these problems.
 
-- **/tex** contains the converted LaTeX files, indexed based on page number.
-- **/txt** contains the converted plain text files, indexed based on page number.
-
-## Future Goals
-
-1. Add diagram processing options (using Multi-Modal LLMs).
-2. Add document tagging, to add meta-data information based on document contents.
-3. Implement RAG (Retrieval-Augmented Generation) chain processing, for QnA generation.
+RAG, being a very rapidly researched domain, seemed like a good solution fit for my use-case, thus leading to this toolkit.
