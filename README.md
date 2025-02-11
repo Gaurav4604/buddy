@@ -4,7 +4,7 @@ Buddy is a Retrieval Augmented Generation based python toolkit, to help students
 
 1. Topic and Chapter targeted Question Generation for their subject topics
 2. Chain of Question based complex and reasoning rich question answering
-3. User Answer Evalution and Grading
+3. User Answer Evaluation for Questions related to notes, and Grading on the same
 4. Semantically Sensible Summary Generation for Chapters
 
 ## Setup and How to Use
@@ -13,9 +13,11 @@ Buddy is a Retrieval Augmented Generation based python toolkit, to help students
 
 1. Make sure to have [Ollama](https://ollama.com/download) set up and running, as it will be the LLM inference server used by our application
 
-2. Make sure you have [Postgres SQL](https://www.postgresql.org/download/) installed, along with support for [pgvector](https://github.com/pgvector/pgvector?tab=readme-ov-file#installation) as it will be used for all the vector embedding operations along with storage
+2. You'll also need [Postgres SQL](https://www.postgresql.org/download/) installed, along with support for [pgvector](https://github.com/pgvector/pgvector?tab=readme-ov-file#installation). This will be used for all the vector embedding operations along with persistent storage of extracted chunks from documents
 
-3. Create a `.env` file with these exact keys, with your configured pairs
+3. A good to have, would be [CUDA toolkit](https://developer.nvidia.com/cuda-toolkit), to leverage usage of GPU for a lot of the _Machine Learning Related_ operations in the project
+
+4. Create a `.env` file with these exact keys, with your configured pairs
 
 ```bash
 database=postgres
@@ -65,6 +67,25 @@ It explains how to use buddy for:
 
 _I've made buddy read documents for my University notes on event driven computing and it gives me very promising answers for complex questions_
 
+#### Document Extraction
+
+1. Formula Extraction
+
+   ![formula](./readme_assets/image_formula.png)
+   ![formula-output](./readme_assets/formula_extraction.png)
+
+2. Table Extraction
+
+   ![table](./readme_assets/image_table.png)
+   ![table-output](./readme_assets/table_extraction.png)
+
+3. Image Content Extraction
+
+   ![image](./readme_assets/image_target.jpg)
+   ![image-output](./readme_assets/extraction_image.png)
+
+#### Question Answering
+
 1. Problem Solving and Reasoning
    ![regex question](./readme_assets/question%20answer%201.png)
 
@@ -73,6 +94,12 @@ _I've made buddy read documents for my University notes on event driven computin
 
 3. Defintion
    ![definition question](./readme_assets/question%20answer%203.png)
+
+#### Question Generation
+
+1. Chapter Specific Question Generation
+
+   ![questions](./readme_assets/question_generation.png)
 
 ## Motivation and Inner Workings
 
@@ -139,5 +166,4 @@ to consume highly dense and multi-format rich documents, was [Llama-Parse](https
 Later on, during my exams, I also suffered from a lack of Question Banks, that targeted my known weak topics for each of the subjects, all of which prompted me to build my own Toolkit, to find solutions to these problems.
 
 I want to use AI to solve realworld problems in domains, where it augments the user's skillset, rather than taking over user's tasks.
-
 RAG, being a very rapidly researched domain, seemed like a good solution fit for my use-case, thus leading to this toolkit.
