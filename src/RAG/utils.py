@@ -1,3 +1,7 @@
+import multiprocessing
+
+multiprocessing.set_start_method("spawn", force=True)
+
 import os
 import re
 import uuid
@@ -13,6 +17,7 @@ from transformers import (
     AutoModelForSequenceClassification,
 )
 from adapters import AutoAdapterModel
+
 from semantic_text_splitter import TextSplitter
 from transformers.utils import logging
 
@@ -29,9 +34,6 @@ from pgvector.psycopg2 import register_vector
 logging.set_verbosity(40)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-# Ensure cache directory exists
-os.makedirs("cache", exist_ok=True)
-
 # Load environment variables
 load_dotenv()
 
@@ -46,35 +48,83 @@ ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
 client = ollama.Client(host=ollama_url)
 
 
+os.makedirs("cache", exist_ok=True)
+
+
 def get_conn_str(database: str) -> str:
     return f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{database}"
 
 
 splitter = TextSplitter(overlap=True, capacity=500, trim=True)
 
-dense_tokenizer = AutoTokenizer.from_pretrained(
-    "allenai/specter2_base", cache_dir="cache"
-)
-dense_model = AutoAdapterModel.from_pretrained(
-    "allenai/specter2_base", cache_dir="cache"
-)
-dense_model.load_adapter(
-    "allenai/specter2", source="hf", load_as="proximity", set_active=True
-)
 
-sparse_tokenizer = AutoTokenizer.from_pretrained(
-    "naver/splade-cocondenser-ensembledistil", cache_dir="cache"
-)
-sparse_model = AutoModelForMaskedLM.from_pretrained(
-    "naver/splade-cocondenser-ensembledistil", cache_dir="cache"
-)
+def load_all_models():
+    # Dense model (allenai/specter2_base with proximity adapter)
+    dense_local_path = "./cache/local_specter2"
+    if not os.path.exists(dense_local_path):
+        dense_tokenizer = AutoTokenizer.from_pretrained("allenai/specter2_base")
+        dense_model = AutoAdapterModel.from_pretrained("allenai/specter2_base")
+        dense_model.load_adapter(
+            "allenai/specter2", source="hf", load_as="proximity", set_active=True
+        )
+        dense_tokenizer.save_pretrained(dense_local_path)
+        dense_model.save_pretrained(dense_local_path)
+    else:
+        dense_tokenizer = AutoTokenizer.from_pretrained(dense_local_path)
+        dense_model = AutoAdapterModel.from_pretrained(dense_local_path)
+        dense_model.set_active_adapters("proximity")
 
-rerank_tokenizer = AutoTokenizer.from_pretrained(
-    "cross-encoder/msmarco-MiniLM-L12-en-de-v1", cache_dir="cache"
-)
-rerank_model = AutoModelForSequenceClassification.from_pretrained(
-    "cross-encoder/msmarco-MiniLM-L12-en-de-v1", cache_dir="cache"
-)
+    # Sparse model (naver/splade-cocondenser-ensembledistil)
+    sparse_local_path = "./cache/local_splade"
+    if not os.path.exists(sparse_local_path):
+        sparse_tokenizer = AutoTokenizer.from_pretrained(
+            "naver/splade-cocondenser-ensembledistil"
+        )
+        sparse_model = AutoModelForMaskedLM.from_pretrained(
+            "naver/splade-cocondenser-ensembledistil"
+        )
+        sparse_tokenizer.save_pretrained(sparse_local_path)
+        sparse_model.save_pretrained(sparse_local_path)
+    else:
+        sparse_tokenizer = AutoTokenizer.from_pretrained(sparse_local_path)
+        sparse_model = AutoModelForMaskedLM.from_pretrained(sparse_local_path)
+
+    # Rerank model (cross-encoder/msmarco-MiniLM-L12-en-de-v1)
+    rerank_local_path = "./cache/local_msmarco"
+    if not os.path.exists(rerank_local_path):
+        rerank_tokenizer = AutoTokenizer.from_pretrained(
+            "cross-encoder/msmarco-MiniLM-L12-en-de-v1"
+        )
+        rerank_model = AutoModelForSequenceClassification.from_pretrained(
+            "cross-encoder/msmarco-MiniLM-L12-en-de-v1"
+        )
+        rerank_tokenizer.save_pretrained(rerank_local_path)
+        rerank_model.save_pretrained(rerank_local_path)
+    else:
+        rerank_tokenizer = AutoTokenizer.from_pretrained(rerank_local_path)
+        rerank_model = AutoModelForSequenceClassification.from_pretrained(
+            rerank_local_path
+        )
+
+    return [
+        dense_tokenizer,
+        sparse_tokenizer,
+        rerank_tokenizer,
+        dense_model,
+        sparse_model,
+        rerank_model,
+    ]
+
+
+[
+    dense_tokenizer,
+    sparse_tokenizer,
+    rerank_tokenizer,
+    dense_model,
+    sparse_model,
+    rerank_model,
+] = load_all_models()
+
 
 summary_generation_prompt = """
 Using the following page info, present inside the page tags,

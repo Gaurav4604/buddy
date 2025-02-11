@@ -65,11 +65,14 @@ It explains how to use buddy for:
 
 _I've made buddy read documents for my University notes on event driven computing and it gives me very promising answers for complex questions_
 
-1. Problem Solving
+1. Problem Solving and Reasoning
    ![regex question](./readme_assets/question%20answer%201.png)
 
-1. Comparison and Contrast
+2. Comparison and Contrast
    ![comparison and contrast question](./readme_assets/question%20answer%202.png)
+
+3. Defintion
+   ![definition question](./readme_assets/question%20answer%203.png)
 
 ## Motivation and Inner Workings
 
