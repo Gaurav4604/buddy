@@ -100,14 +100,14 @@ The application works in 3 very distinct steps
 
        1. Query the dense table
        2. Query the sparse table
-       3. using reranking, sort and filter query relevant results
+       3. using reranking (via cross-encoder/msmarco-MiniLM-L12-en-de-v1), to sort and filter query relevant results
        4. return these results, for context generation for the LLM
 
     3. Semantically Sound Summary Generation: Using an LLM, to stitch together, each page's summary, to form a chapter-wise summary on demand, for easily accessible synopsis of the chapter as and when required.
 
     4. Sentence Similarity Evaluation: Since, re-ranking is nothing but evaluation of how similar two statements are, I used the same, to build out a function that returns a similarity percentage between query and its target, which can be used for answer evaluation.
 
-       <br/>_(I used this approach since it was a very easy to use postgres as a vectordb, which also allowed to be query using traditional SQL queries. I'd initially tried chromadb, but it fought with be quite a bit, and seemed very well oriented towards langchain based workflows, once I did get it working, it did not allow me to finetune properly for sparse vectors, which was final nail in the cofine to use postgres)_
+       <br/>_(I used this approach since it was a very easy to use postgres as a vectordb, which also allowed to be query using traditional SQL queries. I'd initially tried chromadb, but it fought with be quite a bit, and seemed specifically aligned towards langchain based workflows. Once I did get it working, it did not allow me to finetune properly for sparse vectors, which was final nail in the cofine to use postgres)_
 
 3.  LLM based RAG tools: Ofcourse, the best part about an LLM-centric system is the sweet sweet answer generation capabilities, and I've tried to leverage them as best possible for my use-case:
 
