@@ -49,7 +49,7 @@ NOTE: the resulting questions are stored in `/generated` directory
 
 #### 5. `answer`
 
-- **Usage:** `python main.py answer --for <topic> --question <question_string>`
+- **Usage:** `python src/main.py answer --for <topic> --question <question_string>`
 - **Description:** Answers a user's question.
 - **Flags:**
   - `--for`: Topic name
@@ -61,19 +61,19 @@ NOTE: answers once generated, are cached for each topic, in the file `generated/
 
 ```bash
 # Read data from a file and extract relevant information
-python main.py read --for python --from example.pdf --chapter_num 1 --structure research --manual_terminate "Python Documentation"
+python src/main.py read --for python --from example.pdf --chapter_num 1 --structure research --manual_terminate "Python Documentation"
 
 # Generate questions for a given topic and chapter
-python main.py generate --for python --chapter_num 1 --sub-topics "arrays+loops"
+python src/main.py generate --for python --chapter_num 1 --sub-topics "arrays+loops"
 
 # Summarize chapter content
-python main.py summarize --for python --chapter_num 1
+python src/main.py summarize --for python --chapter_num 1
 
 # Evaluate a question-answer pair
-python main.py evaluate --for python --question "What is Python?" --answer "I love Python!"
+python src/main.py evaluate --for python --question "What is Python?" --answer "I love Python!"
 
 # Answer a user's question
-python main.py answer --for python --question "What is the meaning of life?"
+python src/main.py answer --for python --question "What is the meaning of life?"
 ```
 
 ### Flags and Examples
@@ -91,14 +91,14 @@ python main.py answer --for python --question "What is the meaning of life?"
 
 ```bash
 # Generate questions for a given topic and chapter
-python main.py generate --for python --chapter_num 1 --sub-topics "programming+data structures+algorithms"
+python src/main.py generate --for python --chapter_num 1 --sub-topics "programming+data structures+algorithms"
 
 # Summarize chapter content
-python main.py summarize --for python --chapter_num 1
+python src/main.py summarize --for python --chapter_num 1
 
 # Evaluate a question-answer pair
-python main.py evaluate --for python --question "What is Python?" --answer "I love Python!"
+python src/main.py evaluate --for python --question "What is Python?" --answer "I love Python!"
 
 # Answer a user's question
-python main.py answer --for python --question "What is the meaning of life?"
+python src/main.py answer --for python --question "What is the meaning of life?"
 ```
