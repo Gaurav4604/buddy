@@ -1,4 +1,9 @@
 import cv2
+import torch
+from doclayout_yolo import YOLOv10
+
+torch.serialization.add_safe_globals([YOLOv10])
+
 from texify.inference import batch_inference
 from texify.model.model import load_model
 from texify.model.processor import load_processor
@@ -7,12 +12,12 @@ from pydantic import BaseModel
 import pytesseract
 import os
 from PIL import Image, ImageOps
-from doclayout_yolo import YOLOv10
 import base64
 from transformers.utils import logging
 import warnings
 import ollama
 import shutil
+import time
 
 logging.set_verbosity(40)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -180,7 +185,10 @@ async def extract_table(image: str) -> Table:
         pad_image_to_aspect_ratio(image, image, 0.15)
         res = await get_inference(image)
 
-    return Table.model_validate_json(res["message"]["content"])
+    try:
+        return Table.model_validate_json(res["message"]["content"])
+    except:
+        return Table(headers=["error extracting table"])
 
 
 async def extract_image(image: str) -> str:
@@ -214,7 +222,12 @@ async def extract_image(image: str) -> str:
         pad_image_to_aspect_ratio(image, image, 0.15)
         res = await get_inference(image)
 
-    return ImageDescription.model_validate_json(res["message"]["content"]).description
+    try:
+        return ImageDescription.model_validate_json(
+            res["message"]["content"]
+        ).description
+    except:
+        return "error extracting image"
 
 
 template_formula = """
@@ -262,10 +275,13 @@ async def extract_formula(image: str) -> str:
         keep_alive=0,
     )
 
-    text_content = LatexNodes2Text().latex_to_text(
-        Formula.model_validate_json(res["message"]["content"]).formula
-    )
-    return text_content
+    try:
+        text_content = LatexNodes2Text().latex_to_text(
+            Formula.model_validate_json(res["message"]["content"]).formula
+        )
+        return text_content
+    except:
+        return "error extracting formula"
 
 
 system_text_instruct = """
@@ -327,9 +343,12 @@ async def extract_text(image: str) -> str:
         format=DocNeedsOCR.model_json_schema(),
         options={"temperature": 0, "num_ctx": ctx_size},
     )
-    invalid_latex = DocNeedsOCR.model_validate_json(
-        res["message"]["content"]
-    ).invalid_latex
+    try:
+        invalid_latex = DocNeedsOCR.model_validate_json(
+            res["message"]["content"]
+        ).invalid_latex
+    except:
+        return "error extracting text"
 
     if invalid_latex:
         tesseract_text = pytesseract.image_to_string(image)
@@ -345,10 +364,17 @@ async def extract_text(image: str) -> str:
             options={"temperature": 0, "num_ctx": ctx_size},
             keep_alive=0,
         )
-        result = DocContent.model_validate_json(res["message"]["content"]).text
-        return result.strip()
+        try:
+            result = DocContent.model_validate_json(res["message"]["content"]).text
+            return result.strip()
+        except:
+            return "error extracting text"
+
     else:
-        return LatexNodes2Text().latex_to_text(latex_extract)
+        try:
+            return LatexNodes2Text().latex_to_text(latex_extract)
+        except:
+            return "error extracting text"
 
 
 # 1) Define a class to hold detection info

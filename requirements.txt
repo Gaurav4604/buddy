@@ -1,3 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cu124
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
 texify
 doclayout-yolo
 pdf2image
@@ -5,13 +9,10 @@ ollama
 pylatexenc
 pytesseract
 opencv-python-headless
-torch 
-torchvision
-torchaudio
-chromadb
 transformers
 adapters
 Pillow
 semantic-text-splitter
 psycopg2-binary
 pgvector
+scipy

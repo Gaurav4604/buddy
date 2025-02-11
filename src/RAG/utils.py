@@ -39,7 +39,7 @@ load_dotenv()
 DB_USER = os.getenv("user")
 DB_PASSWORD = os.getenv("password")
 DB_HOST = os.getenv("host")
-DB_PORT = os.getenv("DB_PORT", "5432")
+DB_PORT = os.getenv("port_postgres", "5432")
 
 ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
 

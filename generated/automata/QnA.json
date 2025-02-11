@@ -26,5 +26,9 @@
     {
         "question": "What is NFA processing?",
         "answer": "NFA processing involves evaluating a string of symbols by successively removing the first symbol and applying the transition function Δ to compute the resulting state-set T. This process continues until the base case is reached, ensuring termination."
+    },
+    {
+        "question": "In what ways can E-NFAs be more efficient or effective compared to DFAs?",
+        "answer": "E-NFAs can be more efficient in the number of states required to describe a language. While converting an E-NFA to a DFA may increase the number of states, E-NFAs are often easier to construct and can represent complex languages with fewer states than their DFA counterparts. Additionally, certain properties like regularity are preserved when converting from E-NFAs to DFAs, ensuring that both models accept the same language."
     }
 ]

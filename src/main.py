@@ -11,6 +11,9 @@ from RAG.pipeline import (
     question_answer_pipeline,
 )
 
+import ollama
+import os
+
 
 async def read_pipeline(
     topic: str,

@@ -9,25 +9,67 @@ A Retrieval Augmented Generation Based toolkit, to help students studying STEM s
 
 ## Setup and How to Use
 
-### Installation
+### Prerequisites
 
-#### Using Docker _(recommended)_
+1. Make sure to have [Ollama](https://ollama.com/download) set up and running, as it will be the LLM inference server used by our application
 
-Make sure to have docker, along with docker-compose setup on your system.
+2. Make sure you have [Postgres SQL](https://www.postgresql.org/download/) installed, along with support for [pgvector](https://github.com/pgvector/pgvector?tab=readme-ov-file#installation) as it will be used for all the vector embedding operations along with storage
+
+3. Create a `.env` file with these exact keys, with your configured pairs
+
+```bash
+database=postgres
+user=postgres
+password=placeholder # update your env file to contain your password
+host=127.0.0.1 # or the url for the postgres server
+port_postgres=5432
+```
+
+### Environment Setup
 
 ```bash
 # clone the repo
-git clone repo-name
+git clone https://github.com/Gaurav4604/buddy
 
-# using docker
-docker-compose build
 
-docker-compose up
+# set up a virtual env for the application and activate the same
+python -m venv buddy
+
+buddy/Scripts/activate # or the command for env activation on your OS
+
+# install the application dependencies from the requirements file
+pip install -r requirements.txt
+```
+
+### LLM models download and setup
+
+```bash
+ollama pull marco-o1
+ollama pull huihui_ai/deepseek-r1-abliterated
+ollama pull llama3.2
+ollama create minicpm-v-2 -f ./Modelfile
 ```
 
 ### Usage
 
--- to add docker based usage, once docker image is setup to handle main.py files --
+A comprehensive usage guide can be [found here](./usage.md)
+It explains on how to use buddy for:
+
+1. Document Consumption
+2. Question Generation
+3. Chapter summarization
+4. Answer Evaluation
+5. Answer Generation
+
+### Example Outputs
+
+_I've made buddy read documents for my University notes on event driven computing and it gives me very promising answers for complex questions_
+
+1. Problem Solving
+   ![regex question](./readme_assets/question%20answer%201.png)
+
+1. Comparison and Contrast
+   ![comparison and contrast question](./readme_assets/question%20answer%202.png)
 
 ## Motivation and Inner Workings
 
@@ -46,7 +88,7 @@ The application works in 3 very distinct steps
     1. Embedding Generation: For **each topic**, a new database in postgres SQL, is created, with 3 tables:
 
        - sparse_embeddings (using naver/splade-cocondenser-ensembledistil)
-       - dense_embeddings (using allenai/specter2) <- this embeddings works best on scientific data
+       - dense_embeddings (using allenai/specter2) <- this embeddings model works best on scientific data (a.k.a STEM data!)
        - topic_meta_data (to store a summary of each page, along with tags containing all topics present on the same page, along with chapter_num)
 
        A file parser, chunks my `.txt` files, and generates embeddings, along with an LLM based summary of the page, finally storing all of the same to the database
@@ -78,6 +120,7 @@ The application works in 3 very distinct steps
           ```
 
           Thus beautifully decomposing the initial question into simpler easier questions to answer.
+          </br>(kudos to event driven computing and state machine for teaching me this)
 
        3. Once this context is formed, by answering all of the simpler queries, the model, asks itself the original question again, with these atomic answers as reference, to ground its answer, and thus provides an accurate answer to user's question
 

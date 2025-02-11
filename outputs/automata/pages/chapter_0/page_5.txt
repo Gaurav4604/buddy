@@ -95,11 +95,11 @@ For the alphabet Σ={N,E,S,W}, we find:
             
 
             <formula>
-            Σ^1={N,E,S,W}
+            Σ^1 = {N, E, S, W}
 
-Σ^2={NN,NE,NS,NW,EN,EE,ES,EW,SN,SE,SS,SW,WN,WE,WS,WW}
+Σ^2 = {NN, NE, NS, NW, EN, EE, ES, EW, SN, SE, SS, SW, WN, WE, WS, WW}
 
-Σ^3={NNN,NNE,NNS,⋯,WWS,WWW}
+Σ^3 = {NNN, NNE, NNS, …, WWS, WWW}
             </formula>
             
 
@@ -109,7 +109,7 @@ For the alphabet Σ={N,E,S,W}, we find:
             
 
             <formula>
-            Σ^3 = {NNN, NNE, NNS, ⋯, WWS, WWW}
+            Σ^3 = {NNN, NNE, NNS, …, WWS, WWW}
             </formula>
             
 
