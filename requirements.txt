@@ -10,6 +10,8 @@ pylatexenc
 pytesseract
 opencv-python-headless
 transformers
+huggingface_hub
+adapter-transformers
 adapters
 Pillow
 semantic-text-splitter
