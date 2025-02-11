@@ -1,6 +1,6 @@
 # Buddy
 
-A Retrieval Augmented Generation Based toolkit, to help students studying STEM subjects offload tasks such as
+Buddy is a Retrieval Augmented Generation concept based python toolkit, to help students studying STEM subjects offload tasks such as
 
 1. Topic and Chapter targeted Question Generation for their subject topics
 2. Chain of Question based complex and reasoning rich question answering
