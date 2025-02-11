@@ -52,8 +52,8 @@ ollama create minicpm-v-2 -f ./Modelfile
 
 ### Usage
 
-A comprehensive usage guide can be [found here](./usage.md)
-It explains on how to use buddy for:
+A comprehensive usage guide can be [found here](./usage.md).
+It explains how to use buddy for:
 
 1. Document Consumption
 2. Question Generation
