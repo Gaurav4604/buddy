@@ -398,33 +398,45 @@ class RAGtoolkit:
         return results
 
     def query_docs(self, query: str, top_n: int = 20):
-        dense_results = self._query_docs_dense(query)
-        sparse_results = self._query_docs_sparse(query)
+        try:
+            dense_results = self._query_docs_dense(query)
+            sparse_results = self._query_docs_sparse(query)
+        except Exception as e:
+            return []
 
-        data = list(result[0] for result in dense_results) + list(
+        # Combine document results into one list
+        data = [result[0] for result in dense_results] + [
             result[0] for result in sparse_results
-        )
-
+        ]
         combined_inputs = [f"{query} [SEP] {doc}" for doc in data]
 
+        # Set device and move the model to it
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        rerank_model.to(device)
+
+        # Tokenize and explicitly set padding/truncation to 512 tokens
         embeddings = rerank_tokenizer(
             combined_inputs,
+            padding="max_length",
             return_tensors="pt",  # Ensure tensors are returned
-            padding=True,  # Optional: pad sequences to the same length
-            truncation=True,  # Optional: truncate sequences to a maximum length
+            truncation=True,  # Truncate sequences to a maximum length
+            max_length=512,
         )
+        # Move the tokenized inputs to the same device as the model
+        embeddings = {k: v.to(device) for k, v in embeddings.items()}
 
         rerank_model.eval()
         with torch.no_grad():
             scores = rerank_model(**embeddings).logits
             scores_list = scores.tolist()
 
+            # Pair each score with its corresponding document
             scored_data = list(zip(scores_list, data))
+            scored_data.sort(
+                key=lambda x: x[0], reverse=True
+            )  # Sort descending by score
 
-            # Sort the combined list by scores in descending order
-            scored_data.sort(key=lambda x: x[0], reverse=True)
-
-            # Extract the sorted data entries
+            # Select the top_n documents
             top_reranked_data = [item[1] for item in scored_data[:top_n]]
             return top_reranked_data
 
@@ -490,8 +502,8 @@ import torch.nn.functional as F
 def grade_statement_similarity(user_statement: str, actual_statement: str) -> float:
     """
     Evaluates the similarity between a user's answer and the actual answer
-    using the cross-encoder reranker model. The function returns a similarity
-    score (as a percentage from 0% to 100%).
+    using the cross-encoder reranker model on the appropriate device (CPU or GPU).
+    The function returns a similarity score (as a percentage from 0% to 100%).
 
     Args:
         user_statement (str): The statement provided by the user.
@@ -500,29 +512,33 @@ def grade_statement_similarity(user_statement: str, actual_statement: str) -> fl
     Returns:
         float: Similarity score as a percentage.
     """
-    # Format the input as a query-document pair (using [SEP] as a separator)
+    # Format the input as a query-document pair using [SEP] as a separator
     input_text = f"{user_statement} [SEP] {actual_statement}"
 
-    # Tokenize the input; the model expects a single sequence containing both answers
+    # Set the device to GPU if available, otherwise CPU
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    # Tokenize the input; the model expects a single sequence containing both answers.
     inputs = rerank_tokenizer(
         input_text, return_tensors="pt", truncation=True, padding=True
     )
+    # Move tokenized inputs to the appropriate device
+    inputs = {k: v.to(device) for k, v in inputs.items()}
 
-    # Ensure the model is in evaluation mode
+    # Move the model to the device and set it to evaluation mode
+    rerank_model.to(device)
     rerank_model.eval()
 
     # Compute logits without gradient computation
     with torch.no_grad():
         logits = rerank_model(**inputs).logits  # Expected shape: [1, num_labels]
 
-    # If the model returns only one logit (i.e. num_labels==1), use sigmoid;
+    # If the model returns only one logit (i.e., num_labels==1), use sigmoid;
     # otherwise, use softmax to extract the probability for the positive class.
     if logits.size(1) == 1:
-        # Use sigmoid for single-output scenario
         prob = torch.sigmoid(logits)[0][0].item()
     else:
-        # Use softmax for standard binary classification (positive class at index 1)
-        prob = F.softmax(logits, dim=-1)[0][1].item()
+        prob = torch.softmax(logits, dim=-1)[0][1].item()
 
     # Convert the probability (0 to 1) into a percentage (0% to 100%)
     return prob * 100
@@ -555,3 +571,9 @@ def convert_string_to_list(list_str: str) -> list[str]:
     else:
         print("No list found in the string")
         return []
+
+
+if __name__ == "__main__":
+    kit = RAGtoolkit(topic="wine_chemistry")
+    output = kit.query_docs("alcohol")
+    print(output)

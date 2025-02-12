@@ -131,7 +131,7 @@ def main():
         "--sub-topics",
         nargs="+",
         dest="sub_topics",
-        required=True,
+        required=False,
         help="Tags associated with the topic",
     )
 
@@ -179,7 +179,9 @@ def main():
         )
     elif args.command == "generate":
         asyncio.run(
-            generate_questions_pipeline(args.topic, args.chapter_num, args.sub_topics)
+            generate_questions_pipeline(
+                args.topic, args.chapter_num, args.sub_topics if args.sub_topics else []
+            )
         )
     elif args.command == "summarize":
         asyncio.run(summarize(args.topic, args.chapter_num))

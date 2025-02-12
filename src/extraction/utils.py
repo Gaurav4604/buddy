@@ -428,6 +428,7 @@ async def build_content(
 ) -> str:
 
     if det.class_id == 3:  # image data
+        print(f"processing image {det.file_location}")
         description = await extract_image(det.file_location)
         save_path = (
             f"outputs/{subject}/images/chapter_{chapter_num}/page_{page_num}_{idx}.jpg"
@@ -447,6 +448,7 @@ async def build_content(
             + "\n"
         )
     elif det.class_id == 4:
+        print(f"processing caption {det.file_location}")
         # caption text
         extracted_text = await extract_text(det.file_location)
         content += (
@@ -458,6 +460,7 @@ async def build_content(
             + "\n"
         )
     elif det.class_id == 8 or det.class_id == 5:
+        print(f"processing table/formula {det.file_location}")
         table_or_formula = await classify_table_formula(det.file_location)
         is_table = "table" in table_or_formula
 
@@ -483,6 +486,7 @@ async def build_content(
                 + "\n"
             )
     elif det.class_id == 0:
+        print(f"processing title {det.file_location}")
         # title text
         extracted_text = await extract_text(det.file_location)
         # if manual termination text found in doc
@@ -500,6 +504,7 @@ async def build_content(
             + "\n"
         )
     else:
+        print(f"processing text {det.file_location}")
         # plain text
         extracted_text = await extract_text(det.file_location)
         content += (

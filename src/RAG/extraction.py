@@ -25,17 +25,18 @@ def dump_extraction_to_db(topic: str = "general"):
                     encoding="utf-8",
                 ) as f:
                     data = f.read()
-                    chunks = chapter_kit.generate_chunks(data)
+                    if len(data) > 0:
+                        chunks = chapter_kit.generate_chunks(data)
 
-                    chapter_kit.add_docs(chunks)
+                        chapter_kit.add_docs(chunks)
 
-                    summary = chapter_kit.generate_summary(data)
-                    chapter_kit.add_meta(
-                        summary.summary,
-                        "[" + ",".join(summary.tags) + "]",
-                        chapter_kit.chapter_num,
-                        chapter_kit.page_number,
-                    )
+                        summary = chapter_kit.generate_summary(data)
+                        chapter_kit.add_meta(
+                            summary.summary,
+                            "[" + ",".join(summary.tags) + "]",
+                            chapter_kit.chapter_num,
+                            chapter_kit.page_number,
+                        )
 
                     print(f"--- page {page} - chunks added ---")
             print(f"--- chapter {chapter} - chunks added ---")

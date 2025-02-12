@@ -314,20 +314,23 @@ async def generate_questions(tag: str, topic: str = "general") -> QuestionsFromT
     kit = RAGtoolkit(topic=topic)
     docs = kit.query_docs(query=tag)
 
-    res = await client.chat(
-        model="huihui_ai/deepseek-r1-abliterated",
-        messages=[
-            {"role": "system", "content": question_generation_system},
-            {
-                "role": "user",
-                "content": question_generation_prompt.format(
-                    "\n----reference----\n".join(docs), tag
-                ),
-            },
-        ],
-        format=QuestionsFromTag.model_json_schema(),
-        options={"num_ctx": 32768, "temperature": 0.2},
-        keep_alive=0,
-    )
+    if len(docs):
+        res = await client.chat(
+            model="huihui_ai/deepseek-r1-abliterated",
+            messages=[
+                {"role": "system", "content": question_generation_system},
+                {
+                    "role": "user",
+                    "content": question_generation_prompt.format(
+                        "\n----reference----\n".join(docs), tag
+                    ),
+                },
+            ],
+            format=QuestionsFromTag.model_json_schema(),
+            options={"num_ctx": 32768, "temperature": 0.2},
+            keep_alive=0,
+        )
 
-    return QuestionsFromTag.model_validate_json(res.message.content)
+        return QuestionsFromTag.model_validate_json(res.message.content)
+    else:
+        return QuestionsFromTag(questions=[], tag=tag)

@@ -1,0 +1,28 @@
+[
+    {
+        "questions": [
+            "What are the primary factors influencing wine astringency and viscosity?",
+            "How do ethanol levels and volatile compounds contribute to the sensory profile of wine?"
+        ],
+        "tag": "winemaking"
+    },
+    {
+        "questions": [
+            "What is residual sugar in wines, and how does it affect wine taste?"
+        ],
+        "tag": "residual_sugar"
+    },
+    {
+        "questions": [
+            "What are the primary factors influencing wine astringency and viscosity?",
+            "How do non-polar volatile compounds contribute to the sensory properties of wine?"
+        ],
+        "tag": "winemaking_sensory_properties"
+    },
+    {
+        "questions": [
+            "What is residual sugar in wines?"
+        ],
+        "tag": "residual sugar"
+    }
+]

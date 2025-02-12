@@ -104,6 +104,7 @@ async def questions_generation_pipeline(
     if len(tags) == 0:
         kit = RAGtoolkit(topic=topic)
         tags = kit.get_chapter_tags(chapter_num)
+        print(tags)
         filename = f"chapter_{chapter_num}.json"
     else:
         filename = "user-defined.json"
@@ -111,9 +112,12 @@ async def questions_generation_pipeline(
     payloads = [(tag, topic) for tag in tags]
 
     # Generate questions concurrently for each tag
-    questions = await asyncio.gather(
-        *[generate_questions(*payload) for payload in payloads]
-    )
+    questions = []
+
+    for payload in payloads:
+        question = await generate_questions(*payload)
+        print(question)
+        questions.append(question)
 
     # Create the output directory if it doesn't exist
     output_folder = os.path.join("generated", topic, "questions")

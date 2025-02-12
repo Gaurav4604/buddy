@@ -5,3 +5,7 @@ buddy/**
 cache/**
 
 .env
+
+files/**
+
+outputs/**
