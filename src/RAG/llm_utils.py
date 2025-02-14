@@ -206,9 +206,9 @@ to be used as reference in answering the current question
 
 answer this question, using the above references
 and previous questions and answers
-<question>
+<main-question>
 {}
-</question>
+</main-question>
 """
 
 

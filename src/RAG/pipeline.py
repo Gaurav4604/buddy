@@ -63,11 +63,9 @@ async def question_answer_pipeline(question: str, topic: str) -> QuestionAnswer:
     chain_of_questions: list[str] = []
     atomic_answers: list[QuestionAnswer] = []
 
-    for question in decomposed_question.sub_questions:
+    for q in decomposed_question.sub_questions:
 
-        atomic_answer = await answer_atomic_question(
-            question, topic, chain_of_questions
-        )
+        atomic_answer = await answer_atomic_question(q, topic, chain_of_questions)
 
         chain_addition = f"""
         Question:

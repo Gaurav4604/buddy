@@ -74,5 +74,17 @@
     {
         "question": "Under what conditions do epsilon-NFAs offer advantages over DFAs?",
         "answer": "Epsilon-NFAs can represent regular expressions more compactly than DFAs. They allow for non-determinism, which can simplify the implementation of complex language recognizers. Additionally, since every NFA can be converted into a DFA, epsilon-NFAs provide a flexible and efficient way to model languages before converting them into an executable DFA."
+    },
+    {
+        "question": "What is a DFA?",
+        "answer": "A Deterministic Finite-state Automaton (DFA) is a type of automaton that can only be in one state at any given time. This determinism ensures that for each input symbol, the automaton transitions to exactly one subsequent state. DFAs are widely used in computer science for tasks such as pattern matching and language recognition because their deterministic nature simplifies implementation and analysis."
+    },
+    {
+        "question": "why are NFAs better than DFAs?",
+        "answer": "NFAs are often considered more flexible and expressive compared to DFAs. They can represent multiple possible transitions for a single input symbol, which allows them to model complex behaviors that might require several paths of execution. Additionally, NFAs can have multiple start states, making them suitable for certain tasks where multiple initial conditions are necessary. However, despite their flexibility, every NFA can be converted into an equivalent DFA, ensuring that the language accepted by both is identical."
+    },
+    {
+        "question": "what are realworld examples of DFAs?",
+        "answer": "DFAs are widely used in various fields, including software development, natural language processing, and hardware design. They are particularly useful for pattern matching, string recognition, and parsing tasks."
     }
 ]
