@@ -1,76 +1,44 @@
 
             <title>
-            Chapter 2
+            Chapter 0
             </title>
             
 
             <title>
-            # Non-deterministic automata
-
-
-    
-
-
-
-    
-
+            Introduction
             </title>
             
 
             <text>
-            The automata we have studied so far are called **Deterministic Finite-state Automata (DFA)** because when the DFA receive an input it is able to precisely determine its next state. _Deterministic behaviour is a highly desirable characteristic_, because it guarantees that we can implement a DFA as a program on a computer.
+            Most of your programming experience will have been acquired by writing conventional data-processing style programs that read data, process it, and generate output. Programs that simply read and write files are among the oldest uses of computers, and are known as batch programs — the program runs, computes and, when it is finished, the result is available.
 
-A non-deterministic Finite Finite state Automaton (NFA), has the property that it can be in more than one state any one time. This (apparently weird) property allows us to express many automata state at any time.
+If the program interacts with a user, and asks for data as it is needed for the computation, it is called an interactive program. Interactive programs were the next stage in the evolution of computers and software. You have probably written many interactive programs during your coursework so far.
 
-Non-determinism appears to be an undesirable property (if the NFA cannot determine which state to enter next, what is it to do?) but it is not. It turns out that every NFA can be converted to two other state, sometimes ruled by DFA, so NFAs can _always_ be implemented, though with a bit more effort.
+However, many programs in the real world need to be able to process data as it arrives at the system. These programs are called reactive or event-driven because they need to be able to react to the data as soon as it arrives.
 
-The attraction of the NFA is that we can more-easily _seify_ the desired behaviour. Then, using a mechanical procedure, we can convert the NFA to a DFA, and thus implement it. This two-step approach neatly simplifies the overall task.
+A familiar example of a reactive program is any program with a Graphical User Interface (GUI). Such a program does not wait for a specific button to be pressed, but is instead ready to respond to any button that is pressed.
+
+Another application of reactive programs is embedded systems. These are systems that control electrical appliances such as DVD players, air conditioners, toasters, mobile phones, burglar alarms, car fuel injection systems, and many others. More than 99% of all microprocessors made in the world are hiding inside an embedded system.
+
+Reactive programs have three main characteristics:
+            </text>
+            
+
+            <text>
+            * _They are driven by the availability of data._ When a particular piece of data becomes available for processing, we say that an event occurs (hence event-driven programs). From a software viewpoint, the order in which events can occur is unpredictable – e.g. a DVD layer cannot predict which button a user will press next. This means that the number of execution paths in a reactive program is _much_ larger than in an interactive program. This fact alone makes writing correct code much more difficult (we have all experienced GUI programs that crash for no obvious reason).
 
 
             </text>
             
 
-            <title>
-            # 2.1 An informal view
-
-
-    
-
-
-
-    
-
-            </title>
-            
-
             <text>
-            In most respects, an NFA is the same as a DFA: It has a finite number of states; it accepts a finite set of input symbols; it begins in an initial state; and it has a set of accepting states. There is also a transition function, \	ext{Recall that in a DFA, } \\delta(q,s) \\takes the current state, q, the current input symbol, s, and returns the next _state_ to enter.\\
+            * _They are concurrent._ Reactive systems are usually carrying out multiple activities at the same time. For example, a single web browser process can have multiple windows opened where a different download is in progress in each window. While doing this, the browser still responds to user mouse-clicks and key-strokes. From the viewpoint of the web browser, the arrival of data for each web-page or of a mouse-clicks is simply an event that can occur at any time.
 
-In an NFA, \\delta(q,s) \\takes a current state, q, the current input symbol s, and returns a _state-set_ (a set of states) that the NFA enters. The set can contain zero, one, or more states.\\\n
-Consider the zeroOne recogniser described earlier. We can express this as an NFA as shown in fig. 2.1.\\n
-There are several things to notice about this diagram:
+
             </text>
             
 
-        <image>
-        <path>
-        outputs/automata/images/chapter_1/page_0_5.jpg
-        </path>
-        <description>
-        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two transitions: one to q1 on input 0 and another to itself on input 1. State q1 can be reached from both q0 (on inputs 0 or 1) and remains in the same state upon reaching it again with either input. From q1, there is a transition to q2 only when inputting 'l'. The final state is q2.
-        </description>
-        </image>
-        
-
-            <caption>
-            # Figure 2.1: The zeroOne recogniser as an NFA
-
-
-    
-
-
-
-    
-
-            </caption>
+            <text>
+            e The user is always in control. While the program is processing data, it cannot choose to ignore the user, rather it must respond to the user’s events (mouse-clicks, or key-strokes) in a timely fashion.
+            </text>
             

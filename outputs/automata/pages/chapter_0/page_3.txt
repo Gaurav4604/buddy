@@ -4,7 +4,7 @@
         outputs/automata/images/chapter_0/page_2_0.jpg
         </path>
         <description>
-        A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing it will change the state from OFF to ON or vice versa.
+        A simple diagram showing a toggle switch with an off and on position. The word 'tap' is written inside each circle representing the positions.
         </description>
         </image>
         
@@ -32,7 +32,7 @@ We can show the current state by putting a dot inside it. For example, immediate
         outputs/automata/images/chapter_0/page_2_3.jpg
         </path>
         <description>
-        A simple diagram showing a toggle switch with an arrow indicating that it can be turned on or off. The word 'OFF' is written in bold inside one circle, and the word 'ON' is written in bold inside another circle connected to the first by two arrows labeled 'tap'. There are also two additional arrows pointing from each of these circles back towards their respective labels.
+        A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing down on either state will toggle between them.
         </description>
         </image>
         
@@ -58,7 +58,7 @@ Consider our previous diagram, with the tap-light in the _OFF_ state. If we rece
         outputs/automata/images/chapter_0/page_2_6.jpg
         </path>
         <description>
-        A simple diagram showing a toggle switch with two states: OFF and ON. The OFF state is on the left, labeled 'OFF', while the ON state is on the right, labeled 'ON'. Arrows indicate that pressing or tapping the switch can change it from OFF to ON.
+        A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing or tapping the switch will change its state from OFF to ON.
         </description>
         </image>
         

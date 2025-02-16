@@ -1,13 +1,6 @@
 
-            <text>
-            3. We can process the remainder of the input string, (i.e. s_2,s_3,…,s_n) by recursively invoking the extended transition function, starting from state-set T: Δ(T,s_2s_3… s_n).
-
-
-            </text>
-            
-
-            <text>
-            # By combining the above three steps, we see:
+            <title>
+            # 2.6 Equivalence of NFAs and DFAs
 
 
     
@@ -16,103 +9,76 @@
 
     
 
-            </text>
-            
-
-            <formula>
-            Δ̂(P, s_1s_2s_3… s_n) = Δ̂(Δ(E C L O S E(P), s_1), s_2s_3… s_n)
-            </formula>
-            
-
-            <text>
-            A recursive evaluation according to these rules _must_ terminate in a finite number of steps. Each invocation of Δ̂ occurs with a shorter string of symbols, so we must (eventually) reach the base case: Δ̂(P,e), and the recursion will stop.
-
-
-            </text>
-            
-
-            <title>
-            # 3.5   The language of an ϵ-NFA
             </title>
             
 
             <text>
-            let E=(Q,Σ,δ,Q_0,F) be an ϵ-NFA. We can define L(E), the language of E in a very similar way to that for an NFA. The language is the set of all input strings that take E from its initial state-set Q_0 to a state-set in which _at least one_ of the states is an accepting state.
+            An NFA is often easier to construct than a DFA for a given language, which is sufficient justification for studying NFAs. You may be surprised to know that every NFA can be converted into an equivalent DFA, so it is always possible to implement an NFA.
 
-We can find this in three steps:
+In the worst case, an NFA with n states will require a DFA with 2–1 states. Fortunately, this case arises only rarely in practice, and a typical DFA has about the same number of states as the original NFA.
+
+We can construct a DFA from an NFA by first creating all the non-empty subsets of the states of the NFA (there will be 2–1 such subsets, for an NFA with n states). Let us call each subset a d-state. We then build a DFA with a separate state for each d-state.
+
+The goal is to take an NFA N = (Q_n, ε_n, Q_{o_n}, F_n), and generate a corresponding DFA D= (Q_p, ε_p, Q_{p_0}, F_p) such that L(N) = L(D).
+
+We notice that the two automata have the same input alphabet, ε, and the initial state of D (q_{p_0}) is the d-state containing all the initial states of N (Q_{o_n}).
+
+The remaining parts of the automaton D can be constructed like this:
             </text>
             
 
             <text>
-            1. The string transition function, Δ̂ allows us to find the set of states T that E will occupy after processing an input string w:
+            * Q_D is the set of all non-empty subsets of Q_N. We refer to each of these as a d_-state_. Since Q_N has n states, there will be 2^n subsets. After eliminating the empty subset, Q_D will have 2^n-1 d-states. Fortunately, in practical cases, many of these d-states will be unreractable from the initial d-state, and so can be thrown away. This can substantially reduce the complexity of the final DFA.
+
+
+            </text>
+            
+
+            <text>
+            * The final-set of D (=F_D), is the set of d-states in Q_D, such that each d-state contains at least one accepting state of N. We can specify this as:
             </text>
             
 
             <formula>
-            
-    T = Δ̂(Q_0, w)
-
+            F_D = {d ∈ Q_D| d ∩ F_N≠∅}
             </formula>
             
 
             <text>
-            2. However, there may still be some ϵ-transitionsfrom those states to one (or more) final states. We take account of this by computing, R, the states that are reachable from T by taking only ϵ-transitions:
+            * For each d-state d in Q_D, and for each symbol t in Σ, we can define δ_D(d,t) by looking at each of the corresponding NFA states s∈ d, and then seeing how N would handle each of those states for an input symbol t. Then we compute the union of those states, to get the actual d-state. Formally:
             </text>
             
 
             <formula>
-            
-    R = ECLOSE(T)
-
-            </formula>
-            
-
-            <text>
-            3. The string w is accepted by E if at least one of the states in R is in F.
-
-
-            </text>
-            
-
-            <text>
-            We can compress these three steps into one compact formal statement, like this:
-            </text>
-            
-
-            <formula>
-            
-    L(E) = {w ∈Σ^*| E C L O S E(Δ̂(Q_0, w)) ∩ F ≠∅}
-
+            ∀ d ∈ Q_D, δ_D(d, t) = Δ_N(d, t)
             </formula>
             
 
             <title>
-            3.6 Eliminating υ-transitions
+            # 2.6.1 Converting our example NFA to a DFA.
+
+
             </title>
             
 
             <text>
-            Given any ϵ-NFA, E, we can find a non-deterministic finite-state automaton (NFA), N, that accepts the same language as E. We do this by eliminating the ϵ-transitions.
-
-Let E=(Q_E,Σ,δ_E,Q_HF,F_E) be an ϵ-NFA. We will create an equivalent NFA, N=(Q_N,Σ,δ_N,Φ_UN,F_N), defined like this:
-            </text>
-            
-
-            <text>
-            1. N has the same states as E, thus Q_N=Q_E. We will see later that sometimes this results in N having unreachable states (states that can never be reached from the initial states). Unreachable states can safely be deleted, thus the number of states in N maybe fewer than in E.
-
-
-            </text>
-            
-
-            <text>
-            2. E starts in the state-set Q_0E, so N will start in the same set of states. Thus:
+            Taking our example of the _zeroOne_ NFA, we have: Q_N={q_0,q_1,q_2}. Now Q_D is the set of all non-empty subsets of Q_N, thus the d-states in Q_D will be: {q_0}, {q_1}, {q_2}, {q_0,q_1}, {q_0,q_2}, {q_1,q_2}, and {q_0,q_1,q_2}. We can write:
             </text>
             
 
             <formula>
-            
-    Q_0N = Q_0E
-
+            Q_D = { q_0, q_1, q_2, {q_0, q_1}, {q_0, q_2}, {q_1, q_2}, {q_0, q_1, q_2}}
             </formula>
+            
+
+            <text>
+            since N has 3 states, there are 2^3-1=7 non-empty subsets, as we have just seen.
+            </text>
+            
+
+            <text>
+            The final states of the DFA are {q_2}, {q_0,q_2}, {q_1,q_2}, and {q_0,q_1,q_2}, since these d-states all include the final state q_2 of the original NFA.
+
+When we construct the transition function, we find:
+            </text>
             

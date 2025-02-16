@@ -1,77 +1,16 @@
 
-        <image>
-        <path>
-        outputs/automata/images/chapter_2/page_4_0.jpg
-        </path>
-        <description>
-        A simple state diagram with a single initial and final state. The transition is labeled 'e'.
-        </description>
-        </image>
-        
-
-            <text>
-            # Here is the limiting case of the previous problem:
-
-
-    
-
-
-
-    
-
-            </text>
-            
-
-            <text>
-            # Once again, there is no problem: eclose(q_0)={q_0}.
-
-            </text>
-            
-
-            <text>
-            Thus we see that loops of ϵ-transitions among one or several states cause no problem with the definition of eclose. 
-            </text>
-            
-
             <title>
-            # 3.3.4 The extended epsilon-closure
-
-
-    
-
-
-
-    
-
+            
+# 2.4 The string transition function for an NFA
             </title>
             
 
             <text>
-            The epsilon closure we have defined, _eclose_ takes as parameter a _single_ state, and returns a _set of states_.
+            The extended transition function, Δ allows us to specify how an NFA in state-set Q, will move to state-set R upon receipt of a symbol s. We show this by writing R=Δ(Q,s).
 
-We will find it convenient to define another function, _ECLOOSE_ (note the capital letters!), that takes as parameter a _set of states_ and returns a _set of states_. The _ECLOOSE_ of a set of states is simply the union of the _eclose_ of each of the individual states, thus the definition is:
-            </text>
-            
+We are interested in knowing what state-set an NFA will reach, starting at Q_0, if it is presented with a _string_ of symbols w=s_1s_2s_3⋯ s_n.
 
-            <formula>
-            
-    E C L O S E(Q)=⋃_q∈ Qe c l o s e(q)
-
-            </formula>
-            
-
-            <title>
-            # 3.4 The string transition function of an ϵ-NFA.
-
-            </title>
-            
-
-            <text>
-            We are interested in knowing what state-set an ϵ-NFA will reach, starting at state-set Q_0, if it is presented with a _string_ of symbols w=s_1s_2s_3⋯ s_n.
-
-The _string transition function_Δ, shows how an ϵ-NFA that starts in any _state-set_P, and receives a sequence of symbols, w, ends up in state-set R.
-
-We can specify the Δ function like this:
+We can specify Δ, the string transition function, that takes a current _state-set_P, and a string of input symbols v=s_1s_2s_3⋯ s_n, and generates the state-set R that the NFA will reach after processing those symbols: R=Δ̂(P,w), like this:
             </text>
             
 
@@ -81,34 +20,83 @@ We can specify the Δ function like this:
             
 
             <text>
-            (Remember that {Q} is the set of all subsets that can be created by selecting states from Q.)
+            (Note that {Q} is a _set of sets of states_ – the set of all subsets that can be created by selecting states from Q.)
 
-We can define the behaviour of Δ recursively like this:
+We can define Δ̂ recursively, like this:
             </text>
             
 
             <text>
             
-| **Base case** | Δ̂(P,ϵ)=P which says that if there is no input, the ϵ-NFA remains in the current state-set P. 
+Base case If there is no input, the NFA stays in the current state-set, P. Thus the rule is:
             </text>
+            
+
+            <formula>
+            Δ̂(P, ϵ) = P
+            </formula>
             
 
             <text>
             
 
-**Recurrence case**] We proceed by imagining that we have chopped one symbol, s_1, from the input string, w, and then taking one step forward in the c-NFR machine with that symbol. Finally, starting at the state-set thus reached, we use the extended transition function to process the remainder of the input string, s_2s_3… s_n. More formally:
+**Recurrence case**] If we are given a string of symbols s_1s_2s_3⋯ s_n, we "chop" the first symbol s_1 from the string, and use Δ to compute the state-set, T, that would be reached, starting at each state p in P:
             </text>
             
 
-            <text>
-            1. let V=ECLOSE(P) here V is the set of all states from which the ϵ-NFA could possibly make a transition. It includes the current state-set (P), plus all the states that the machine could reach by taking one or more ϵ-transitions.
+            <formula>
+            T = Δ(P, s_1)
+            </formula>
+            
 
+            <text>
+            We then use the Δ̂ function to process the remainder of the string, starting at T: Δ̂(T,∘_2∘_3⋯∘_n). Combining the pieces, we get:
+            </text>
+            
+
+            <formula>
+            Δ̂(P, s_1s_2s_3…s_n) = Δ̂(Δ(P, s_1)), s_2s_3…s_n)
+            </formula>
+            
+
+            <text>
+            We can see that a recursive evaluation according to these rules _must_ terminate in a finite number of steps, because each recursive invocation of δ̂ occurs with a shorter string of symbols. Eventually, we will reach the base case: Δ̂(R,ϵ).
 
             </text>
             
 
+            <title>
+            # 2.5   The language of an NFA
+            </title>
+            
+
             <text>
-            2. let T=Δ(V,s_1)   T is the set of all states that will be reached by taking one transition with the symbols_1, starting from the state-set V. (It includes all states _directly_ reachable from the current state-set, P, by a transition s_1, _and_ all the states _indirectly_ reachable by a sequence of epsilon transitions, followed by a transition s_1.) Thus, T is the next state-set.
+            We can define the language of an NFA in a very similar way to a DFA. The language is the set of all input strings that take the NFA from its initial state to an accepting state. Thus, for the NFA N, defined by:
+            </text>
+            
+
+            <formula>
+            N = (Q, Σ, δ, Q_0, F)
+            </formula>
+            
+
+            <text>
+            The language L(V) of this NFA is defined by: \# The language $L(V)$ of this NFA is defined by:
+            </text>
+            
+
+            <formula>
+            L(N) = {w ∈Σ^* |Δ̂(Q_0, w) ∩ F ≠∅}
+            </formula>
+            
+
+            <formula>
+            L(N) = {w ∈Σ^* |Δ^(Q_0, w) ∩ F ≠∅}
+            </formula>
+            
+
+            <text>
+            Note that we must define the acceptance test slightly differently from a DFA. In a DFA, the δ̂ function returns a single state, and we check to see if that state is in F. For an NFA, Δ̂ returns a _set_ of states. If one or more of those states is in F, then the NFA is in an accepting state. We express this condition by computing the intersection between the result of Δ̂ and F, Δ̂(⋯)∩ F. If the intersection is _non-null_, we know that the NFA has reached an accepting state.
 
 
             </text>

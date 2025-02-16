@@ -3,6 +3,7 @@ import asyncio
 from .utils import RAGtoolkit, grade_statement_similarity
 import os
 import json
+from flask_socketio import SocketIO
 
 from .llm_utils import (
     decompose_question,
@@ -11,6 +12,7 @@ from .llm_utils import (
     answer_atomic_question,
     answer_composite_question,
     generate_questions,
+    format_data,
 )
 
 
@@ -27,15 +29,23 @@ Pipelines
 """
 
 
-async def question_answer_pipeline(question: str, topic: str) -> QuestionAnswer:
+async def question_answer_pipeline(
+    question: str, topic: str, socketio: SocketIO
+) -> QuestionAnswer:
     """
     Generates a composite answer for a question and saves the QnA pair in a JSON file
     at generated/{topic}/QnA.json. Before running the heavy asynchronous processing,
     it checks if a similar question already exists (using grade_statement_similarity > 90%).
 
+    Emits the following socket events:
+      - "questions_generated" with the list of sub-questions once they are decomposed.
+      - "atomic_answer" with each atomic question and its answer.
+      - "final_answer" once the composite answer is generated.
+
     Args:
         question (str): The input question.
         topic (str): The topic name used for file storage.
+        socketio (SocketIO): The SocketIO instance to emit events.
 
     Returns:
         QuestionAnswer: The QnA pair, either retrieved from storage or newly generated.
@@ -60,24 +70,39 @@ async def question_answer_pipeline(question: str, topic: str) -> QuestionAnswer:
     # No duplicate found: proceed with generating the answer.
     decomposed_question = await decompose_question(question=question)
 
+    markdown = await format_data(
+        "questions: " + " ".join(decomposed_question.sub_questions)
+    )
+
+    # Emit event: questions generated.
+    socketio.emit(
+        "questions_generated",
+        {"sub_questions": markdown},
+        namespace="/",
+    )
+
     chain_of_questions: list[str] = []
     atomic_answers: list[QuestionAnswer] = []
 
+    # Process each sub-question
     for q in decomposed_question.sub_questions:
-
         atomic_answer = await answer_atomic_question(q, topic, chain_of_questions)
-
         chain_addition = f"""
         Question:
             {atomic_answer.question}
         Answer:
             {atomic_answer.answer}
         """
-
         print(chain_addition)
-
         chain_of_questions.append(chain_addition)
         atomic_answers.append(atomic_answer)
+
+        # Emit event: atomic answer completed.
+        socketio.emit(
+            "atomic_answer",
+            {"question": atomic_answer.question, "answer": atomic_answer.answer},
+            namespace="/",
+        )
 
     # Generate the composite answer.
     answer = await answer_composite_question(question, atomic_answers)
@@ -91,6 +116,9 @@ async def question_answer_pipeline(question: str, topic: str) -> QuestionAnswer:
     # Save the updated QnA list back to the file.
     with open(output_filepath, "w", encoding="utf-8") as f:
         json.dump(existing_entries, f, indent=4, ensure_ascii=False)
+
+    # Emit event: final answer generated.
+    socketio.emit("final_answer", new_entry, namespace="/")
 
     return answer
 

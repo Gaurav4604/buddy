@@ -1,111 +1,133 @@
 
             <title>
-            
-# 2.4 The string transition function for an NFA
+            0.5.1 Alphabets
             </title>
             
 
             <text>
-            The extended transition function, Δ allows us to specify how an NFA in state-set Q, will move to state-set R upon receipt of a symbol s. We show this by writing R=Δ(Q,s).
-
-We are interested in knowing what state-set an NFA will reach, starting at Q_0, if it is presented with a _string_ of symbols w=s_1s_2s_3⋯ s_n.
-
-We can specify Δ, the string transition function, that takes a current _state-set_P, and a string of input symbols v=s_1s_2s_3⋯ s_n, and generates the state-set R that the NFA will reach after processing those symbols: R=Δ̂(P,w), like this:
-            </text>
-            
-
-            <formula>
-            Δ: {0}×Σ^*→{0}
-            </formula>
-            
-
-            <text>
-            (Note that {Q} is a _set of sets of states_ – the set of all subsets that can be created by selecting states from Q.)
-
-We can define Δ̂ recursively, like this:
+            An _alphabet_ is a finite, non-empty set of symbols. It is conventional to use the Greek letter Σ (sigma), to represent an alphabet. Some examples of common alphabets are:
             </text>
             
 
             <text>
-            
-Base case If there is no input, the NFA stays in the current state-set, P. Thus the rule is:
-            </text>
-            
+            1. Σ={0,1}, the set of binary digits.
+2. Σ={A,B,⋯,Z}, the set of Roman letters.
+3. Σ={N,E,S,W}, the set of compass-points.
 
-            <formula>
-            Δ̂(P, ϵ) = P
-            </formula>
-            
-
-            <text>
-            
-
-**Recurrence case**] If we are given a string of symbols s_1s_2s_3⋯ s_n, we "chop" the first symbol s_1 from the string, and use Δ to compute the state-set, T, that would be reached, starting at each state p in P:
-            </text>
-            
-
-            <formula>
-            
-    T = Δ(P, s_1)
-
-            </formula>
-            
-
-            <text>
-            We then use the Δ̂ function to process the remainder of the string, starting at T: Δ̂(T,∘_2∘_3⋯∘_n). Combining the pieces, we get:
-            </text>
-            
-
-            <formula>
-            Δ̂(P, s_1 s_2 s_3 ⋯ s_n) = Δ̂(Δ(P, s_1)), s_2 s_3 ⋯ s_n)
-            </formula>
-            
-
-            <text>
-            We can see that a recursive evaluation according to these rules _must_ terminate in a finite number of steps, because each recursive invocation of δ̂ occurs with a shorter string of symbols. Eventually, we will reach the base case: Δ̂(R,ϵ).
 
             </text>
             
 
             <title>
-            # 2.5   The language of an NFA
+            0.52 Strings
             </title>
             
 
             <text>
-            We can define the language of an NFA in a very similar way to a DFA. The language is the set of all input strings that take the NFA from its initial state to an accepting state. Thus, for the NFA N, defined by:
+            A string is a finite sequence of symbols drawn from an alphabet. A string is also sometimes called a word. Some examples of strings are:
+            </text>
+            
+
+            <text>
+            1. 100101 is a string from the binary alphabet Σ={0,1}.
+2. THEORY is a string from the Roman alphabet Σ={A,B,⋯,Z}.
+3. SE is a string from the compass-points alphabet Σ={N,E,S,W}.
+
+
+            </text>
+            
+
+            <title>
+            Empty value
+            </title>
+            
+
+            <text>
+            The *empty string* is a string with no symbols in it, usually denoted by the Greek letter ϵ (epsilon). Clearly, the empty string is a string that can be chosen from any alphabet. 
+            </text>
+            
+
+            <title>
+            # Length of a string
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            It is handy to classify strings by their _length_, the number of symbols in the string. The string THEORY, for example, has a length of 6. The usual notation for the length of a string s is |s|. Thus |THEORY|=6, |1001|=4, and |ϵ|=0.
+
+
+            </text>
+            
+
+            <title>
+            # Powers of an alphabet
+
+
+    
+
+
+
+    
+
+            </title>
+            
+
+            <text>
+            We are often interested in the set of all strings of a certain length, say k, drawn from an alphabet Σ. This can be constructed by taking the _Cartesian product_, of Σ with itself k times: Σ×Σ×⋯Σ. We can represent this symbolically, using exponential notation, as Σ^k.
+
+Clearly Σ^0={e}, for any alphabet Σ, because e is the only string whose length is zero.
+
+For the alphabet Σ={N,E,S,W}, we find:
             </text>
             
 
             <formula>
+            Σ^1 = {N, E, S, W}
+            </formula>
             
-    N=(Q,Σ,δ,Q_0,F)
 
+            <formula>
+            Σ^1 = {N, E, S, W}
+
+Σ^2 = {NN, NE, NS, NW, EN, EE, ES, EW, SN, SE, SS, SW, WN, WE, WS, WW}
+
+Σ^3 = {NNN, NNE, NNS, …, WWS, WWW}
             </formula>
             
 
             <text>
-            The language L(V) of this NFA is defined by: \# The language $L(V)$ of this NFA is defined by:
+            Σ^2={NN,NE,NS,NW,EN,EE,ES,EW,SN,SE,SS,SW,WN,WE,WS,WW}. 
             </text>
             
 
             <formula>
-            
-    L(N)={w∈Σ^*|Δ̂(Q_0,w)∩ F≠∅}
-
-            </formula>
-            
-
-            <formula>
-            
-    L(N)={w∈Σ^*|Δ̂(Q_0,w)∩ F≠∅}
-
+            Σ^3 = {NNN, NNE, NNS, …, WWS, WWW}
             </formula>
             
 
             <text>
-            Note that we must define the acceptance test slightly differently from a DFA. In a DFA, the δ̂ function returns a single state, and we check to see if that state is in F. For an NFA, Δ̂ returns a _set_ of states. If one or more of those states is in F, then the NFA is in an accepting state. We express this condition by computing the intersection between the result of Δ̂ and F, Δ̂(⋯)∩ F. If the intersection is _non-null_, we know that the NFA has reached an accepting state.
+            Σ^3, has 64 members, since it contains 4×4×4 members.
 
+The set of _all_ strings that can be drawn from an alphabet is conventionally denoted, using the so-called _Kleene star_, by Σ^*, and of course has an infinite number of members. For the alphabet Σ={0,1}
+            </text>
+            
+
+            <text>
+            * = {ε,0,1,00,01,10,11,000,001,010,...}
+            </text>
+            
+
+            <text>
+            
+    Clearly, Σ^*=Σ^0∪Σ^1∪Σ^2∪⋯
 
             </text>
             

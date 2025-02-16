@@ -1,15 +1,52 @@
 
+            <title>
+            # 0.1 What are event-driven systems?
+
+
+            </title>
+            
+
             <text>
-            The diagram has fewer transitions than the earlier DFA, so it appears simpler.
-
-There are two transitions from state q0, labelled 0. Thus when a 0 is received, the NFA enters both state q0 and state q1. We will see how to think about this situation shortly.
-
-There is no transition corresponding to 0 from state q1, and no transitions at all from state q2. If these situations occur, the thread of the NFA’s existence that corresponds to these states simply “dies”. Other threads may continue to exist.
+            As noted above, reactive or event-driven systems can cover a broad spectrum of applications. The most common are:
             </text>
             
 
             <text>
-            The central idea of this NFA is to try to "guess" when the final 01 has begun. Whenever it is in state q_0, and it sees a zero, it guesses that the 0 is the beginning of the final 01, so it enters state q_1. (If it guessed correctly, a subsequent 1 will cause it to enter state q_2.) However, just in case it makes a bad guess, and the 0 is _not_ the beginning of a 01 sequence, the NFA "hedges its best" and also remains in state q_0.
+            
+
+**Graphical User Interfaces (GUIs)** It is very difficult to write correct code for GUIs without using event-driven techniques. In this course, we will show you how to construct _bug-free_ GUIs.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Embedded Systems**: If you are an engineer, you will almost certainly be involved in designing or implementing an embedded control system for a product. The reason is simple: a microcontroller is the cheapest and most flexible way to implement the control section of almost every electronic product. Those of you who are studying the courses "software Engineering and Project" or "Embedded Computer Systems" will find that knowledge of event-driven systems will significantly simplify the software for your projects.
+
+
+            </text>
+            
+
+            <text>
+            
+
+**Communication Protocols**: Modern computer systems are extensively networked, to allow them to exchange data. All computer communication depends on a protocol for the exchange of data. Communication protocols need to be able to respond to events, such as: arrival of a message, arrival of an acknowledgement, timeout after sending a message, and so on. All these events can occur in any order. A protocol can _only_ be implemented reliably using event-driven programming techniques.
+
+
+            </text>
+            
+
+            <text>
+            A “protocol stack” is a layered set of intercommunicating protocols that together permit computer-to-computer communication. Each layer in the stack is a reactive program. A protocol stack is thus, by its very nature, highly reactive, and highly concurrent.
+            </text>
+            
+
+            <text>
+            Despite the variety of applications for event-driven systems, there are some well understood techniques for designing and implementing these systems. They can significantly reduce the time, effort and the likelihood of bugs when writing your code. They also will make your program _much_ easier to change in the future.
+
+By making clear design and implementation decisions at the beginning, you will retain intellectual control over the complexity inherent in all reactive systems.
 
 
             </text>
@@ -17,7 +54,26 @@ There is no transition corresponding to 0 from state q1, and no transitions at a
 
             <title>
             
-# 2.1.1   Example — the zeroOne NFA processing a string
+    0.2  A little history
+
+            </title>
+            
+
+            <text>
+            The ideas behind finite state machines have been around for a long time now. In the 1930s, Alan Turing did research on computable functions, and invented the Turing machine's, a simple processor that has been proved to have the same capabilities as any current-day computer.
+
+In the 1940s, McCulloch and Pitts modelled the behaviour of nerve networks, using ideas similar to those presented in these notes.
+
+In the mid 1950s, papers by Mealy and Moore, from the Engineering community, had a big influence on the new version of viewing systems in telephone exchanges. Both described finite state machines as the new work of them. We will look at the nature of their work a little later on.
+
+At the end of the 1950s, Rubin and Scott published a paper that introduced non-deterministic finite state machines, and provided fruitful insights for further work. They received the ACM Turing award for this work.
+
+
+            </text>
+            
+
+            <title>
+            # 0.3   An introductory example - the tap-light
 
 
     
@@ -30,63 +86,8 @@ There is no transition corresponding to 0 from state q1, and no transitions at a
             
 
             <text>
-            is works, let us process the same string 011001 that was handled by the previous DF
-            </text>
-            
-
-        <image>
-        <path>
-        outputs/automata/images/chapter_1/page_1_4.jpg
-        </path>
-        <description>
-        A sequence of three states in a finite state machine (FSM) with transitions between them. The FSM starts at q0, moves to q1 after an input 'a', and then to q2 after another input 'b'. Each transition is labeled by the number 0 or 1 representing different paths taken during execution.
-        </description>
-        </image>
-        
-
-            <text>
-            # Initially, the NFA is in state q_0.
+            Let us consider a simple but familiar example: an electric table lamp that is controlled by simply "tapping" it: when a user taps the lamp, it turns on; tap again, and it turns back off; tap again, and it turns back on; and so on. We can represent this behaviour in a _state-diagram_, as shown in fig. 1.
 
 
             </text>
             
-
-            <text>
-            After processing the input symbol 0, the NFA enters states go and q;. There are thus two dots showing the current state.
-            </text>
-            
-
-            <text>
-            To process the input symbol 1, we must handle two cases. The dot in go results in the next state being q0. The dot in q results in the next state being q0. There are two current states g0 and q2, and the diagram now looks like this:
-            </text>
-            
-
-            <text>
-            Since q_2 is an accepting state, the NFA has recognised a string that ends in 01. 
-            </text>
-            
-
-        <image>
-        <path>
-        outputs/automata/images/chapter_1/page_1_9.jpg
-        </path>
-        <description>
-        A state diagram with three states: q0, q1, and q2. The initial state is q0, which has two transitions labeled 0 and 1 leading to q1. From q1, there are two transitions labeled 0 and 1 leading to q2.
-        </description>
-        </image>
-        
-
-            <text>
-            To process the input symbol 1, again we must handle two cases. The dot in q0 results in the next state being q0. q0 has no outgoing transitions, so there is no next state. There is only one current state, and the diagram is:
-            </text>
-            
-
-        <image>
-        <path>
-        outputs/automata/images/chapter_1/page_1_11.jpg
-        </path>
-        <description>
-        A state diagram with three states: q0, q1, and q2. The initial state is q0, which has two transitions to q1 based on input 0 or 1. From q1, there are two transitions to q2 based on inputs 0 or 1.
-        </description>
-        </image>
-        

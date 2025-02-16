@@ -1,90 +1,69 @@
 
-            <text>
-            When we process the input symbol 0, the NFA makes two transitions to $q_0$ and $q_1$. There are again two current states, and the diagram is:
-            </text>
+        <image>
+        <path>
+        outputs/automata/images/chapter_1/page_2_0.jpg
+        </path>
+        <description>
+        A simple diagram showing a switch with two states: OFF and ON. The arrow labeled 'tap' indicates that pressing or tapping on either state will change it to the opposite one.
+        </description>
+        </image>
+        
+
+            <caption>
+            
+    Figure 1: The tap-on/tap-off table light
+
+            </caption>
             
 
             <text>
-            When we process the input symbol 0, there are two cases to handle: There is no outgoing transition from state q_1, so it is unable to handle the 0. State q_0 has two outgoing transitions labelled with 0, so the NFA enters states q_0 and q_1. The overall effect is for the NFA diagram to not change:
+            In the diagram, the two circles, named of f and on, represent the state of the light. The state of the light can be changed by the occurrence of an event, named tap. We show a transition from one state to another by a directed arc (A line with an arrow on one end) from one state to another, labelled with the name of an event. There is a special transition, shown as a “lightning-strike”, that indicates the starting state of the diagram. (In this example, the starting state is named off.) A diagram such as this is called a finite state machine(FSM).
+
+This state-diagram very neatly and succinctly captures the behaviour of the light: Initially, the light is off, and the FSM is in state of f. Upon receipt of a tap event, the system changes state to on, indicating that the light is now on. The FSM is now in state on. Upon receipt of a tap event, the system changes state to of f, indicating that the light is now off. The FSM is now in state of f.
+
+We can show the current state by putting a dot inside it. For example, immediately after starting this FSM, the diagram will appear as shown in fig. 2.
             </text>
             
 
         <image>
         <path>
-        outputs/automata/images/chapter_1/page_2_2.jpg
+        outputs/automata/images/chapter_1/page_2_3.jpg
         </path>
         <description>
-        A state diagram with three states q0, q1 and q2. The initial state is q0 which has two transitions: one to q1 on input 0 and another to q1 on input 1. State q1 can be reached from both q0 (on inputs 0 or 1) and it leads to the final state q2 when reaching its transition labeled 'I'. The diagram also includes a label W, which may represent an external influence or condition affecting the transitions.
+        A simple diagram showing a toggle switch with an arrow indicating that it can be turned on or off. The word 'OFF' is written in bold inside one circle, and the word 'ON' is written in bold inside another circle connected by two arrows labeled 'tap'. There are also two additional arrows pointing to each of these circles from outside.
         </description>
         </image>
         
 
-            <text>
-            To process the input symbol 1, we again must handle two cases. The dot in $q_0$ results in the next state being $q_0$. The dot in $q_1$ results in the next state being $q_2$. There are two current states $q_0$ and $q_2$, and the diagram now looks like this:
-            </text>
+            <caption>
+            
+    Figure 2: The tap-light in the O F F state
+
+            </caption>
             
 
             <text>
-            Since q_2 is an accepting state, the NFA has recognised a string that ends in 01. 
-            </text>
-            
+            All this behaviour can be understood just by putting your finger on the current state (the one with the dot) and, upon receipt of an event, following the appropriate transition to the next state. By reading the diagram, it is easy to see what will happen in every situation.
 
-            <title>
-            
-# 2.2   Formal definitions of an NFA
-
-
-    
-
-
-
-    
-
-            </title>
-            
-
-            <title>
-            # 2.2.1 Five-tuple definition of an NFA.
-
-
-            </title>
-            
-
-            <text>
-            A nondeterministic finite automaton (NFA) consists of:
-            </text>
-            
-
-            <text>
-            1. A finite set of _states_, usually denoted by Q
-2. A finite set of _input symbols_, usually denoted by Σ.
-3. A _transition function_Q×Σ→{Q}, that takes a state and an input symbol, and returns a set of new states. The transition function is usually denoted by δ.
-4. A set of _start-states_Q_0⊆ Q, Q_0 is a set containing one or more of the the states in Q.
-5. A set of _final_ or _accepting_ states F⊆Q, usually denoted by F. Clearly, F is a subset of Q.
+Consider our previous diagram, with the tap-light in the _OFF_ state. If we receive a _tap_ event, the diagram changes to the _ON_ state, as shown in fig. 3.
 
 
             </text>
             
 
-            <text>
-            Notice that the there are two minor differences between a DFA and an NFA. The first difference is that the transition function for a DFA returns a _single_ state, whereas for an NFA it returns a _set_ of states.
+        <image>
+        <path>
+        outputs/automata/images/chapter_1/page_2_6.jpg
+        </path>
+        <description>
+        A simple diagram showing a switch with two states, OFF and ON. The arrow labeled 'tap' indicates that pressing it will change from OFF to ON or vice versa.
+        </description>
+        </image>
+        
 
-The second difference follows from the first, and is that a DFA has a _single_ start state, whereas an NFA has a _set_ of start states.
-
-A non-deterministic finite automaton named N can be represented by a 5-tuple:
-            </text>
+            <caption>
             
+    Figure 3: The tap-light in the O N state
 
-            <formula>
-            
-    N=(Q,Σ,δ,Q_0,F)
-
-            </formula>
-            
-
-            <text>
-            where Q is the set of states, Σ is the set of input symbols, δ is the transition function, Q_0 is the set of initial states, and F the set of final states.
-
-
-            </text>
+            </caption>
             

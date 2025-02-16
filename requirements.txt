@@ -18,3 +18,7 @@ semantic-text-splitter
 psycopg2-binary
 pgvector
 scipy
+flask
+flask-socketio
+eventlet
+flask-cors

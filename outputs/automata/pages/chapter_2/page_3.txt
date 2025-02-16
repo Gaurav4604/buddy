@@ -1,106 +1,87 @@
 
             <text>
-            6 by taking a normal transition. (If there had been a chain of epsilon transitions, the machine could take as many of them as it wanted. However, at the end it must process the 6.)
+            When we process the input symbol 0, the NFA makes two transitions to $q_0$ and $q_1$. There are again two current states, and the diagram is:
+            </text>
+            
+
+            <text>
+            When we process the input symbol 0, there are two cases to handle: There is no outgoing transition from state q_1, so it is unable to handle the 0. State q_0 has two outgoing transitions labelled with 0, so the NFA enters states q_0 and q_1. The overall effect is for the NFA diagram to not change:
             </text>
             
 
         <image>
         <path>
-        outputs/automata/images/chapter_2/page_2_1.jpg
+        outputs/automata/images/chapter_2/page_2_2.jpg
         </path>
         <description>
-        A diagram showing a state transition in an automaton with states q0, q1, q2 and q3. The arrows represent transitions between these states, where epsilon (ε) represents self-loops or empty input symbols leading to different states.
+        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two outgoing edges to q1 (labeled 0) and q2 (labeled 1). There are no incoming or self-loops on any of the states.
         </description>
         </image>
         
 
             <text>
-            After processing the symbol 5, the machine remains in state-set {q2}, and the machine looks like this:
+            To process the input symbol 1, we again must handle two cases. The dot in $q_0$ results in the next state being $q_0$. The dot in $q_1$ results in the next state being $q_2$. There are two current states $q_0$ and $q_2$, and the diagram now looks like this:
             </text>
             
 
             <text>
-            Once again, because there is an epsilon-transition from q2 to q3, the machine has correctly recognised 65 as a valid string.
+            Since q_2 is an accepting state, the NFA has recognised a string that ends in 01. 
             </text>
             
 
             <title>
-            # 3.2   Formal definitions of an ϵ-NFA
+            
+# 2.2   Formal definitions of an NFA
+
+
+    
+
+
+
+    
+
             </title>
             
 
             <title>
-            # 3.2.1  5-tuple definition of an ϵ-NFA.
+            # 2.2.1 Five-tuple definition of an NFA.
+
 
             </title>
             
 
             <text>
-            # An ϵ-NFA, E, can be defined by the tuple:
+            A nondeterministic finite automaton (NFA) consists of:
+            </text>
+            
 
-. 
+            <text>
+            1. A finite set of _states_, usually denoted by Q
+2. A finite set of _input symbols_, usually denoted by Σ.
+3. A _transition function_Q×Σ→{Q}, that takes a state and an input symbol, and returns a set of new states. The transition function is usually denoted by δ.
+4. A set of _start-states_Q_0⊆ Q, Q_0 is a set containing one or more of the the states in Q.
+5. A set of _final_ or _accepting_ states F⊆Q, usually denoted by F. Clearly, F is a subset of Q.
+
+
+            </text>
+            
+
+            <text>
+            Notice that the there are two minor differences between a DFA and an NFA. The first difference is that the transition function for a DFA returns a _single_ state, whereas for an NFA it returns a _set_ of states.
+
+The second difference follows from the first, and is that a DFA has a _single_ start state, whereas an NFA has a _set_ of start states.
+
+A non-deterministic finite automaton named N can be represented by a 5-tuple:
             </text>
             
 
             <formula>
-            
-    E=(Q,Σ,δ,Q_0,F)
-
+            N = (Q, Σ, δ, Q_0, F)
             </formula>
             
 
             <text>
-            The meanings of Q, Σ, Q_0, and F are the same as for an NFA, but the definition of δ, is altered slightly: it accepts a state in Q, and _either_ an input symbol s (s∈Σ) _or_ϵ, and returns a set of states. We can express this formally:
-            </text>
-            
-
-            <formula>
-            δ: Q ×(∑{ϵ}) →{Q}
-            </formula>
-            
-
-            <text>
-            where {Q} is a set of sets of states, i.e. the _set of all subsets_ of Q. For example, for the intRecog ϵ-NFA described earlier, we have:
-            </text>
-            
-
-            <formula>
-            
-    Q = {q_0, q_1, q_2, q_3} y = {+, -, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9} Q_0 = {a} F = {q_s}
-
-            </formula>
-            
-
-            <title>
-            # 3.2.2 Transition-table definition of an ϵ-NFA.
-
-            </title>
-            
-
-            <text>
-            The transition table for an ε-NFA is almost identical to that for an NFA, except there is an extra column to specify the effect of the ε-transitions.
-            </text>
-            
-
-                <table>
-                
-<headers>
-    ['δ', '|', 'ε', '+,-,', '0,1,...,9']
-</headers>
-<rows>
-        <row>['→ q₀', '|', '{q₁}', '|', '|', '|', '']</row>
-</rows>
-        
-                </table>
-                
-
-            <title>
-            3.3 The epsilon-closure
-            </title>
-            
-
-            <text>
-            To define the language of an ϵ-NFA, we need to understand a new concept, called the _epsilon-closure_, that is a property of each state. The epsilon-closure of a state q is a set of states. The set includes the state q itself, and all states that can be reached from q, by following _only_ϵ-transitions.
+            where Q is the set of states, Σ is the set of input symbols, δ is the transition function, Q_0 is the set of initial states, and F the set of final states.
 
 
             </text>

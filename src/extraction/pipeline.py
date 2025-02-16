@@ -9,6 +9,8 @@ import asyncio
 import json
 import time
 
+from flask_socketio import SocketIO
+
 
 async def extraction_pipeline(
     input_img: str,
@@ -138,6 +140,7 @@ async def async_extraction_pipeline_from_pdf(
     document_structure: str = "top_down",
     start_page: int = 0,
     manual_terminate: str = "",
+    socketio: SocketIO = None,
 ) -> str:
     """
     Async version of 'extraction_pipeline_from_pdf' that converts pages to images,
@@ -157,6 +160,16 @@ async def async_extraction_pipeline_from_pdf(
     for i, page in enumerate(pages):
         start_time = time.time()
 
+        if socketio:
+            print(socketio)
+            socketio.emit(
+                "doc_extraction",
+                {"message": f"Page {i + 1} Extraction started"},
+                namespace="/",
+            )
+        else:
+            print("no socketio found")
+
         real_page_index = start_page + i
         page_filename = f"pages/page_{real_page_index}.png"
         page.save(page_filename, "PNG")
@@ -170,13 +183,22 @@ async def async_extraction_pipeline_from_pdf(
             manual_terminate=manual_terminate,
         )
         # Accumulate your results if needed
-        all_pages_content.append(f"--- Page {real_page_index + 1} ---\n{page_content}")
+        all_pages_content.append(f"--- Page {i + 1} ---\n{page_content}")
 
         end_time = time.time()
         print(f"time taken for extraction --- {end_time - start_time} s---")
         pages_consumed += 1
         if manually_terminated:
             break
+
+        if socketio:
+            socketio.emit(
+                "doc_extraction",
+                {
+                    "message": f"Page {real_page_index + 1} Extracted in {end_time - start_time} s"
+                },
+                namespace="/",
+            )
 
     if len(manual_terminate) > 0:
         page_count_save(subject, chapter_num, pages_consumed)

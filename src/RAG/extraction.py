@@ -2,9 +2,10 @@ from .utils import RAGtoolkit
 from os.path import isfile
 from os import remove
 import json
+from flask_socketio import SocketIO
 
 
-def dump_extraction_to_db(topic: str = "general"):
+def dump_extraction_to_db(topic: str = "general", socketio: SocketIO = None):
     file_name = f"outputs/{topic}/pages/chapters_tree.json"
     with open(file_name, "r") as file:
         chapter_tree = json.load(file)
@@ -29,7 +30,13 @@ def dump_extraction_to_db(topic: str = "general"):
                         chunks = chapter_kit.generate_chunks(data)
 
                         chapter_kit.add_docs(chunks)
-
+                        if socketio:
+                            socketio.emit(
+                                "doc_extraction",
+                                {
+                                    "message": f"Page {chapter_kit.page_number} chunks Generated"
+                                },
+                            )
                         summary = chapter_kit.generate_summary(data)
                         chapter_kit.add_meta(
                             summary.summary,
@@ -37,6 +44,14 @@ def dump_extraction_to_db(topic: str = "general"):
                             chapter_kit.chapter_num,
                             chapter_kit.page_number,
                         )
+
+                        if socketio:
+                            socketio.emit(
+                                "doc_extraction",
+                                {
+                                    "message": f"Page {chapter_kit.page_number} summary Generated"
+                                },
+                            )
 
                     print(f"--- page {page} - chunks added ---")
             print(f"--- chapter {chapter} - chunks added ---")

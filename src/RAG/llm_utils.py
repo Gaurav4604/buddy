@@ -16,6 +16,10 @@ class QuestionDecomposed(BaseModel):
     category: str
 
 
+class FormattedOutput(BaseModel):
+    output_markdown: str
+
+
 question_decomposition_system = """
 You are incharge of breaking the given question down into simpler sub-questions,
 which can then be used to answer the original question again
@@ -334,3 +338,41 @@ async def generate_questions(tag: str, topic: str = "general") -> QuestionsFromT
         return QuestionsFromTag.model_validate_json(res.message.content)
     else:
         return QuestionsFromTag(questions=[], tag=tag)
+
+
+content_formatting_system = """
+You are a content formatting bot,
+Your role is to to convert simple input text,
+into markdown text,
+which benefits from formatting ensured by markdown files.
+
+You have to ensure to use only sub-level heading tags `###` and lower
+"""
+
+
+content_formatting_prompt = """
+the following, enclosed in tags is the reference text
+
+<reference>
+{}
+</reference>
+
+generate beautiful and well formatted markdown on the same
+"""
+
+
+async def format_data(input_data: str) -> FormattedOutput:
+    res = await client.chat(
+        model="llama3.2",
+        messages=[
+            {"role": "system", "content": content_formatting_system},
+            {
+                "role": "user",
+                "content": content_formatting_prompt.format(input_data),
+            },
+        ],
+        format=FormattedOutput.model_json_schema(),
+        options={"num_ctx": 32768, "temperature": 0.2},
+        keep_alive=0,
+    )
+    return FormattedOutput.model_validate_json(res.message.content)

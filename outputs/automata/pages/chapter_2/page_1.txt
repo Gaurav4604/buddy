@@ -1,25 +1,37 @@
 
             <title>
-            Chapter 3
+            Chapter 2
             </title>
             
 
             <title>
-            Epsilon-NFAs
+            # Non-deterministic automata
+
+
+    
+
+
+
+    
+
             </title>
             
 
             <text>
-            There is an extension that can be made to NNs, that improves expressiveness, but does not add any fundamentally new capabilities. The idea of the extension is to allow an NFA to make a transition from one state to another _without_ the need for an input symbol. We can think of this as _a transition caused by the empty string_, ϵ, which is why it is called an _ϵ-transition_.
+            The automata we have studied so far are called **Deterministic Finite-state Automata (DFA)** because when the DFA receive an input it is able to precisely determine its next state. _Deterministic behaviour is a highly desirable characteristic_, because it guarantees that we can implement a DFA as a program on a computer.
 
-An ϵ-NFA has the same capabilities as a standard NFA, because the class of languages that can be processed remains the same.
+A non-deterministic Finite Finite state Automaton (NFA), has the property that it can be in more than one state any one time. This (apparently weird) property allows us to express many automata state at any time.
+
+Non-determinism appears to be an undesirable property (if the NFA cannot determine which state to enter next, what is it to do?) but it is not. It turns out that every NFA can be converted to two other state, sometimes ruled by DFA, so NFAs can _always_ be implemented, though with a bit more effort.
+
+The attraction of the NFA is that we can more-easily _seify_ the desired behaviour. Then, using a mechanical procedure, we can convert the NFA to a DFA, and thus implement it. This two-step approach neatly simplifies the overall task.
 
 
             </text>
             
 
             <title>
-            # 3.1 An informal view
+            # 2.1 An informal view
 
 
     
@@ -32,11 +44,11 @@ An ϵ-NFA has the same capabilities as a standard NFA, because the class of lang
             
 
             <text>
-            We begin with an example: a signed integer is a string of characters. The first character can be a an optional + or - sign, which is then followed by a sequence of decimal digits. Some examples of valid signed integers are: 12, -5, +163, and 9. Some illegal values are: 34A, -, -368-, 3+, and 3+4.
+            In most respects, an NFA is the same as a DFA: It has a finite number of states; it accepts a finite set of input symbols; it begins in an initial state; and it has a set of accepting states. There is also a transition function, \	ext{Recall that in a DFA, } \\delta(q,s) \\takes the current state, q, the current input symbol, s, and returns the next _state_ to enter.\\
 
-Fig. 3.1 shows an ϵ-NPA, named intRecog, that can recognise a valid signed integer.
-
-
+In an NFA, \\delta(q,s) \\takes a current state, q, the current input symbol s, and returns a _state-set_ (a set of states) that the NFA enters. The set can contain zero, one, or more states.\\\n
+Consider the zeroOne recogniser described earlier. We can express this as an NFA as shown in fig. 2.1.\\n
+There are several things to notice about this diagram:
             </text>
             
 
@@ -45,34 +57,20 @@ Fig. 3.1 shows an ϵ-NPA, named intRecog, that can recognise a valid signed inte
         outputs/automata/images/chapter_2/page_0_5.jpg
         </path>
         <description>
-        A diagram showing a finite state machine with three states: q0, q1, and q2. The transitions between these states are represented by arrows labeled with probabilities or constants (e.g., 0..9 for an epsilon transition). There is also an arrow from the initial state q0 to q1 with a probability of -c divided by c, indicating some form of input or action that causes this transition.
+        A state diagram with three states labeled q0, q1, and q2. The initial state is q0, which has two transitions to q1 on inputs 0 and 1 respectively. From q1, there are two transitions to q2: one on input 0 and another on input 1.
         </description>
         </image>
         
 
             <caption>
-            # Figure 3.1: The intRecog ϵ-NFA
+            # Figure 2.1: The zeroOne recogniser as an NFA
+
+
+    
+
+
+
+    
+
             </caption>
-            
-
-            <text>
-            The diagram is very similar to the NFAs we studied previously, except it has two transitions labelled with ι. If the machine is in state q_0, it is permitted to make an ι-transition to state q_1, without requiring an input symbol. Similarly, if the machine is in state q_2, it can transition to state q_3 without requiring an input symbol.
-
-The input alphabet for this NFAs is Σ={+,-,0,1,2…9}. (Notice that the alphabet does _not_ include ι.) The set of states is Q={q_0,q_1,q_2,q_3}. The initial state-set is Q_0={q_0}, and the set of accepting states is F={q_3}
-            </text>
-            
-
-            <title>
-            
-# 3.1.1   Example - the intRecog ϵ-NFA processing a string
-
-.
-
-            </title>
-            
-
-            <text>
-            # Suppose we wish to recognise the string "+14".
-
-            </text>
             

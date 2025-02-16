@@ -44,7 +44,7 @@
         outputs/automata/images/chapter_0/page_3_4.jpg
         </path>
         <description>
-        A diagram showing a flowchart with various nodes and arrows indicating transitions between them. The chart starts at 'start' node, moves through different stages like f, fo, for, fl1, floa, float, and ends back to start.
+        A diagram showing a flowchart with various nodes and arrows indicating transitions between them. The chart starts at 'start' node, moves through different stages such as f, fo, for, fl1, floa, float, and ends back at start.
         </description>
         </image>
         
