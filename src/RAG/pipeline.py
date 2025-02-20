@@ -77,7 +77,7 @@ async def question_answer_pipeline(
     # Emit event: questions generated.
     socketio.emit(
         "questions_generated",
-        {"sub_questions": markdown},
+        {"message": markdown},
         namespace="/",
     )
 
@@ -96,11 +96,12 @@ async def question_answer_pipeline(
         print(chain_addition)
         chain_of_questions.append(chain_addition)
         atomic_answers.append(atomic_answer)
+        markdown = await format_data(chain_addition)
 
         # Emit event: atomic answer completed.
         socketio.emit(
             "atomic_answer",
-            {"question": atomic_answer.question, "answer": atomic_answer.answer},
+            {"message": markdown},
             namespace="/",
         )
 
@@ -113,12 +114,21 @@ async def question_answer_pipeline(
     # Append the new QnA entry to the list.
     existing_entries.append(new_entry)
 
+    markdown = await format_data(
+        f"""
+        Question:
+            {atomic_answer.question}
+        Answer:
+            {atomic_answer.answer}
+        """
+    )
+
     # Save the updated QnA list back to the file.
     with open(output_filepath, "w", encoding="utf-8") as f:
         json.dump(existing_entries, f, indent=4, ensure_ascii=False)
 
     # Emit event: final answer generated.
-    socketio.emit("final_answer", new_entry, namespace="/")
+    socketio.emit("final_answer", {"message": markdown}, namespace="/")
 
     return answer
 
